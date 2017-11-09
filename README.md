@@ -1,4 +1,4 @@
-# LibSL - v1.11 - README - 2012-11-29 - Sylvain Lefebvre
+# LibSL - v1.11 - README
 
 # What is LibSL?
  
