@@ -25,10 +25,8 @@ Former students have suffered LibSL and went as far as contributing to it:
 * Jérémie Dumas (many improvements, in particular to tuples)
     
 # Compiling LibSL:
-================
 
-# Windows:
-----------
+## Windows:
 
 - **IMPORTANT** Setup the environment variable LibSL_DIR to your LibSL root directory
 - Make sure you have Visual C++ installed, or any other compiler supported by CMake
@@ -43,8 +41,7 @@ Former students have suffered LibSL and went as far as contributing to it:
 - Build the INSTALL project
 - All libraries are now in %LibSL_DIR%\lib
 
-# Linux:
---------
+## Linux:
 
 Use CMake. Do *not* use any left over Makefile in the LibSL source tree, these will be removed soon.
 
@@ -58,8 +55,7 @@ Type "make install" in the build tree. Libraries are copied into LibSL/lib/*
 
 (LibSL was initally developped with g++ (GCC) 4.0.2, it is tested with gcc 4.3.3)
 
-# Using LibSL:
-============
+## Using LibSL:
 
 *** Setup the environment variable LibSL_DIR to your LibSL root directory ***
 
@@ -84,14 +80,12 @@ To create a new project using LibSL and for instance LibSL_gl, use the following
 	TARGET_LINK_LIBRARIES(myexe ${LIBSL_LIBRARIES} ${LIBSL_GL_LIBRARIES})
 
 # Documentation:
-================
 
 None at the time, but several tutorial are available in LibSL/src/tutorials
 Tutorials binaries are compiled into LibSL/bin and meant to be executed
 from there.
 
 # Licence:
-========
 
 LibSL is distributed under the CeCILL-C licence (http://www.cecill.info).
 See Licence_CeCILL-C_V1-en.txt for the complete licence text.
