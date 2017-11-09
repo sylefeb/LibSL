@@ -87,7 +87,7 @@ from there.
 
 # Licence:
 
-LibSL is distributed under the CeCILL-C licence (http://www.cecill.info).
+LibSL is distributed under the CeCILL-C licence (http://www.cecill.info/index.en.html).
 See Licence_CeCILL-C_V1-en.txt for the complete licence text.
 
 --
