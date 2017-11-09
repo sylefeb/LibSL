@@ -1,0 +1,14 @@
+#pragma once
+
+#define LIBSL_VERSION_MAJOR @LIBSL_VERSION_MAJOR@
+#define LIBSL_VERSION_MINOR @LIBSL_VERSION_MINOR@
+
+//#pragma message("Including LibSL.config.h")
+
+#cmakedefine USE_GLUX
+#cmakedefine LIBSL_BUILD_MAX_PERFORMANCE
+
+#ifdef LIBSL_BUILD_MAX_PERFORMANCE
+#define LIBSL_RELEASE
+#endif
+

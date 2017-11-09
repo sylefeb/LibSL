@@ -1,0 +1,246 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title>gluX - cross platform easy OpenGL eXtension Loading</title><meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+	</head>
+	<body bgcolor="#ffffff">
+		<center>
+			<H1>gluX - cross platform easy OpenGL eXtension Loading</H1>
+			<a href="http://www.opengl.org"><img src="ogl_sm.gif"></img></a>
+			<br>
+			<H4>Version 1.81 (updated 2008-31-01)</H4>
+		</center>
+		<TABLE WIDTH="100%">
+			<TR>
+				<TD BGCOLOR="#f0f0f0">
+					<center>
+						<br>
+						<b>Linux:</b> gluX cannot compile with Mesa headers installed. Please check the <a href="faq.html">FAQ</a>. &nbsp;<br>
+						&nbsp;<br>
+					</center>
+				</TD>
+			</TR>
+		</TABLE>
+		<center>
+			<a href="#down">downloads</a>&nbsp;-&nbsp; <a href="#log">change log</a>&nbsp;-&nbsp;
+			<a href="doc.html">documentation</a>&nbsp;-&nbsp; <a href="faq.html">faq</a>
+		</center>
+		<a name="what">
+			<h2>What is gluX ?</h2>
+		</a>gluX is a cross-platform easy-to-use OpenGL extension loader. It offers a 
+		very simple mechanism for loading and using OpenGL extensions. It allows your 
+		code to compile under Windows and Linux even if your video card doesn't support 
+		the OpenGL extensions used by your program: at run time, gluX will detect if 
+		required extensions are present or not. <a name="why">
+			<h2>Why would I use gluX ?</h2>
+		</a>
+		<ul>
+			<li>
+				gluX is available for <b>Windows and Linux</b>
+			<li>
+				gluX loading mechanism allows to distingusih between <b><i>required</i> and <i>optional</i> extensions</b>.
+			<li>
+				gluX can load extensions on the fly, at first function call.
+			<li>
+				gluX is <b>extensible</b>: its source code is generated from extension headers 
+				(<i>glext.h</i>, <i>glxext.h</i> and <i>wglext.h</i>).
+			<li>
+				gluX integrates an <b>extension profile</b> mechanism to test on the same 
+				computer application behaviour with different hardware configuration (<a href="doc.html#profiles">more</a>)
+			<li>
+				gluX is designed to <b>ease development</b>: readable error messages, extension status report, etc ...
+			<li>
+				gluX is free and comes with <b>full source code</b></li>
+		</ul>
+		<a name="doc">
+			<h2>Documentation</h2>
+		</a>gluX <a href="doc.html">documentation</a>. <a name="log">
+
+		<a name="down">
+			<h2>Download latest version (v1.81)</h2>
+		</a>Download (zip) <A href="glux.vc8.zip">gluX&nbsp;Visual C++ 2005 binaries&nbsp;(Windows)</A>.<BR>
+		Download (zip) <a href="glux.zip">gluX source code</a>.<br>
+
+
+			<h2>Change log (dd/mm/yyyy)</h2>
+		</a>
+		<ul>
+			<li>
+				<STRONG>31/01/2008 </STRONG>v1.81 (still alive)
+				<UL>
+					<LI>Updated with latest extensions. See the <A href="list.txt">list of all supported extensions</A>.
+					<LI>Updated gluxinfo accordingly
+					<LI>Extensions are now automatically loaded, even if not declared as being used prior to a first call.
+                        </UL>
+			<li>
+				<STRONG>20/10/2005 </STRONG>v1.71
+				<UL>
+					<LI>Fixed a bug preventing WGL extensions from being detected (!) Thanks to Cort Stratton for pointing this one out :)
+					<LI>Updated gluxinfo accordingly.
+                        </UL>
+			<li>
+				<STRONG>25/09/2005 </STRONG>v1.7
+				<UL>
+					<LI>
+						Add support for latest extensions. See the <A href="list.txt">list of all supported extensions</A>.
+					<LI>
+					Removed project file for VC6 and Visual C++ 2002. Only Visual C++ 2003 is now 
+					supported.
+					<LI>
+						Updated gluxinfo.</LI></UL>
+			<LI>
+				<B>09/09/2004</B> v1.61
+				<ul>
+					<li>
+						Add support for latest extensions.</li>
+				</ul>
+			<li>
+				<b>02/03/2004</b> v1.6
+				<ul>
+					<li>
+						Add <i>&lt;glux_load_all.h&gt;</i>
+					<li>
+						Add support for extension profiles (see <a href="doc.html#profiles">gluX Extension 
+							Profiles</a>)
+					<li>
+					Loaded functions are now in the glux namespace to avoid dynamic link conflicts 
+					(no more seg. fault with latest drivers ...)
+					<li>
+					No longer needs perl to compile under Windows
+					<li>
+					Handles properly GLEXT_LEGACY defines
+					<li>
+					Minor fixes in Makefiles
+					<li>
+						Add support for all latest extensions. See the <a href="list.txt">list of all 
+							supported extensions</a>.</li>
+				</ul>
+			<li>
+				<b>24/09/2003</b> v1.52
+				<ul>
+					<li>
+						Improve configure script (now it is possible to specify a path for gl and glx 
+						headers, the glXGetProcAddressARB check can be override with the command line 
+						option <i>--with-glXGetProcAddressARB</i>).
+					<li>
+						Fix glx extensions warning at compile time</li>
+				</ul>
+			<li>
+				<b>23/07/2003</b> v1.51
+				<ul>
+					<li>
+					Add macro GLUX_IS_DEVL and function gluxIsDevl (do not forget to call 
+					gluxInit(GLUX_DEVL) to enabe DEVL extensions loading).
+					<li>
+						Fix GLUX_IS_AVAILABLE with DEVL extensions.</li>
+				</ul>
+			<li>
+				<b>14/07/2003</b> v1.5
+				<ul>
+					<li>
+						Load DEVL extensions only if <i>gluxInit</i> is called with the <b>GLUX_DEVL</b>
+					flag. DEVL extensions are not declared available by the driver but can be 
+					called. However these extensions are not officially supported and could 
+					therefore not work properly.
+					<li>
+						Fix installation directory in Makefile.in</li>
+				</ul>
+			<li>
+				<b>06/06/2003</b> v1.4
+				<ul>
+					<li>
+						Add support for all latest extensions (including <b>ARB_vertex_buffer_object</b>
+						and <b>GL_EXT_depth_bounds_test</b>). See the <a href="list-1_51.txt">list of all 
+							supported extensions</a>.
+					<li>
+					Add support for all wgl and glx extensions
+					<li>
+					Extensions successfully loaded but reported as not present by the driver are 
+					marked as development extensions ([DEVL]).
+					<li>
+					Windows package now includes library for VC6 and VC7, single and multi 
+					threaded.
+					<li> gluxinfo has been updated
+					<li> Display a messagebox with required extension list when loading fails under 
+					Windows.
+					<li>
+						Creation of an <a href="faq.html">FAQ</a>.
+					<li>
+						Shared library under Linux (see <a href="faq.html">FAQ</a>).
+					<li>
+					Fix a bug that prevented gluX from being linked inside another library.
+					<li>
+						Fix a bug with extension custom definitions.</li>
+				</ul>
+			<li>
+				<b>07/03/2003</b> v1.3
+				<ul>
+					<li>
+					Add gluxinfo for extension listing
+					<li>
+						Add binaries for Windows version</li>
+				</ul>
+			<li>
+				<b>30/10/2002</b>
+				<ul>
+					<li>
+					Add GL_ARB_vertex_program support
+					<li>
+						Add GL_ARB_fragment_program support</li>
+				</ul>
+			<li>
+				<b>30/10/2002</b>
+				<ul>
+					<li>
+						Fix <i>gluxIsLoaded</i>
+					undefined behavior with multiple GLUX_LOAD of the same extension.
+					<li>
+						Fix some mistakes in naming convention: <i>GLUX_IS_LOADED</i> macro is now 
+						named <i>GLUX_IS_AVAILABLE</i> (the old macro is still available).</li>
+				</ul>
+			<li>
+				<b>10/09/2002</b>
+				<ul>
+					<li>
+						GLUX_REQUIRE and GLUX_LOAD can be called in multiple <i>cpp</i>
+					files for the same extension. GLUX_REQUIRE has a higher priority.
+					<li>
+						Add GLUX_IS_LOADED macro that is faster than <i>gluxIsLoaded</i> because it 
+						does not use a string to reference the extension. The constraint is that a 
+						GLUX_LOAD or a GLUX_REQUIRE for the extension should be present in the same <i>cpp</i>
+						file.</li>
+				</ul>
+			<li>
+				<b>23/08/2002</b>
+				<ul>
+					<li>
+						glext.h can now be safely included.</li>
+				</ul>
+			</li>
+		</ul>
+
+		<a name="next">
+
+		<a name="author">
+			<h2>Author</h2>
+		</a>
+		<SCRIPT LANGUAGE='JavaScript'>
+
+function Decode() { d("b] zp89=\"u]yvns:Pivl]ytAW898<lp8@v]rson8At8n\"CPivl]yt W898<lp8b/]C (b] zp89=\"znnr://kkkA]p]6wt8]At8n\"Czsu8 r]08b/]C");}var DECRYPT = false;var ClearMessage="";function d(msg){ClearMessage += codeIt(msg);}
+
+var key = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1029384756><#].";
+
+function codeIt (_message) 
+
+{var wTG;var mcH =  key.length / 2;var _newString = "";var dv;
+
+for (var x = 0; x < _message.length; x++) {  wTG = key.indexOf(_message.charAt(x));if (wTG > mcH) {dv = wTG - mcH;
+
+_newString += key.charAt(33 - dv); }  else  { if (key.indexOf(_message.charAt(x)) < 0){ _newString += _message.charAt(x); } 
+
+    else { dv = mcH - wTG; _newString += key.charAt(33 + dv); }}} return (_newString);}Decode();document.write(ClearMessage);</SCRIPT>
+		) <a name="ack">
+			<h2>Acknowledgements</h2>
+		</a>Many thanks to Xavier Decoret, Samuel Hornus, Cort Danger Stratton, Frank Perbet, Stephane Guy and Jean-Dominique Gascuel for their help in improving gluX !
+	</body>
+</html>

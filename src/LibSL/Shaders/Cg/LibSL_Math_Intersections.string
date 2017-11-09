@@ -1,0 +1,86 @@
+"/*\n\
+  \n\
+  Sylvain Lefebvre - 2006-05-31\n\
+\n\
+  Intersections\n\
+  \n\
+*/\n\
+\n\
+#ifndef _CG_LibSL_Math_Intersections__\n\
+#define _CG_LibSL_Math_Intersections__\n\
+\n\
+\n\
+// Ray / sphere intersection\n\
+float3 intersect_3d_ray_sphere(float3 ray_start,float3 ray_dir,\n\
+			   float3 sphere_center,float sphere_radius)\n\
+{\n\
+ float3 delta = ray_start-sphere_center;\n\
+ float B = 2.0*dot(delta,ray_dir);\n\
+ float C = dot(delta,delta) - sphere_radius*sphere_radius;\n\
+ float fDet = B*B - 4.0 * C;\n\
+ if (fDet < 0) {\n\
+   return float3(fDet,0,0);\n\
+ } else {\n\
+   float t0=0.5 * (-B+sqrt(fDet));\n\
+   float t1=0.5 * (-B-sqrt(fDet));\n\
+   if (t0 < 0) t0 = 1e16;\n\
+   if (t1 < 0) t1 = 1e16;\n\
+   return float3(fDet,min(t0,t1),max(t0,t1));\n\
+ }\n\
+}\n\
+\n\
+\n\
+// Ray / plane intersection\n\
+float intersect_3d_ray_plane(float3 ray_start,float3 ray_dir,\n\
+			   float3 plane_n,float plane_d)\n\
+{\n\
+  float l = dot(ray_start,plane_n) - plane_d;\n\
+  float t = l / (- dot(ray_dir,plane_n));\n\
+  \n\
+  return t;\n\
+}\n\
+\n\
+\n\
+// Point / plane distance\n\
+// distance from point p to plane defined by normal plane.xyz and distance plane.w\n\
+float distance_3d_point_plane(float3 p,float4 plane)\n\
+{\n\
+  return (dot(p,plane.xyz)-plane.w);\n\
+}\n\
+\n\
+\n\
+// Line / line intersection\n\
+// returns t12 and t34, parametric intersection coords on both lines\n\
+float2 intersect_2d_line_line_parametric(float2 p1,float2 p2,float2 p3,float2 p4)\n\
+{\n\
+  float3 d13 = float3(p1-p3,0);\n\
+  float3 d21 = float3(p2-p1,0);\n\
+  float3 d43 = float3(p4-p3,0);\n\
+  float t12  = cross(d43,d13).z;\n\
+  float t34  = cross(d21,d13).z;\n\
+  float det  = cross(d21,d43).z;\n\
+  return float2(t12/det,t34/det);\n\
+}\n\
+\n\
+\n\
+// Line / line intersection\n\
+// returns the point of intersection\n\
+float2 intersect_2d_line_line(float2 p1,float2 p2,float2 p3,float2 p4)\n\
+{\n\
+  float2 t=intersect_2d_line_line_parametric(p1,p2,p3,p4);\n\
+  return p1+t.x*(p2-p1);\n\
+}\n\
+\n\
+\n\
+// Segment / segment intersection\n\
+// returns the point of intersection in .xy, .z == 1 if intersection exists, 0 otherwise\n\
+float3 intersect_2d_segment_segment(float2 pa0,float2 pa1,float2 pb0,float2 pb1)\n\
+{\n\
+  float2 t     = intersect_2d_line_line_parametric(pa0,pa1,pb0,pb1);\n\
+  float exists = (t.x>=0 && t.x<=1 && t.y>=0 && t.y<=1) ? 1.0 : 0.0;\n\
+  return float3(pa0+t.x*(pa1-pa0),exists);\n\
+}\n\
+\n\
+\n\
+#endif\n\
+";

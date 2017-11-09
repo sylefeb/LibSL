@@ -1,0 +1,44 @@
+
+LibSL contains free source code from the following developers/institutions:
+
+- Tomas Akenine-Möller (see Geometry/Intersections/triangle_aabox.cpp and triangle_ray.cpp)
+  See also http://www.cs.lth.se/home/Tomas_Akenine_Moller/code/
+
+- Thomas Lewiner <tomlew@mat.puc-rio.br> (see Geometry/MarchingCubes.h)
+  See also http://www.mat.puc-rio.br/~tomlew/
+
+- Industrial Light & Magic (see System/half.h and System/half.cpp for copyright notice)
+  See also http://www.openexr.com/
+  // Copyright (c) 2002, Industrial Light & Magic, a division of Lucas
+  // Digital Ltd. LLC
+
+- David HENRY (see tga.c), TGA loader code
+
+*********************************************************************************
+To the best of our knowledge including these files does not violate any license.
+Would this be the case, please be assured that we will take all necessary steps
+to remove them from the distribution.
+*********************************************************************************
+
+LibSL also relies on these libraries (see src\libs\* for licenses):
+
+- OpenNL
+- lib3ds
+- libpng
+- zlib
+- libjpeg 
+- glux
+- tclap
+- loki
+- NewMat
+- TAUCS
+- AntTweakBar
+- TinyXML
+- sqlite
+- hashlib++
+- rply
+- qhull
+- libarchive
+
+--
+LibSL - (c) Sylvain Lefebvre 2006-2009

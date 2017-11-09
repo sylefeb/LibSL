@@ -1,0 +1,85 @@
+/*
+  
+  Sylvain Lefebvre - 2006-05-31
+
+  Intersections
+  
+*/
+
+#ifndef _CG_LibSL_Math_Intersections__
+#define _CG_LibSL_Math_Intersections__
+
+
+// Ray / sphere intersection
+float3 intersect_3d_ray_sphere(float3 ray_start,float3 ray_dir,
+			   float3 sphere_center,float sphere_radius)
+{
+ float3 delta = ray_start-sphere_center;
+ float B = 2.0*dot(delta,ray_dir);
+ float C = dot(delta,delta) - sphere_radius*sphere_radius;
+ float fDet = B*B - 4.0 * C;
+ if (fDet < 0) {
+   return float3(fDet,0,0);
+ } else {
+   float t0=0.5 * (-B+sqrt(fDet));
+   float t1=0.5 * (-B-sqrt(fDet));
+   if (t0 < 0) t0 = 1e16;
+   if (t1 < 0) t1 = 1e16;
+   return float3(fDet,min(t0,t1),max(t0,t1));
+ }
+}
+
+
+// Ray / plane intersection
+float intersect_3d_ray_plane(float3 ray_start,float3 ray_dir,
+			   float3 plane_n,float plane_d)
+{
+  float l = dot(ray_start,plane_n) - plane_d;
+  float t = l / (- dot(ray_dir,plane_n));
+  
+  return t;
+}
+
+
+// Point / plane distance
+// distance from point p to plane defined by normal plane.xyz and distance plane.w
+float distance_3d_point_plane(float3 p,float4 plane)
+{
+  return (dot(p,plane.xyz)-plane.w);
+}
+
+
+// Line / line intersection
+// returns t12 and t34, parametric intersection coords on both lines
+float2 intersect_2d_line_line_parametric(float2 p1,float2 p2,float2 p3,float2 p4)
+{
+  float3 d13 = float3(p1-p3,0);
+  float3 d21 = float3(p2-p1,0);
+  float3 d43 = float3(p4-p3,0);
+  float t12  = cross(d43,d13).z;
+  float t34  = cross(d21,d13).z;
+  float det  = cross(d21,d43).z;
+  return float2(t12/det,t34/det);
+}
+
+
+// Line / line intersection
+// returns the point of intersection
+float2 intersect_2d_line_line(float2 p1,float2 p2,float2 p3,float2 p4)
+{
+  float2 t=intersect_2d_line_line_parametric(p1,p2,p3,p4);
+  return p1+t.x*(p2-p1);
+}
+
+
+// Segment / segment intersection
+// returns the point of intersection in .xy, .z == 1 if intersection exists, 0 otherwise
+float3 intersect_2d_segment_segment(float2 pa0,float2 pa1,float2 pb0,float2 pb1)
+{
+  float2 t     = intersect_2d_line_line_parametric(pa0,pa1,pb0,pb1);
+  float exists = (t.x>=0 && t.x<=1 && t.y>=0 && t.y<=1) ? 1.0 : 0.0;
+  return float3(pa0+t.x*(pa1-pa0),exists);
+}
+
+
+#endif

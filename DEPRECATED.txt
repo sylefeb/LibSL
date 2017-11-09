@@ -1,0 +1,10 @@
+
+LibSL - v1.10 - DEPRECATED - 2012-10-23 - Sylvain Lefebvre
+--
+
+Some parts of LibSL are currently deprecated:
+- Anything to do with NVidia Cg will be removed
+- The Sky shaders have to be upgraded to GLSL
+
+--
+LibSL - (c) Sylvain Lefebvre 2006-....

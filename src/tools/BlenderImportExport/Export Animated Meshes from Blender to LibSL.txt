@@ -1,0 +1,57 @@
+Export Animated Meshes from Blender to LibSL
+-------
+
+This describes the process of going from a blender animated mesh to a LibSL '.animesh' file.
+To achieve this we will perform two successive conversions:
+
+1. Blender => '.x'       using Blender export script (DirectX old mesh format)
+2. '.x'    => '.animesh' using 'xmeshextract' provided in the animesh tool pack (see below)
+
+- Download the animesh tool pack http://webloria.loria.fr/~slefebvr/gprog/animesh.zip
+
+- Unzip; you will find xmeshextract.exe and export.py
+
+- The file 'export.py' is a fix to the Blender addon exporting towards the '.x' file format
+  * First, copy this file in 
+      C:\Program Files (x86)\Blender Foundation\Blender\2.67\scripts\addons\io_scene_x\
+    Replace the existing 'export.py' with the new one.
+  * Second, open Blender, goto 
+    'File'(menu) => 'User preferences' => 'Addons'(tab) => 'Import/Export'(left menu) and 
+    check 'DirectX X format' (checkbox on the right)
+  * Make sure you now have the menu 'File => Export => DirectX (.x)'. If not, something is
+    wrong with the addon or user prefrences. Start again.
+
+- Open your model in blender. For the example we included 'mini_knight.x' from 
+
+- Make sure there is a unique mesh. If there are multiple, select all and press Ctrl-J
+
+- Select everything, mesh *and* skeleton
+
+- Choose 'File => Export => DirectX (.x)'
+
+- Select the following options:
+  * Export selected only
+  * Export meshes
+  * Export normals
+  * Export UVs
+  * Export materials
+  * Export skin weights
+  * Export armature bones
+  * Export animations
+
+- Click on 'Export DirectX' (top right of the screen)
+
+- That's all for blender, close it.
+
+- Now, copy the '.x' file into the directory where xmeshextract.exe is located.
+
+- Launch 'xmeshextract.exe <myfile>.x' (<myfile> being your file name)
+
+- The models should be displayed on screen, with its normals. Use space to animate it (goes through keyframes). If anything is wrong, double check the export options, and double check your model is a single mesh. Optionally load the .x into FragMotion. If it appears properly in FragMotion then send me a bug report (.blend file + .x file + description of what is incorrect)
+
+- A file '<myfile>.x.animesh' has been created. This file may be loaded with LibSL using 'loadAnimatedMesh'. It should contain the same UV coordinates as in blender and therefore can be textured from a pixel shader.
+
+- NOTE: In case of trouble, load the mesh in FragMotion, check it is ok, export again as a '.x' selecting 'Export all frames'.
+
+------
+Sylvain Lefebvre - 2013-06-04

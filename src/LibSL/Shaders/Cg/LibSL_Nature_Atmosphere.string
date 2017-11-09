@@ -1,0 +1,278 @@
+"/*\n\
+  Sylvain Lefebvre - 2006-05-31\n\
+\n\
+  Sky model based on the work of Naty Hoffman and Arcot J. Preetham  \n\
+  \"Rendering Outdoor Light Scattering in Real Time\".\n\
+  http://www.ati.com/developer/dx9/ATI-LightScattering.pdf\n\
+\n\
+  Updated from the article of the same authors, in the book\n\
+  \"Graphics Programming Methods\", by Charles River Media\n\
+\n\
+  Class LibSL::Nature::Sky helps using this shader\n\
+  See also the tutorials in LibSL/src/tutorials/Nature\n\
+\n\
+  From the caller point of view, coordinates are ground coordinates \n\
+  (z=0 means on ground)\n\
+\n\
+  Units are meters\n\
+\n\
+  LIMITATIONS:\n\
+\n\
+  This shader is NOT suitable for high altitudes. It is assumed that\n\
+  the viewer remains close to the ground.\n\
+\n\
+  CODE STATUS: Experimental, unoptimized, reference code\n\
+\n\
+  TODO:\n\
+   - Optimize !!\n\
+   - VP version (currently fp only)\n\
+\n\
+--\n\
+\n\
+  In order to draw the sky:\n\
+\n\
+    m_cgSkyShaderCameraPos.set(cx,cy,cz);\n\
+    m_cgSkyShaderSunDir.set(sx,sy,sz);\n\
+    glPushAttrib(GL_ENABLE_BIT);\n\
+    glDisable(GL_DEPTH_TEST);\n\
+    glDepthMask(0);\n\
+    cgGLSetStateMatrixParameter(m_cgSkyModelviewInverse.handle(),\n\
+                                CG_GL_MODELVIEW_MATRIX,\n\
+                                CG_GL_MATRIX_INVERSE);\n\
+    cgGLSetStateMatrixParameter(m_cgSkyProjectionInverse.handle(),\n\
+                                CG_GL_PROJECTION_MATRIX,\n\
+                                CG_GL_MATRIX_INVERSE);\n\
+    m_cgSkyShader.begin();   // Technique \"t_sky\" must be activated\n\
+    glBegin(GL_QUADS);\n\
+    glVertex4f(-1,-1, 1, 1);\n\
+    glVertex4f( 1,-1, 1, 1);\n\
+    glVertex4f( 1, 1, 1, 1);\n\
+    glVertex4f(-1, 1, 1, 1);\n\
+    glEnd();\n\
+    m_cgSkyShader.end();\n\
+    glDepthMask(0xFF);\n\
+    glPopAttrib();\n\
+\n\
+  In order to draw an object on the ground, the fragment \n\
+  shader of the object must call\n\
+\n\
+    groundFromAtmosphere(pos_on_ground,CameraPos,SunDir,color_on_ground)\n\
+\n\
+*/\n\
+\n\
+#ifndef _CG_LibSL_Nature_Atmosphere__\n\
+#define _CG_LibSL_Nature_Atmosphere__\n\
+\n\
+#ifndef _CG_LibSL_Math_Intersections__\n\
+#include \"LibSL_Math_Intersections.cg\"\n\
+#endif\n\
+\n\
+// Atmosphere parameters - set to reasonnable default values\n\
+\n\
+uniform float3 Sky_BetaR    = float3(4.1e-06,6.93327e-06,1.43768e-05); // Raleigh coefficient\n\
+uniform float3 Sky_BetaM    = float3(2.3e-06,2.3e-06,2.3e-06);         // Mie coefficient\n\
+uniform float  Sky_G        = -0.94;                                   // Henyey-Greenstein eccentricty parameter\n\
+\n\
+// Raleigh coefficient\n\
+//uniform float3 Sky_BetaR    = float3(6.95e-06,1.18e-05,2.44e-05);  \n\
+\n\
+// Mie coefficient and Henyey-Greenstein 'elongation' parameter\n\
+// Light haze\n\
+//uniform float3 Sky_BetaM    = float3(2e-05,3e-05,4e-05);     \n\
+//uniform float  Sky_G        = 0.07;\n\
+// Heavy haze\n\
+//uniform float3 Sky_BetaM    = float3(8e-05,1e-04,1.2e-04);     \n\
+//uniform float  Sky_G        = 0.2;\n\
+// Light fog\n\
+//uniform float3 Sky_BetaM    = float3(9e-04,1e-03,1.1e-03);\n\
+//uniform float  Sky_G        = 0.4;\n\
+// Heavy fog\n\
+//uniform float3 Sky_BetaM    = float3(1e-02,1e-02,1e-02);\n\
+//uniform float  Sky_G        = 0.5;\n\
+\n\
+\n\
+// Sun color and intensity\n\
+\n\
+uniform float3 Sky_ESun = float3(20.0,20.0,20.0);\n\
+\n\
+// Exposure\n\
+\n\
+uniform float  Sky_Exposure=1.0;\n\
+\n\
+// Bias to artificially increase optical length\n\
+\n\
+uniform float  Sky_AtmoLengthBias = 1.0;\n\
+\n\
+#define PI 3.14159265358979323846\n\
+\n\
+// Earth and atmosphere shell radius\n\
+\n\
+#define Sky_Air_Zenith      8400.0\n\
+#define Sky_S_haze_over_S_air (1.25/8.4)\n\
+const float Sky_OuterRadius = (6378000.0+Sky_Air_Zenith);\n\
+const float Sky_InnerRadius = 6378000.0;\n\
+\n\
+// Vertex data definition\n\
+\n\
+struct SKY_VS_INPUT\n\
+{\n\
+  float4 Pos   : POSITION;\n\
+};\n\
+\n\
+struct SKY_VS_OUTPUT\n\
+{\n\
+  float4 Pos   : POSITION;\n\
+  float3 VDir  : TEXCOORD0;\n\
+};\n\
+\n\
+\n\
+// Aerial perspective\n\
+//\n\
+//   Approximate extinction at pos as viewed from camera\n\
+//   Also approximates sun extinction\n\
+//   Returns:\n\
+//      Fex extinction\n\
+//      Lin in-scattered light from sun\n\
+//      Sun sun color\n\
+\n\
+\n\
+\n\
+void aerialPerspective(float3 pos,float3 camera,float3 sundir,\n\
+                       out float3 Fex,out float3 Lin,out float3 Sun)\n\
+{\n\
+  // Force viewpoint close to the ground to avoid color shifts\n\
+  camera.z = min(camera.z,Sky_InnerRadius+(Sky_OuterRadius-Sky_InnerRadius)*0.25);\n\
+  // Optical length\n\
+  float s_air  = length(pos-camera);\n\
+  float s_haze = s_air * Sky_S_haze_over_S_air;\n\
+  // Extinction factor\n\
+  float3 Fex_air_haze = exp( - s_haze * (Sky_BetaM + Sky_BetaR) );\n\
+  float3 Fex_air      = exp( - (s_air-s_haze)  * Sky_BetaR );\n\
+  // Cosine of incoming sunlight angle theta\n\
+  float3 ViewDir = normalize(pos-camera);\n\
+  float cosTh    = dot(sundir, ViewDir);\n\
+  // Rayleigh scattering from angle theta\n\
+  float3 BetaRTh = (1.0 + cosTh*cosTh)*Sky_BetaR*3.0/(16.0*PI);\n\
+  // Mie scattering from angle theta\n\
+  float3 BetaMTh =  1.0/(4.0*PI)\n\
+    *Sky_BetaM\n\
+    *(1.0-(Sky_G*Sky_G))\n\
+    *pow(1.0+(Sky_G*Sky_G)-(2.0*Sky_G*cosTh), -3.0/2.0 );\n\
+\n\
+  // Compute sun attenuation due to atmosphere\n\
+\n\
+  // FIXME: Give all the following as shader params !\n\
+  //        It is way too expensive to be computed here ...\n\
+  float cosTh_sun = max(0,-sundir.z);\n\
+  float Th_sun    = (180.0/PI)*acos(cosTh_sun);\n\
+  float t_air     = Sky_Air_Zenith / (cosTh_sun + 0.15*pow(93.885 - Th_sun, -1.253) );\n\
+  float t_haze    = t_air * Sky_S_haze_over_S_air;\n\
+  Sun = exp( - (Sky_BetaR*t_air + Sky_BetaM*t_haze)  );\n\
+\n\
+  // In-scattered color from sun\n\
+  Lin = Sun * Sky_ESun\n\
+    * (\n\
+       ((BetaRTh + BetaMTh) / (Sky_BetaR + Sky_BetaM)) * (1.0 - Fex_air_haze)\n\
+       + (BetaRTh / Sky_BetaR) * (1.0 - Fex_air) * Fex_air_haze\n\
+       );\n\
+  Fex = Fex_air * Fex_air_haze;\n\
+}\n\
+\n\
+// Simple HDR mapping\n\
+\n\
+float3 HDR(float3 light)\n\
+{\n\
+  //return light;\n\
+  return (1.0 - exp(- light * Sky_Exposure));\n\
+}\n\
+\n\
+// Computes ground color viewed through atmosphere\n\
+// groundcolor is the unlighted ground color\n\
+\n\
+float3 groundFromAtmosphere(float3 pos,float3 camera,float3 sundir,\n\
+                            float3 groundcolor,float3 groundnrm=float3(0,0,1))\n\
+{\n\
+  float3 Fex,Lin,Sun;\n\
+  aerialPerspective(pos   +float3(0,0,Sky_InnerRadius),\n\
+		    camera+float3(0,0,Sky_InnerRadius),\n\
+		    sundir,\n\
+		    Fex,Lin,Sun);\n\
+  return HDR( Lin + Fex*Sun*groundcolor*max(0,-dot(groundnrm,sundir)) );\n\
+}\n\
+\n\
+// Computes sky color\n\
+\n\
+float3 skyFromAtmosphere(float3 pos,float3 camera,float3 sundir)\n\
+{\n\
+  float3 Fex,Lin,Sun;\n\
+  aerialPerspective(pos,camera,sundir, Fex,Lin,Sun);\n\
+  return HDR(Lin);\n\
+}\n\
+\n\
+\n\
+// --------------------------\n\
+// Shader to draw a sky dome\n\
+// --------------------------\n\
+\n\
+uniform float3   Sky_CameraPos;\n\
+uniform float3   Sky_SunDir;\n\
+uniform float4x4 Sky_ModelviewInverse_GL_MVP;\n\
+uniform float4x4 Sky_ProjectionInverse_GL_MVP;\n\
+\n\
+// Vertex program\n\
+\n\
+SKY_VS_OUTPUT vp_sky(SKY_VS_INPUT In)\n\
+{\n\
+  SKY_VS_OUTPUT OUT;\n\
+\n\
+  // back projects a screen space unit quad onto far plane\n\
+  // The quad is meant to be:\n\
+  //  glBegin(GL_QUADS);\n\
+  //  glVertex4f(-1,-1, 1, 1);\n\
+  //  glVertex4f( 1,-1, 1, 1);\n\
+  //  glVertex4f( 1, 1, 1, 1);\n\
+  //  glVertex4f(-1, 1, 1, 1);\n\
+  //  glEnd();\n\
+\n\
+  OUT.VDir = mul(Sky_ModelviewInverse_GL_MVP,\n\
+		 float4(mul(Sky_ProjectionInverse_GL_MVP,In.Pos).xyz,0));\n\
+  OUT.Pos    = In.Pos;\n\
+  return OUT;\n\
+}\n\
+\n\
+// Fragment program\n\
+\n\
+float4 fp_sky(SKY_VS_OUTPUT In) : COLOR0\n\
+{\n\
+  // compute view dir\n\
+  float3 vdir = normalize(In.VDir);\n\
+\n\
+  // compute intersection with sphere\n\
+  float3 ray_dir   = normalize(In.VDir);\n\
+  float3 ray_start = float3(0,0,Sky_CameraPos.z)+float3(0,0,Sky_InnerRadius);\n\
+\n\
+  float  sinPh = vdir.z;\n\
+  float  l     =\n\
+    - Sky_InnerRadius*sinPh\n\
+    + sqrt( (Sky_InnerRadius*Sky_InnerRadius)*((sinPh*sinPh)-1) \n\
+	    + Sky_OuterRadius*Sky_OuterRadius );\n\
+  \n\
+  float3 p = float3(0,0,Sky_InnerRadius) + l*vdir;\n\
+  \n\
+  return float4(\n\
+		skyFromAtmosphere(p,float3(0,0,Sky_InnerRadius),Sky_SunDir)\n\
+		,1);\n\
+}\n\
+\n\
+// Technique\n\
+\n\
+technique t_sky {\n\
+  pass P0 {\n\
+    VertexProgram = compile CG_PROFILE_VP vp_sky();\n\
+    FragmentProgram = compile CG_PROFILE_FP fp_sky();\n\
+  }\n\
+}\n\
+\n\
+\n\
+#endif\n\
+";

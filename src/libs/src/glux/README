@@ -1,0 +1,38 @@
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+gluX - cross platform easy OpenGL eXtension Loading
+
+                          sylvain.lefebvre@inria.fr
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+
+What is gluX ?
+--------------
+GluX is a cross-platform easy-to-use OpenGL extension loader. 
+It offers a very simple mechanism for loading and using OpenGL extensions.
+It allows your code to compile under Windows and Linux even if
+your video card doesn't support the OpenGL extensions used by your
+program: at run time, gluX will detect if required extensions are
+present or not.
+
+Installation:
+-------------
+  see INSTALL
+
+Troubleshooting:
+----------------
+
+  see doc/doc.html and doc/faq.html
+
+Author:
+-------
+  Sylvain Lefebvre
+
+  Sylvain.Lefebvre@inria.fr
+  http://webloria.loria.fr/~slefebvr
+
+Licence and copyright:
+----------------------
+
+  Use, distribute and modify freely !
+  As usual this software comes with no warranty.
+
+  -= gluX Copyright (c) 2002 Sylvain Lefebvre =-

@@ -1,0 +1,15 @@
+uniform mat4 u_LightView;
+uniform mat4 u_ShdwMatrix;
+
+varying vec3 v_Normal;
+varying vec4 v_ShadowPos;
+
+void main()
+{
+  // pass transformed normal to FP
+  v_Normal       = u_LightView * float4(gl_Normal,0); // NOTE: only valid if no scaling
+  // transform the point
+  gl_Position    = gl_ProjectionMatrix * gl_ModelViewMatrix * gl_Vertex;
+  // compute the point transformed in light view
+  v_ShadowPos    = u_ShdwMatrix * gl_ProjectionMatrix * u_LightView  * gl_Vertex;
+}

@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "shdwmap_cg", "ShdwMap_cg.vcproj", "{E13A41CD-FEEA-4FE6-A93D-30E4A142C3E4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "shdwmap_glsl", "ShdwMap_glsl.vcproj", "{D7B61D43-3C03-4279-9EDE-CE54A62A792F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E13A41CD-FEEA-4FE6-A93D-30E4A142C3E4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E13A41CD-FEEA-4FE6-A93D-30E4A142C3E4}.Debug|Win32.Build.0 = Debug|Win32
+		{E13A41CD-FEEA-4FE6-A93D-30E4A142C3E4}.Release|Win32.ActiveCfg = Release|Win32
+		{E13A41CD-FEEA-4FE6-A93D-30E4A142C3E4}.Release|Win32.Build.0 = Release|Win32
+		{D7B61D43-3C03-4279-9EDE-CE54A62A792F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D7B61D43-3C03-4279-9EDE-CE54A62A792F}.Debug|Win32.Build.0 = Debug|Win32
+		{D7B61D43-3C03-4279-9EDE-CE54A62A792F}.Release|Win32.ActiveCfg = Release|Win32
+		{D7B61D43-3C03-4279-9EDE-CE54A62A792F}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

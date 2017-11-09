@@ -1,0 +1,44 @@
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+gluX - cross platform easy OpenGL eXtension Loading
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+
+Linux Install:
+--------------
+
+./configure
+make
+make install
+
+Don't forget to add gluX install path in your CFLAGS 
+and gluX library path to your LDFLAGS. Also as gluX
+is a shared library, the path to libglux.so should 
+be in the LD_LIBRARY_PATH environment variable.
+
+Link with -lglux
+
+Default path are:
+  /usr/local/glux
+  /usr/local/include
+  /usr/local/lib
+
+Windows Install:
+----------------
+
+Add the include directory in your preprocessor path and link with
+the appropriate version of the library:
+
+lib/win32/vc7.net/glux.lib (single thread)
+lib/win32/vc7.net/glux-mt.lib (multi thread)
+lib/win32/vc7.net/glux-mt-dll.lib (multi thread dll)
+
+lib/win32/vc8.net/glux-mt.lib (multi thread)
+lib/win32/vc8.net/glux-mt-dll.lib (multi thread dll)
+
+If the library directory is empty, compile the solution 'glux-vc2003' or 'glux-vc2005' with
+correct code generation settings depending on your version of Visual C++ and the settings
+of your project (single thread, multi thread, etc...)
+
+Troubleshooting:
+----------------
+
+  see doc/faq.html

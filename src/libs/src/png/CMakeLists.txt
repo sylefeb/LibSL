@@ -1,0 +1,28 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+PROJECT(png)
+
+SET(LIBPNG_SOURCES
+		png.c pngerror.c pnggccrd.c pngget.c pngmem.c pngpread.c
+		pngread.c pngrio.c pngrtran.c pngrutil.c pngset.c
+		pngtrans.c pngvcrd.c pngwio.c pngwrite.c pngwtran.c pngwutil.c)
+
+SET(LIBPNG_HEADERS
+		png.h
+		pngconf.h)
+
+INCLUDE_DIRECTORIES(../zlib)
+
+ADD_LIBRARY(png STATIC ${LIBPNG_SOURCES} ${LIBPNG_HEADERS})
+
+SET_TARGET_PROPERTIES(png PROPERTIES DEBUG_POSTFIX "-d")
+SET_TARGET_PROPERTIES(png PROPERTIES VERSION "1.2.35")
+
+INSTALL(TARGETS png
+  RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/bin
+  LIBRARY DESTINATION ${CMAKE_SOURCE_DIR}/lib
+  ARCHIVE DESTINATION ${CMAKE_SOURCE_DIR}/lib
+)
+IF(NOT WIN32)
+INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/libpng.a" DESTINATION ${CMAKE_SOURCE_DIR}/lib)
+ENDIF(NOT WIN32)
+

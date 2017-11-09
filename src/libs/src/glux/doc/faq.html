@@ -1,0 +1,196 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title>gluX documentation</title><meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+	</head>
+	<body bgcolor="#ffffff">
+		<center>
+			<H1>gluX - cross platform easy OpenGL eXtension Loading</H1>
+			<BR>
+			<hr>
+			<H1>FAQ</H1>
+			<hr>
+		</center>
+		<p>
+			<b>
+				<h2>What are the interesting features of gluX ?</h2>
+			</b>I tried to make gluX 'developer friendly': if an extension is not loaded it 
+			exits with a nice message instead of crashing because of a NULL pointer access. 
+			The perl script allows you to easily add extensions by updating the <i>glext.h</i>
+			file. Another interest of gluX is its ability to make a difference between a 
+			required extension and an optional extension. Also, the query for checking if 
+			an extension is available is very fast (see <a href="doc.html">documentation</a>
+			and GLUX_IS_AVAILABLE macro).<br>
+			GluX tries to load an extension even if the driver report that the extension is 
+			not present. This is usually the case when an extension is in development.
+			<br>
+		<P></P>
+		<p>
+			<b>
+				<h2>How can I use a <i>wgl</i> extension ?</h2>
+			</b>It is very simple: let's say you want to use the <i>GL_NV_vertex_array_range</i>
+			extension. This extension is making use of plateform depedent functions 
+			wglAllocateMemoryNV and wglFreeMemoryNV to allocate / free memory. Therefore 
+			you also need to load the <i>WGL_NV_vertex_array_range</i> extension:
+			<pre>
+GLUX_REQUIRE(GL_NV_vertex_array_range);
+GLUX_REQUIRE(WGL_NV_vertex_array_range);
+</pre>
+		And then you can call the functions wglAllocateMemoryNV and wglFreeMemoryNV.
+		<P></P>
+		<p>
+			<b>
+				<h2>Why do I have link problems when compiling a program with gluX under Windows ?</h2>
+			</b>There is four versions of the gluX library for windows:
+			<ul>
+				<li>
+				gluX Visual C++ 6, single thread (lib/win32/vc6)
+				<li>
+				gluX Visual C++ 6, multi-thread (lib/win32/vc6)
+				<li>
+				gluX Visual C++ .NET, single thread (lib/win32/vc7.net)
+				<li>
+					gluX Visual C++ .NET, multi-thread (lib/win32/vc7.net)</li>
+			</ul>
+		Check that you are compiling with the correct version of the library. If you 
+		are using the SDL library (or any other multi-threaded library like qt-mt), you 
+		should link with the multi-thread version of gluX.
+		<P></P>
+		<p>
+		</p>
+		<H2>An OpenGL function is missing ! (exemple: <EM>glBlendColor</EM>)</H2>
+		gluX is created by parsing latest OpenGL header files. These headers are 
+		present in the <EM>glux\script</EM> directory. If you are using older headers 
+		(as it is often the case under Windows), some functions that used to be 
+		extensions but have since be included in OpenGL might be missed. <EM>glBlendColor</EM>
+		is one of those. To fix this issue, simply include the OpenGL headers located 
+		in the script directory (they have to be renamed without the reg_ prefix: <EM>reg_glext.h 
+			=&gt; glext.h</EM>). Also, in the case of <EM>glBlendColor</EM>, another 
+		extension defines the function <EM>glBlendColorEXT</EM> . You can find the latest 
+			OpenGL extension headers on the <a href="http://oss.sgi.com/projects/ogl-sample/registry/">
+				SGI website</a>.
+			<H2>Why do I have link problems when compiling sample programs under Linux ?</H2>
+			Sometimes configure reports gcc as the c++ compiler instead of g++. The result 
+			is that the exe file are not linked with the correct run-time library. To 
+			correct this simply edit the Makefile in the sample directory and change gcc to 
+			g++.
+			<P></P>
+			<p>
+				<b>
+					<h2>I have a compilation error when compiling gluX under Linux (typedef conflict, 
+						glXGetProcAddressARB not defined)</h2>
+				</b>Please check that your header files (<i>gl.h</i>,<i>glx.h</i> and <i>glxtokens.h</i>
+			) are not from Mesa (the word Mesa will appear in the comment at the beginning 
+			of the file if it the case). gluX is unfortunately not compatible with Mesa 
+			header files ... If you have Mesa header files, please replace them by the 
+			OpenGL headers provided - for instance - by NVidia 
+			(/usr/share/doc/NVIDIA_GLX-1.0/include). Then launch configure again.
+			<P></P>
+			<p>
+				<b>
+					<h2>Do I need to compile gluX ?</h2>
+				</b>
+			If you are using gluX under Windows you can directly use the libraries provided 
+			in the binary package. Under Linux you have to compile gluX because your 
+			computer may have special defintions for extensions (see below).
+			<P></P>
+			<p>
+				<b>
+					<h2>The configure script says that glXGetProcAddressARB is not available on my 
+						computer ! (Linux)</h2>
+				</b>If you are on a SGI workstation, there is no extension loading mechanism 
+				and therefore gluX will not compile (this may change in a future release ...)<br>
+				If not, please make sure that you have standard OpenGL headers. This error 
+				usually comes from a non standard glx.h header file. You can force configure to 
+				ignore glXGetProcAddressARB by using the <i>--with-glXGetProcAddressARB</i> command 
+				line option. You can also specify which gl.h and glx.h should be used with <i>gl_header=</i>
+				and <i>glx_header=</i>
+			(see configure --help).
+			<P></P>
+			<p>
+				<b>
+					<h2>What is this glux_no_redefine.h file ?</h2>
+				</b>
+			Under some Linux systems, the gl.h file already includes some extension 
+			definitions (the available extensions do not need to be loaded). This file 
+			contains the definition of the functions that should not be loaded by gluX. 
+			Note that under Windows this file should be empty.
+			<P></P>
+			<p>
+				<b>
+					<h2>Why is gluX a shared library under Linux whereas it is a static library under 
+						Windows ?</h2>
+				</b>As gluX under Linux depends on how the system is configured (see above), it 
+				has to be compiled for an individual computer. It is not the case under 
+				Windows. However if you compile gluX on a Linux computer with a standard OpenGL 
+				installation then you can safely use the library on other computers (and link 
+				it statically) = &gt; I strongly recommand to keep a standard OpenGL 
+				installation on your computer if you are willing to distribute your programs. 
+				To compile gluX as a static library, execute configure, enter the src directory 
+				and type <i>make static</i>
+			.
+			<P></P>
+			<p>
+				<b>
+					<h2>The perl scripts don't work (Linux) !?</h2>
+				</b>
+			The scripts are assuming that perl is in /usr/bin/perl. If not, modify the 
+			first line of the scripts with the correct path to the perl executable.
+			<P></P>
+			<p>
+				<b>
+					<h2>I am trying to compile under Windows but ... a lot of source files are missing 
+						!?</h2>
+				</b>A large part of the gluX source code is generated by the perl script <i>script/gen_plugins.pl</i>. 
+				The perl script must be called prior to compiling if the source files are not 
+				present. To manually create the source files, enter the script directory and 
+				execute <i>perl gen_plugins.pl glext.h wglext.h glxext.h</i>.
+				<i><b>This is now done automatically by the CMake script: so simply update gl*.h in the script directory
+				and re-run CMake</b></i>.
+			<P></P>
+			<p>
+				<b>
+					<h2>I am trying to compile under Windows, the perl script works fine, but I have an 
+						error message saying that the linker cannot open an obj file !?</h2>
+				</b>The reason is that Visual.NET only tries to compile the files which exist 
+				when the compilation starts (and it checks for file existence <i>before</i>
+			the pre-build step). As most source files are actually generated by the perl 
+			script, the compiler doesn't try to compile them. The solution is simple: 
+			launch compilation again and it will work the second time ...
+			<P></P>
+			<p>
+				<b>
+					<h2>For some obscure reason, an extension that I don't need refuse to compile ... 
+						what can I do ?</h2>
+				</b>
+			Due to the wide variety of Linux distributions, it is hard to predict every 
+			cases that may occur. Therefore, it is possible that an extension refuse to 
+			compile on your system. If you do not need this extension (or it is not present 
+			on your system) you can simply edit the Makefile and suppress the .cpp/.h files 
+			associated with the extension. Note that each time you launch configure the 
+			Makefile is generated again.
+			<P></P>
+			<p>
+				<b>
+					<h2>How can I add new extensions to gluX ?</h2>
+				</b>Simply copy an updated <i>glext.h</i>, <i>glxext.h</i> or <i>wglext.h</i> file 
+				into the script directory. Re-run CMake to generate an updated project.
+			<P></P>
+			<p>
+				<b>
+					<h2>gluX gives me headaches ! What can I do ?</h2>
+				</b>hmmm .... first take a breath, stay calm: beating the screen with the 
+				keyboard will not result in any good (I tried ;). You will find in the 
+				documentation some links to other extension loading libraries = &gt; try 
+				another one :)<br>
+			And when you feel better, do not forget to send me an email to explain what you 
+			didn't like in gluX.
+			<P></P>
+			<p>
+				<b>
+					<h2>Where can I report a bug ?</h2>
+				</b>Please report bugs at <a href="mailto:Sylvain.Lefebvre@imag.fr">Sylvain.Lefebvre@imag.fr</a>
+			(if you have a correction feel free to send it :))
+			<P></P>
+	</body>
+</html>

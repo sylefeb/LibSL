@@ -1,0 +1,10 @@
+# Group is the VC base name, root is the project root and file list is the list of files ...
+MACRO(CreateSourceGroups Group Root FileList)
+	FOREACH(File ${FileList})
+		STRING (REGEX REPLACE "${Root}" "" RelativePath "${File}")
+	    STRING (REGEX REPLACE "[\\\\/][^\\\\/]*$" "" RelativePath "${RelativePath}")
+	    STRING (REGEX REPLACE "^[\\\\/]" "" RelativePath "${RelativePath}")
+	    STRING (REGEX REPLACE "/" "\\\\\\\\" RelativePath "${RelativePath}")
+	    SOURCE_GROUP ( "${Group}\\${RelativePath}" FILES ${File} )
+	ENDFOREACH(File)
+ENDMACRO(CreateSourceGroups)

@@ -1,0 +1,84 @@
+
+uniform float4x4 Proj;
+uniform float4x4 View;
+uniform float4x4 LightView;
+uniform float4x4 Shdw;
+
+sampler2D ShadowMap = sampler_state {
+  MipFilter = None;
+  MinFilter = None;
+  MagFilter = Linear;
+};
+
+// --------------------------
+
+struct VS_INPUT
+{
+  float4 Pos  : POSITION;
+  float3 Nrm  : NORMAL;
+};
+
+struct VS_OUTPUT
+{
+  float4 Pos   : POSITION;
+  float4 Shdw  : TEXCOORD0;
+  float4 Proj  : TEXCOORD1;
+  float3 Nrm   : TEXCOORD2;
+};
+
+VS_OUTPUT vp_shadow(VS_INPUT In)
+{
+  VS_OUTPUT OUT;
+
+  float4  proj = mul(Proj,mul(View     ,In.Pos));
+  OUT.Pos      = proj;
+  OUT.Proj     = proj;
+  OUT.Shdw     = mul(Shdw,mul(Proj,mul(LightView,In.Pos)));
+  OUT.Nrm      = mul(LightView,float4(In.Nrm,0));  // NOTE: use inv transp. if scaling !!
+
+  return OUT;
+}
+
+
+// --------------------------
+
+float4 fp_shadow(VS_OUTPUT In) : COLOR
+{
+  // return tex2D(ShadowMap,In.Shdw.xy / In.Shdw.w);
+
+  // float  shdw = ((In.Shdw.z / In.Shdw.w) > tex2Dproj(ShadowMap,In.Shdw).x) ? 0 : 1;
+  
+  float  shdw = tex2Dproj(ShadowMap,In.Shdw);
+  
+  // float  depth = tex2D(ShadowMap,In.Shdw.xy / In.Shdw.w).x;
+  // float  shdw  = ((In.Shdw.z / In.Shdw.w) > depth) ? 0 : 1;
+  
+  float3 nrm  = normalize(In.Nrm);
+  return ( shdw * nrm.z );
+}
+
+// --------------------------
+
+#ifdef OPENGL
+
+technique t_main {
+  pass P0 {
+    VertexProgram   = compile CG_PROFILE_VP vp_shadow();
+    FragmentProgram = compile CG_PROFILE_FP fp_shadow();
+  }
+}
+
+#endif
+
+#ifdef DIRECT3D
+
+technique t_main {
+  pass P0 {
+    VertexShader = compile CG_PROFILE_VP vp_shadow();
+    PixelShader  = compile CG_PROFILE_FP fp_shadow();
+  }
+}
+
+#endif
+
+

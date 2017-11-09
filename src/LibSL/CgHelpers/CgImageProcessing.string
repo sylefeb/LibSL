@@ -1,0 +1,83 @@
+"#ifndef _CG_IMAGE_PROCESSING_\n\
+#define _CG_IMAGE_PROCESSING_\n\
+\n\
+#ifdef OPENGL\n\
+\n\
+/// header OpenGL\n\
+#define CG_IMAGE_PROCESSING_SHADER_HEADER \\\n\
+    struct VS_OUTPUT \\\n\
+    { \\\n\
+      float4 Pos         : POSITION; \\\n\
+      float2 Tex         : TEXCOORD0; \\\n\
+    }; \\\n\
+    struct VS_INPUT \\\n\
+    { \\\n\
+        float4 Pos       : POSITION; \\\n\
+        float2 Tex       : TEXCOORD0; \\\n\
+    }; \\\n\
+    float4 Viewport; \\\n\
+    float2 DestRegionCoord; \\\n\
+    float2 DestRegionSize; \\\n\
+    float2 InvDestRegionSize; \\\n\
+    VS_OUTPUT vs_image_processing(VS_INPUT In) \\\n\
+    { \\\n\
+      VS_OUTPUT o; \\\n\
+      o.Pos = float4(float2(In.Pos.x,In.Pos.y) ,0.0,1.0); \\\n\
+      o.Tex = DestRegionCoord + In.Tex*DestRegionSize; \\\n\
+      return (o); \\\n\
+    }\n\
+\n\
+/// footer OpenGL\n\
+#define CG_IMAGE_PROCESSING_SHADER_FOOTER \\\n\
+    technique t_main \\\n\
+    { \\\n\
+      pass P0 \\\n\
+      { \\\n\
+        VertexProgram   = compile CG_PROFILE_VP vs_image_processing(); \\\n\
+  	FragmentProgram = compile CG_PROFILE_FP ps_main(); \\\n\
+      } \\\n\
+    }\n\
+\n\
+#endif\n\
+\n\
+#ifdef DIRECT3D\n\
+\n\
+/// header Direct3D\n\
+#define CG_IMAGE_PROCESSING_SHADER_HEADER \\\n\
+    struct VS_OUTPUT \\\n\
+    { \\\n\
+      float4 Pos         : POSITION; \\\n\
+      float2 Tex         : TEXCOORD0; \\\n\
+    }; \\\n\
+    struct VS_INPUT \\\n\
+    { \\\n\
+        float4 Pos       : POSITION; \\\n\
+        float2 Tex       : TEXCOORD0; \\\n\
+    }; \\\n\
+    float4 Viewport; \\\n\
+    float2 DestRegionCoord; \\\n\
+    float2 DestRegionSize; \\\n\
+    float2 InvDestRegionSize; \\\n\
+    VS_OUTPUT vs_image_processing(VS_INPUT In) \\\n\
+    { \\\n\
+      VS_OUTPUT o; \\\n\
+      o.Pos = float4(float2(In.Pos.x,-In.Pos.y) + float2(-1.0,1.0) / Viewport.zw ,0.0,1.0); \\\n\
+      o.Tex = DestRegionCoord + In.Tex*DestRegionSize; \\\n\
+      return (o); \\\n\
+    }\n\
+\n\
+/// footer Direct3D\n\
+#define CG_IMAGE_PROCESSING_SHADER_FOOTER \\\n\
+    technique t_main \\\n\
+    { \\\n\
+      pass P0 \\\n\
+      { \\\n\
+        VertexShader = compile CG_PROFILE_VP vs_image_processing(); \\\n\
+  	PixelShader  = compile CG_PROFILE_FP ps_main(); \\\n\
+      } \\\n\
+    }\n\
+\n\
+#endif\n\
+\n\
+#endif\n\
+";

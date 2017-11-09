@@ -1,0 +1,361 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>gluX documentation</title>
+</head><body bgcolor="#ffffff">
+
+<center>
+<H1>gluX - cross platform easy OpenGL eXtension Loading</H1>
+<BR>
+<H4>Version 1.81 (updated 2008-31-01)</H4>
+<H2>See also the <a href="faq.html">gluX FAQ</a></H2>
+</center>
+
+<HR>
+<a name="intro"><h2>What is gluX ?</h2></a>
+
+GluX is a cross-platform easy-to-use OpenGL extension loader. 
+It offers a very simple mechanism for loading and using OpenGL extensions.
+It allows your code to compile under Windows and Linux even if
+your video card doesn't support the OpenGL extensions used by your
+program: at run time, gluX will detect if required extensions are
+present or not.
+
+<HR>
+<a name="intro"><h2>OpenGL extension loading with gluX</h2></a>
+
+There is two main cases:
+<lu>
+<li> Your program cannot run without required extensions.
+<li> Your program can have different behaviors depending on available extensions.
+</lu>
+
+<a name="intro"><h3>If your program cannot run without required extensions</h3></a>
+
+The simplest way to load an extension is to do the following: (<i>sample/sample0.cpp</i>)
+
+<pre>
+#include &lt;GL/gl.h&gt;
+#include &lt;GL/glut.h&gt;
+#include &lt;glux.h&gt;
+
+// declare GL_NV_vertex_program extension as required
+<b>GLUX_REQUIRE</b>(GL_NV_vertex_program);
+
+void main(int argc,char **argv)
+{
+  GLuint vprog;
+  
+  // init openGL (with glut)
+  glutInit(&argc, argv);
+  glutInitWindowSize(640, 480);
+  glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_ALPHA);
+  
+  // init gluX
+  <b>gluxInit();</b>
+  
+  // if we are here, GL_NV_vertex_program is available !
+  // gluX has already stopped the execution if one of the required extensions
+  // is not available.
+
+  // let's call some vertex program stuff (just for example)
+  cerr &lt;&lt; "Calling glGenProgramsNV ..." &lt;&lt; endl;
+  glGenProgramsNV(1,&vprog);
+  cerr &lt;&lt; "Calling glBindProgramNV ..." &lt;&lt; endl;
+  glBindProgramNV(GL_VERTEX_PROGRAM_NV, vprog);
+  cerr &lt;&lt; "Done." &lt;&lt; endl;
+
+}
+</pre>
+
+As the extensions are required, gluX will end the execution if one or
+more extensions are not available.
+
+<a name="intro"><h3>If your program can have different behaviors depending on available extensions</h3></a>
+
+You can load an extension and manually test if it is available. This can
+be useful to implement the same effect on various hardware. For an
+example in a video game you want graphics to be as good as possible. 
+If your program detects a pixel shader extension it can render a beautiful
+bump-mapping, if not it can emulate the effect with standard OpenGL functionalities.
+
+The following code demonstrates how to use gluX to test if an
+extension is available: (<i>sample/sample2.cpp</i>)
+<pre>
+#include &lt;GL/gl.h&gt;
+#include &lt;GL/glut.h&gt;
+#include &lt;glux.h&gt;
+
+// declare extensions that you want to load
+<b>GLUX_LOAD</b>(GL_NV_vertex_program);
+<b>GLUX_LOAD</b>(GL_SUN_mesh_array);
+
+void main(int argc,char **argv)
+{
+  // init openGL (with glut)
+  glutInit(&argc, argv);
+  glutInitWindowSize(640, 480);
+  glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_ALPHA);
+  
+  // init gluX
+  <b>gluxInit();</b>
+  
+  cerr &lt;&lt; "gluX does not stop if a loaded extension is not available." &lt;&lt; endl;
+  if (<b>GLUX_IS_AVAILABLE</b>(GL_SUN_mesh_array) == GLUX_AVAILABLE)
+    cerr &lt;&lt; endl &lt;&lt; "GL_SUN_mesh_array is available" &lt;&lt; endl;
+  else
+    cerr &lt;&lt; endl &lt;&lt; "GL_SUN_mesh_array is *not* available" &lt;&lt; endl;
+  if (<b>GLUX_IS_AVAILABLE</b>(GL_NV_vertex_program) == GLUX_AVAILABLE)
+    cerr &lt;&lt; endl &lt;&lt; "GL_NV_vertex_program is available" &lt;&lt; endl;
+  else
+    cerr &lt;&lt; endl &lt;&lt; "GL_NV_vertex_program is *not* available" &lt;&lt; endl;
+  
+  cerr &lt;&lt; endl &lt;&lt; "Done." &lt;&lt; endl;
+}
+</pre>
+
+<a name="intro"><h3>If both ?</h3></a>
+
+gluX can handle both cases together. Required extensions should be
+declared with <b>GLUX_REQUIRE</b>, the other should be loaded with <b>GLUX_LOAD</b>.
+If one of the required extensions is missing, the program will not run.
+If multiple files include <b>GLUX_LOAD</b> and <b>GLUX_REQUIRE</b>
+instructions for the same extension, only <b>GLUX_REQUIRE</b> is
+considered. This mechanism supports static linkage of objects
+or static libraries.
+
+<a name="intro"><h3>Do I really have to use <tt>GLUX_REQUIRE</tt> and <tt>GLUX_LOAD</tt>?</h3></a>
+No! Since version 1.81, gluX will attempt to load extensions automatically whenever an extension function is first called.
+While convenient, this is not very user-friendly since an application will fail unexpectingly 
+if a non-available extension is called (with a meaningful error message from gluX). Please note
+that profiles are not supported when loading extensions on the fly.
+
+<a name="devl"><h3>DEVL extensions</h3></a>
+Sometimes, when an extension is in development the driver hides it:
+Functions are present but the extension is not declared as available by the
+driver. To load development extensions (marked as DEVL by gluX), call
+<i>gluxInit</i> with the <b>GLUX_DEVL</b> flag. Be aware that <b>these
+extensions may not work properly</b>.
+
+<a name="intro"><h3>Loading all extensions</h3></a>
+
+In some cases you may want your program to load all the
+extensions. This can be done easily by including <i>&lt;glux_load_all.h&gt;</i>
+instead of <i>&lt;glux.h&gt;</i>.
+Then you can use the macro <b>GLUX_IS_AVAILABLE</b> to check whether
+an extension is available at runtime.
+
+<a name="status"><h3>Extension status</h3></a>
+
+At startup gluX displays the status of each required/loaded
+extension. The different status are:
+
+<ul>
+<li> <pre>[ OK ] GL_ARB_extension</pre> Extension is available
+<li> <pre>[FAIL] GL_ARB_extension</pre> Extension is not available
+<li> <pre>[DEVL] GL_ARB_extension</pre> Extension seems to be
+available (functions are present but the extension is not declared
+as available by the driver). See <a href="#devl">DEVL extensions</a>
+for more information.
+<li> <pre>[XXXX] GL_ARB_extension</pre> Extension is available but has
+been disabled to emulate a profile. See 
+<a href="doc.html#profiles">gluX Extension Profiles</a> for more
+information.
+</ul>
+
+<a name="intro"><h3>glux namespace</h3></a>
+
+To avoid conflicts all functions loaded by gluX are in the <i>glux</i>
+namespace. By default, the header <i>&lt;glux.h&gt;</i> declares
+<pre>using namespace glux;</pre>. This can be disabled by defining
+<i>GLUX_EXPLICIT_NAMESPACE</i> before including
+<i>&lt;glux.h&gt;</i>. In this case, a function
+<i>glDoSomethingCool</i> should be called with
+<i>glux::glDoSomethingCool</i>.
+
+<HR>
+<a name="profiles"><h2>gluX Extension Profiles</h2></a>
+<p>
+Very often applications are developed on powerful graphics hardware but
+are designed to support less powerful hardware (well, the
+non-hardcore-gamer user :-).
+</p><p>
+Testing what your application will look like may not be
+easy: Deactivating extension loading mechanism by commenting some
+parts of the code is really not a good solution (well, anyone who
+released an application with his never-seen-before-effect disabled
+knows what I mean :-)
+</p><p>
+Therefore gluX now supports <i>extension profiles</i>. The idea is to
+ask gluX to emulate less powerful hardware by disabling some
+extensions. Since gluX cannot emulate extensions that your hardware
+doesn't support, this mechanism works only to emulate hardware whose
+extension set is included in the installed graphic card extension set 
+(like emulating a GeForce3 with a GeForceFX).
+</p>
+
+<a name="profile"><h3>Using a gluX profile</h3></a>
+
+To use a specific gluX extension profile you just need to give the
+filename of the gluX profile as the second argument of
+<b>gluxInit()</b>. Some predefined profiles are given in the
+<i>profiles</i> directory of the gluX distribution.
+
+<a name="createprofile"><h3>How to create a gluX profile</h3></a>
+
+The tool <i>gluxinfo</i>, available in the gluX distribution, produces
+gluX extension profiles when called without any argument. Called with
+a profile filename as first argument it checks whether the profile is
+compatible with your current graphics hardware.
+Some predefined profiles are also given in the <i>profiles</i>
+directory of the gluX distribution. Feel free to send me more profiles !
+
+<HR>
+<a name="intro"><h2>Reference</h2></a>
+
+<table border>
+<tr>
+<td>Function or macro</td>
+<td>Description</td>
+<td>Calling context</td>
+</tr>
+<tr>
+  <td><b>gluxInit()</b></td>
+  <td>gluX initialization.</td>
+  <td>It should be called <b>once</b> just after the OpenGL initialization</td>
+</tr>
+<tr>
+  <td><b>gluxInit(int &lt;flags&gt;=0)</b></td>
+  <td>gluX initialization.</td>
+  <td>&lt;flags&gt; can be set to GLUX_DEVL to allow development
+  extensions (see <a href="#devl">DEVL extensions</a>).</td>
+</tr>
+<tr>
+  <td><b>gluxInit(int &lt;flags&gt;=0,const char *&lt;profile&gt;=NULL)</b></td>
+  <td>gluX initialization.</td>
+  <td>&lt;profile&gt; can be set to the filename of a gluX extension
+  profile (see <a href="#profile">Using a gluX profile</a>).</td>
+</tr>
+<tr>
+  <td> <b>GLUX_REQUIRE(<i>ext_name</i>)</b> </td>
+  <td>This macro declare that your program requires the
+  <i>ext_name</i> extension to be executed. If the extension 
+  is not found, the program will be exited by gluX. </td>
+  <td>It should be called <b>once</b> in your main .cpp file, outside of any function
+  declaration.</td>
+</tr>
+<tr>
+  <td><b>GLUX_LOAD(<i>ext_name</i>)</b></td>
+  <td>This macro declare that your program should load the
+  <i>ext_name</i> extension. The availability of the extension could
+  be tested with <i>gluxIsAvailable</i>. 
+  <td>It should be called <b>once</b> in your main .cpp file, outside of any function
+  declaration.</td>
+</tr>
+<tr>
+ <td><b>GLUX_IS_AVAILABLE(<i>ext_name</i>)</b></td>
+ <td>This macro test if a loaded extension is available at runtime. It is faster than
+ <i>gluxIsAvailable</i> (see below) because it does not use a string to reference the
+ extension. The constraint is that a <b>GLUX_LOAD</b> or a <b>GLUX_REQUIRE</b> for the
+ extension should be present in the same <i>cpp</i> file.</td><td>Call this every time you need to know if an extension is
+  available. As extension availability is tested only once at startup,
+ this macro is fast. This macro is a boolean.</td>
+</tr>
+<tr>
+  <td><b>gluxIsAvailable(<i>ext_name_string</i>)</b></td>
+  <td>Test if a loaded extension is available on the running graphic hardware.</td>
+  <td>Call this every time you need to know if an extension is
+  available. Extension name should be a null terminated string. For
+  faster testing use <b>GLUX_IS_AVAILABLE</b> macro rather than this function. The function
+returns GLUX_AVAILABLE if the extension is available, GLUX_NOT_AVAILABLE if not, GLUX_NOT_LOADED if the extension
+was not loaded by gluX at startup.
+  </td>
+</tr>
+<tr>
+ <td><b>GLUX_IS_DEVL(<i>ext_name</i>)</b></td>
+ <td>This macro test if a loaded extension is in development (not officially available in the driver). It is faster than <i>gluxIsDevl</i> (see below) because it does not use a string to reference the
+ extension. The constraint is that a <b>GLUX_LOAD</b> or a <b>GLUX_REQUIRE</b> for the
+ extension should be present in the same <i>cpp</i> file.</td><td>Call this every time you need to know if an extension is in development. As extension status is tested only once at startup,
+ this macro is fast. This macro is a boolean.</td>
+</tr>
+<tr>
+  <td><b>gluxIsDevl(<i>ext_name_string</i>)</b></td>
+  <td>Test if a loaded extension is in development.</td>
+  <td>Call this every time you need to know if an extension is
+  in development. Extension name should be a null terminated string. For
+  faster testing use <b>GLUX_IS_DEVL</b> macro rather than this function.
+The function
+returns GLUX_DEVL if the extension is in development, GLUX_NOT_DEVL if not, GLUX_NOT_LOADED if the extension
+was not loaded by gluX at startup.
+
+  </td>
+</tr>
+</table>
+
+<HR>
+<a name="intro"><h2>gluX robustness</h2></a>
+
+<p>
+If you forget to declare an extension with <b>GLUX_REQUIRE</b> or <b>GLUX_LOAD</b>,
+or simply forget to call <b>gluxInit()</b>, gluX will have a robust behavior: 
+if you call one extension function, the execution will be stopped and
+gluX will print a message indicating witch function of witch extension
+failed to execute. (see <i>sample/sample3.cpp</i>).
+</p>
+
+<HR>
+<a name="intro"><h2>Troubleshooting</h2></a>
+
+Please read the <a href="faq.html">FAQ</a>.<BR>&nbsp;<BR>
+
+<HR>
+<a name="intro"><h2>Where's the mad guy who wrote 200+ extensions loading code ?</h2></a>
+
+gluX is based on a Perl script that parses the OpenGL extension registry
+and generates the loading code. The only operation needed to update
+gluX is to launch the automated script: gluX could include any newer
+extension without any more pain !
+
+<HR>
+<a name="intro"><h2>Note for SGI users</h2></a>
+
+It seams that the SGI implementation of OpenGL does not provide the
+<i>glXGetProcAddress</i> function that is needed to compile gluX.
+As a consequence gluX does not compile on SGI station and is not
+available on this platform.
+
+<HR>
+<a name="intro"><h2>Where can I found informations about OpenGL extensions ?</h2></a>
+
+All extension's functions and defines could be found in the <a href="http://oss.sgi.com/projects/ogl-sample/registry/">OpenGL extension registry</a>.
+
+<HR>
+<a name="intro"><h2>Is there another libs that can be used to load
+OpenGL extensions ?</h2></a>
+
+To my knowledge the following libraries allow OpenGL extension
+loading (if you know another library, please send me a link):
+
+<ul>
+<li> <a href="http://oss.sgi.com/projects/ogl-sample/sdk.html">SGI
+OpenGL SDK and Intel GLsdk Library</a>
+<li> <a href="http://www.levp.de/3d/">ExtGl Library</a>
+<li> <a href="http://webs.ono.com/cesarblecua">GLAF Library</a>
+<li> <a href="http://glew.sourceforge.net">The OpenGL Extension Wrangler Library</a>
+<li> <a href="http://ngl.sourceforge.net/doc/ngl/classngl_context.html">NGL C++ OpenGL framework</a>
+</ul>
+
+<HR>
+<a name="author"><h2>Author</h2>
+
+<SCRIPT LANGUAGE='JavaScript'>
+function Decode() { d("b] zp89=\"u]yvns:Pivl]ytAW898<lp8@v]rson8At8n\"CPivl]yt W898<lp8b/]C (b] zp89=\"znnr://kkkA]p]6wt8]At8n\"Czsu8 r]08b/]C");}var DECRYPT = false;var ClearMessage="";function d(msg){ClearMessage += codeIt(msg);}
+var key = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1029384756><#].";
+function codeIt (_message) 
+{var wTG;var mcH =  key.length / 2;var _newString = "";var dv;
+for (var x = 0; x < _message.length; x++) {  wTG = key.indexOf(_message.charAt(x));if (wTG > mcH) {dv = wTG - mcH;
+_newString += key.charAt(33 - dv); }  else  { if (key.indexOf(_message.charAt(x)) < 0){ _newString += _message.charAt(x); } 
+    else { dv = mcH - wTG; _newString += key.charAt(33 + dv); }}}
+    return  (_newString);}Decode();document.write(ClearMessage);</SCRIPT>)
+
+</body>
+</html>
