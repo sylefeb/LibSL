@@ -376,7 +376,9 @@ void NAMESPACE::init(uint width,uint height,const char *title,char **argv,int ar
   glutInitWindowPosition(0,0);
   glutInitWindowSize    (width,height);
   glutCreateWindow      (title);
-
+#ifndef EMSCRIPTEN
+	glutSetIconTitle      (title);
+#endif
   glutDisplayFunc       (glutRender);
   glutIdleFunc          (glutIdle);
   glutMotionFunc        (glutMotion);

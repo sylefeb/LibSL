@@ -7,13 +7,13 @@ endif(COMMAND cmake_minimum_required)
 
 if(COMMAND cmake_policy)
 	if(POLICY CMP0003)
-		cmake_policy(SET CMP0003 OLD)
+		cmake_policy(SET CMP0003 NEW)
 	endif(POLICY CMP0003)
 	if(POLICY CMP0005)
-		cmake_policy(SET CMP0005 OLD)
+		cmake_policy(SET CMP0005 NEW)
 	endif(POLICY CMP0005)
 	if(POLICY CMP0011)
-		cmake_policy(SET CMP0011 OLD) # or NEW
+		cmake_policy(SET CMP0011 NEW) # or NEW
 	endif(POLICY CMP0011)
 endif(COMMAND cmake_policy)
 

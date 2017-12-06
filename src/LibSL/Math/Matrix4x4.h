@@ -492,6 +492,26 @@ namespace LibSL {
                    0,            0,             0,           1);
     }
 
+    // pick matrix
+    template <typename T_Type>
+    Matrix4x4<T_Type> pickMatrix(
+      T_Type x, T_Type y,
+      T_Type w, T_Type h,
+      T_Type viewport[4])
+    {
+      float sx, sy;
+      float tx, ty;
+      sx = viewport[2] / w;
+      sy = viewport[3] / h;
+      tx = (viewport[2] + 2.0 * (viewport[0] - x)) / w;
+      ty = (viewport[3] + 2.0 * (viewport[1] - y)) / h;
+      return Matrix4x4<T_Type>(
+        sx, 0, 0, tx,
+        0, sy, 0, ty,
+        0,  0, 1,  0,
+        0,  0, 0,  1);
+    }
+
     // print matrix
     template <typename T_Type>
     std::ostream& operator<<(std::ostream& s,const Matrix4x4<T_Type>& m)

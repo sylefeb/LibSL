@@ -75,6 +75,8 @@ static void ImGui_generic_init()
   io.KeyMap[ImGuiKey_Z] = 'z';
   io.KeyMap['\\'] = '\\';
   io.KeyMap['/'] = '/';
+  // Disable imgui.ini
+  io.IniFilename = NULL;
 }
 
 // ----------------------------------------------------
