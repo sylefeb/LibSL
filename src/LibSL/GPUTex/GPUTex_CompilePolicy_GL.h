@@ -464,11 +464,11 @@ namespace LibSL  {
         sl_assert(target < rt.numtargets);
         // makes sure Tuple have the correct size (read back relies on pointers)
         sl_assert(sizeof(T_PixelFormat) == sizeof(typename T_PixelFormat::t_Element)*T_PixelFormat::e_Size);
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        glPixelStorei(GL_PACK_ALIGNMENT,   1);
-        glBindTexture(GL_TEXTURE_2D,rt.textures[target]);
         sl_assert( glGetError() == 0 );
-        #ifndef EMSCRIPTEN
+#ifndef EMSCRIPTEN
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        glPixelStorei(GL_PACK_ALIGNMENT, 1);
+        glBindTexture(GL_TEXTURE_2D, rt.textures[target]);
         int w, h;
         glGetTexLevelParameteriv(GL_TEXTURE_2D,0,GL_TEXTURE_WIDTH,&w);
         glGetTexLevelParameteriv(GL_TEXTURE_2D,0,GL_TEXTURE_HEIGHT,&h);
@@ -479,13 +479,15 @@ namespace LibSL  {
           GL_type<typename T_PixelFormat::t_Element>::type,
           &(array.set(0,0))
           );
-        #else
+#else
+        bindRenderTarget2D(rt);
         glReadPixels(0,0,array.xsize(),array.ysize(),
           GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::format,
           GL_type<typename T_PixelFormat::t_Element>::type,
           &(array.set(0,0))
         );
-        #endif
+        unbindRenderTarget2D(rt);
+#endif
         if (0) {
           // flip data   // FIXME TODO necessary ?   YES but test vs DX + Backward compatibility ????
           ForIndex(j,array.ysize()/2) {
