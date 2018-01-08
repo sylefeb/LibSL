@@ -76,13 +76,17 @@ string NAMESPACE::loadFileIntoString(const char *file)
 std::string NAMESPACE::extractFileName(const std::string& path)
 {
   // search for last '\\' or '/'
-  size_t pos;
-  pos = path.rfind("\\");
-  if (pos == string::npos) {
-    pos   = path.rfind("/");
-    if (pos == string::npos) {
+	size_t pos, pos1, pos2;
+	pos1 = path.rfind("\\");
+	pos2 = path.rfind("/");
+	if (pos1 != string::npos && pos2 != string::npos) {
+		pos = max(pos1, pos2);
+	}
+	else {
+		pos = min(pos1, pos2);
+	}
+	if(pos == string::npos) {
       return path;
-    }
   }
   string fname = path.substr(pos+1,path.length()-pos);
   return fname;
@@ -106,14 +110,18 @@ std::string NAMESPACE::extractExtension(const std::string& path)
 std::string NAMESPACE::extractPath(const std::string& path)
 {
   // search for last '\\' or '/'
-  size_t pos;
-  pos = path.rfind("\\");
-  if (pos == string::npos) {
-    pos   = path.rfind("/");
-    if (pos == string::npos) {
-      return path;
-    }
-  }
+	size_t pos, pos1, pos2;
+	pos1 = path.rfind("\\");
+	pos2 = path.rfind("/");
+	if (pos1 != string::npos && pos2 != string::npos) {
+		pos = max(pos1, pos2);
+	}
+	else {
+		pos = min(pos1, pos2);
+	}
+	if (pos == string::npos) {
+		return path;
+	}
   string dname = path.substr(0,pos);
   return dname;
 }
