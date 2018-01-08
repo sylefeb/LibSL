@@ -61,6 +61,8 @@ namespace LibSL {
 
     std::string base64_encode(const uchar* buf, uint bufLen);
     void        base64_decode(std::string const& encoded_string, Array<uchar>& _decoded);
+    std::string base64_encode(const uchar* buf, uint bufLen, const std::string& base64_chars);
+    void        base64_decode(std::string const& encoded_string, Array<uchar>& _decoded, const std::string& base64_chars);
 
 
   } //namespace LibSL::ArrayHelpers

@@ -128,12 +128,25 @@ void NAMESPACE::unpack(const uchar *data, uint sz, Array<uchar>& _unpacked)
 
 // base64 encoding/decoding, see http://stackoverflow.com/questions/180947/base64-decode-snippet-in-c
 
-static const std::string base64_chars =
+static const std::string default_base64_chars =
 "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 "abcdefghijklmnopqrstuvwxyz"
-"0123456789+/";
+"0123456789+/"
+"="; // special marker
 
 std::string NAMESPACE::base64_encode(const uchar* buf, uint bufLen)
+{
+  return base64_encode(buf, bufLen, default_base64_chars);
+}
+
+void NAMESPACE::base64_decode(std::string const& encoded_string, Array<uchar>& _decoded)
+{
+  base64_decode(encoded_string, _decoded, default_base64_chars);
+}
+
+// ------------------------------------------------------
+
+std::string NAMESPACE::base64_encode(const uchar* buf, uint bufLen, const std::string& base64_chars)
 {
   std::string ret;
   int i = 0;
@@ -165,7 +178,7 @@ std::string NAMESPACE::base64_encode(const uchar* buf, uint bufLen)
       ret += base64_chars[char_array_4[j]];
     }
     while (i++ < 3) {
-      ret += '=';
+      ret += base64_chars[64];
     }
   }
   return ret;
@@ -173,12 +186,13 @@ std::string NAMESPACE::base64_encode(const uchar* buf, uint bufLen)
 
 // ------------------------------------------------------
 
-static inline bool is_base64(unsigned char c)
+static inline bool is_base64(unsigned char c, const std::string& base64_chars)
 {
-  return (isalnum(c) || (c == '+') || (c == '/'));
+  ForIndex(i, 64) { if (c == base64_chars[i]) return true; } // NOTE: Could be made fast depending on base64_chars set. Make it a predicate?
+  return false;
 }
 
-void NAMESPACE::base64_decode(std::string const& encoded_string, Array<uchar>& _decoded)
+void NAMESPACE::base64_decode(std::string const& encoded_string, Array<uchar>& _decoded, const std::string& base64_chars)
 {
   int in_len = (int)encoded_string.size();
   int i = 0;
@@ -187,7 +201,7 @@ void NAMESPACE::base64_decode(std::string const& encoded_string, Array<uchar>& _
   unsigned char char_array_4[4], char_array_3[3];
   _decoded.truncate(_decoded.allocatedSize());
   uint num_out = 0;
-  while (in_len-- && (encoded_string[in_] != '=') && is_base64(encoded_string[in_])) {
+  while (in_len-- && (encoded_string[in_] != base64_chars[64]) && is_base64(encoded_string[in_],base64_chars)) {
     char_array_4[i++] = encoded_string[in_]; in_++;
     if (i == 4) {
       for (i = 0; i < 4; i++) {
