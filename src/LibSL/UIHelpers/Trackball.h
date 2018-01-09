@@ -73,6 +73,7 @@ namespace LibSL {
       uint  m_Status;
       float m_Radius;
       bool  m_Walkthrough;
+			bool  m_Roll;
       float m_WalkDir;
       float m_WalkSide;
       float m_WalkSpeed;
@@ -106,6 +107,7 @@ namespace LibSL {
       void  stopMotion();
       void  setWindowSize(uint w,uint h);
       void  setWalkthrough(bool b);
+			void  setRoll(bool b);
       void  setForceZoom(bool b);
 
       // Set the up direction for walktrough. 

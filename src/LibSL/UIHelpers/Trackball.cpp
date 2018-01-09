@@ -93,22 +93,23 @@ NAMESPACE::Trackball::Trackball()
 {
   m_Rotation = quatf(LibSL::Math::V3F(0, 0, 1), 0);
   m_Translation = 0;
-  m_Center = 0;
-  m_Width = 0;
-  m_Height = 0;
-  m_PrevX = 0;
-  m_PrevY = 0;
-  m_Elapsed = 0;
-  m_Status = 0;
-  m_Radius = 1.0f;
+  m_Center      = 0;
+  m_Width       = 0;
+  m_Height      = 0;
+  m_PrevX       = 0;
+  m_PrevY       = 0;
+  m_Elapsed     = 0;
+  m_Status      = 0;
+  m_Radius      = 1.0f;
   m_Walkthrough = false;
-  m_WalkDir = 0.0f;
-  m_WalkSide = 0.0f;
-  m_Up = Z_pos;
-  m_WalkSpeed = 1.0f;
-  m_BallSpeed = 1.0f;
-  m_Locked = false;
-  m_ForceZoom = false;
+	m_Roll        = false;
+  m_WalkDir     = 0.0f;
+  m_WalkSide    = 0.0f;
+  m_Up          = Z_pos;
+  m_WalkSpeed   = 1.0f;
+  m_BallSpeed   = 1.0f;
+  m_Locked      = false;
+  m_ForceZoom   = false;
 }
 
 //---------------------------------------------------------------------------
@@ -299,6 +300,13 @@ void  NAMESPACE::Trackball::setWalkthrough(bool b)
 
 //---------------------------------------------------------------------------
 
+void NAMESPACE::Trackball::setRoll(bool b)
+{
+	m_Roll = b;
+}
+
+//---------------------------------------------------------------------------
+
 quatf NAMESPACE::Trackball::deltaRotation(float dx, float dy)
 {
   //quatf qx=quatf(V3F(1,0,0),dy);
@@ -349,7 +357,7 @@ void NAMESPACE::Trackball::updateRotation(uint x, uint y)
   quatf dr = deltaRotation(dx, dy);
   m_Rotation = dr * m_Rotation;
 
-  if (m_Walkthrough) {
+  if (!m_Roll) {
     // remove 'roll'
     int d = -1;
     if (m_Up == X_neg || m_Up == Y_neg || m_Up == Z_neg) {
@@ -357,7 +365,7 @@ void NAMESPACE::Trackball::updateRotation(uint x, uint y)
     }
     quatf rinv = m_Rotation.inverse();
     v3f up = dir2v3f(m_Up);
-    v3f realleft = rinv * V3F(1, 0, 0);
+    v3f realleft = rinv * V3F(-1, 0, 0);
     v3f frwd = rinv * V3F(0, 0, 1);
     v3f flat = normalize_safe(realleft - dot(realleft, up)*up);
     float cs = dot(realleft, flat);
