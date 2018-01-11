@@ -102,7 +102,7 @@ NAMESPACE::Trackball::Trackball()
   m_Status      = 0;
   m_Radius      = 1.0f;
   m_Walkthrough = false;
-	m_Roll        = false;
+  m_AllowRoll   = true;
   m_WalkDir     = 0.0f;
   m_WalkSide    = 0.0f;
   m_Up          = Z_pos;
@@ -300,9 +300,9 @@ void  NAMESPACE::Trackball::setWalkthrough(bool b)
 
 //---------------------------------------------------------------------------
 
-void NAMESPACE::Trackball::setRoll(bool b)
+void NAMESPACE::Trackball::setAllowRoll(bool b)
 {
-	m_Roll = b;
+	m_AllowRoll = b;
 }
 
 //---------------------------------------------------------------------------
@@ -357,7 +357,7 @@ void NAMESPACE::Trackball::updateRotation(uint x, uint y)
   quatf dr = deltaRotation(dx, dy);
   m_Rotation = dr * m_Rotation;
 
-  if (!m_Roll) {
+  if (!m_AllowRoll || m_Walkthrough) {
     // remove 'roll'
     int d = -1;
     if (m_Up == X_neg || m_Up == Y_neg || m_Up == Z_neg) {
