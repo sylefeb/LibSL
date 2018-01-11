@@ -80,7 +80,7 @@ namespace LibSL {
       float m_BallSpeed;
       bool  m_Locked;
       bool  m_ForceZoom;
-      e_Direction m_Up;
+      e_Direction m_Up;      
 
       void  initRotation(uint x,uint y);
       void  initTranslation(uint x,uint y);

@@ -365,7 +365,7 @@ void NAMESPACE::Trackball::updateRotation(uint x, uint y)
     }
     quatf rinv = m_Rotation.inverse();
     v3f up = dir2v3f(m_Up);
-    v3f realleft = rinv * V3F(-1, 0, 0);
+    v3f realleft = rinv * V3F(1, 0, 0);
     v3f frwd = rinv * V3F(0, 0, 1);
     v3f flat = normalize_safe(realleft - dot(realleft, up)*up);
     float cs = dot(realleft, flat);
