@@ -224,12 +224,12 @@ static void ImGui_ImplSimpleUI_RenderDrawLists(ImDrawData* draw_data)
   glViewport(last_viewport[0], last_viewport[1], (GLsizei)last_viewport[2], (GLsizei)last_viewport[3]);
 }
 
-static const char* ImGui_ImplSimpleUI_GetClipboardText()
+static const char* ImGui_ImplSimpleUI_GetClipboardText(void* user_data)
 {
   return "[clipboard not implemented]";
 }
 
-static void ImGui_ImplSimpleUI_SetClipboardText(const char* text)
+static void ImGui_ImplSimpleUI_SetClipboardText(void* user_data, const char* text)
 {
 
 }
