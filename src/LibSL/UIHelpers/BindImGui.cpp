@@ -73,8 +73,9 @@ static void ImGui_generic_init()
   io.KeyMap[ImGuiKey_X] = 'x';
   io.KeyMap[ImGuiKey_Y] = 'y';
   io.KeyMap[ImGuiKey_Z] = 'z';
-  io.KeyMap['\\'] = '\\';
-  io.KeyMap['/'] = '/';
+//  io.KeyMap['\\'] = '\\'; //CZ 2018-01-16 : TODO array is used as a map (id of \\ is too large (92>>19))
+//CZ 2018-01-16 : unfortunately, trivial correction requires change in ImGui as the size of the array is defined from an enum !
+//  io.KeyMap['/'] = '/'; //CZ 2018-01-16 : same
   // Disable imgui.ini
   io.IniFilename = NULL;
 }

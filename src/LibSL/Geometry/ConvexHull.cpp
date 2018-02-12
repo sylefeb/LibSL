@@ -18,7 +18,7 @@
 #include <iterator>
 #endif
 
-#ifdef USE_CXX11
+#if defined(USE_CXX11) || defined(USE_CXX14) || defined(USE_CXX17)
 #include <mutex>
 #else
 #pragma message ("Convex hull compiled without multithread support")

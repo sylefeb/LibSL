@@ -43,8 +43,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 // Sylvain Lefebvre - 2016-02-19
 // ------------------------------------------------------
 
-#pragma once
-
 #include <algorithm>
 #include <LibSL/Geometry/PointTree.h>
 
