@@ -56,9 +56,9 @@ using namespace std;
 
 string NAMESPACE::loadFileIntoString(const char *file)
 {
-  ifstream infile(file, ios::binary );
-  if (!infile) {
-    throw LibSL::Errors::Fatal("[loadFileIntoString] - file '%s' not found",file);
+	ifstream infile(file, ios::binary);
+  if (!infile.good()) {
+    throw LibSL::Errors::Fatal("[loadFileIntoString] - error opening file '%s'",file);
   }
   ostringstream strstream;
   while (infile) { // TODO: improve efficienty
