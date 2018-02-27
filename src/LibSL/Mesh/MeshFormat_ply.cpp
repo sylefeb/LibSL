@@ -84,7 +84,7 @@ using namespace std;
 NAMESPACE::TriangleMesh *NAMESPACE::MeshFormat_ply::load(const char *fname) const
 {
 	LIBSL_BEGIN;
-  throw Fatal("[MeshFormat_ply::load] - not yet implemented",fname);
+  throw Fatal("[MeshFormat_ply::load] - not yet implemented");
 	LIBSL_END;
 }
 

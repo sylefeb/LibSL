@@ -84,9 +84,7 @@ void ConvexHullEngine<Dim>::run(
   if (!err) {
       extractHull(points);
   } else {
-      std::stringstream err_msg;
-      err_msg << "Qhull error: " << err;
-      throw LibSL::Errors::Fatal(err_msg.str().c_str());
+      throw LibSL::Errors::Fatal("Qhull error: ");
   }
 
   qh_freeqhull(!qh_ALL);

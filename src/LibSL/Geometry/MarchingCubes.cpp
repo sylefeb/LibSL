@@ -12,7 +12,7 @@
 //________________________________________________
 
 
-#if !defined(WIN32) || defined(__CYGWIN__)
+#if (!defined(WIN32) || defined(__CYGWIN__)) && !defined(__clang__)
 #pragma implementation
 #endif // WIN32
 
