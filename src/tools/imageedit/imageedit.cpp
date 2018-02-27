@@ -298,8 +298,8 @@ public:
       tmp->pixels().fill(0);
       ForIndex(j,tmp->h()-1) {
         ForIndex(i,tmp->w()-1) {
-          tmp->pixel(i, j)[0] = (uchar)(clamp(128.0f + float(image->pixel(i + 1, j + 1)[d.comp]) - float(image->pixel(i, j + 1)[d.comp]), 0.0f, 255.0f));
-          tmp->pixel(i, j)[1] = (uchar)(clamp(128.0f + float(image->pixel(i + 1, j + 1)[d.comp]) - float(image->pixel(i + 1, j)[d.comp]), 0.0f, 255.0f));
+          tmp->pixel(i, j)[0] = (uchar)(LibSL::Math::clamp(128.0f + float(image->pixel(i + 1, j + 1)[d.comp]) - float(image->pixel(i, j + 1)[d.comp]), 0.0f, 255.0f));
+          tmp->pixel(i, j)[1] = (uchar)(LibSL::Math::clamp(128.0f + float(image->pixel(i + 1, j + 1)[d.comp]) - float(image->pixel(i + 1, j)[d.comp]), 0.0f, 255.0f));
         }
       }
       saveImage(d.outname, tmp.raw());
