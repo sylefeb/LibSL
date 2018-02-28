@@ -72,6 +72,11 @@ namespace LibSL {
 
     public:
 
+      Fatal(const std::string &str) {
+          auto  length = str.copy(m_Message,e_MessageBufferSize-1);
+          m_Message[length] = '\0';
+      }
+
 #ifdef WIN32
 #pragma warning(push)
 #pragma warning(disable: 4793) // see https://msdn.microsoft.com/en-us/library/dby9t00y(v=vs.120).aspx

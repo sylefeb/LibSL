@@ -202,7 +202,7 @@ NAMESPACE::TriangleMesh *NAMESPACE::MeshFormat_proc::load(const char *fname) con
         uint start_indice = (uint)vertices.size();
         parser.reachChar('/'); // /* surface x */
         parser.reachString("surface"," ");
-        uint srfId      = parser.readInt();
+        int srfId      = parser.readInt();
         sl_assert(srfId == s);
         //cerr << srfId << ' ';
         parser.reachChar('/');
