@@ -74,7 +74,7 @@ Array<char> NAMESPACE::s_Buf;
 NAMESPACE::Font(bool alpha)
 {
   ImageRGBA_Ptr img(new ImageRGBA(width, height));
-  char *data = header_data;
+  const char *data = header_data;
   ForImage(img, i, j) {
     v3b pixel;
     HEADER_PIXEL(data,pixel);
@@ -100,7 +100,7 @@ NAMESPACE::Font(bool alpha)
   // create a square texture
   ImageRGBA_Ptr tbl = createFontTable(img);
   // space character is a special case
-  m_CharSizeX[' '] = 0.5f*m_MaxCharW;
+  m_CharSizeX[(uchar)' '] = 0.5f*m_MaxCharW;
   // create texture
   m_Tex = Tex2DRGBA_Ptr(new Tex2DRGBA(tbl->pixels(), GPUTEX_AUTOGEN_MIPMAP));
   // create square
@@ -133,7 +133,7 @@ NAMESPACE::Font(const char *n,bool alpha)
   // create a square texture
   ImageRGBA_Ptr tbl = createFontTable(img);
   // space character is a special case
-  m_CharSizeX[' ']  = 0.5f*m_MaxCharW;
+  m_CharSizeX[(uchar)' ']  = 0.5f*m_MaxCharW;
   // create texture
   m_Tex = Tex2DRGBA_Ptr(new Tex2DRGBA(tbl->pixels(), GPUTEX_AUTOGEN_MIPMAP));
   // create square
@@ -454,7 +454,7 @@ void NAMESPACE::printStringNeed(float t ,const char *s,float *w,float *h)
       l    = uint(strlen(subs));
       wtmp = 0.0;
       ForIndex (i,l) {
-        wtmp += t * m_CharSizeX[subs[i]] / m_MaxCharW;
+        wtmp += t * m_CharSizeX[(uchar)subs[i]] / m_MaxCharW;
       }
       if (wtmp > *w) {
         *w = wtmp;

@@ -18,7 +18,7 @@
 #include <iterator>
 #endif
 
-#ifdef USE_CXX11
+#if defined(USE_CXX11) || defined(USE_CXX14) || defined(USE_CXX17)
 #include <mutex>
 #else
 #pragma message ("Convex hull compiled without multithread support")
@@ -84,9 +84,7 @@ void ConvexHullEngine<Dim>::run(
   if (!err) {
       extractHull(points);
   } else {
-      std::stringstream err_msg;
-      err_msg << "Qhull error: " << err;
-      throw LibSL::Errors::Fatal(err_msg.str().c_str());
+      throw LibSL::Errors::Fatal("Qhull error: ");
   }
 
   qh_freeqhull(!qh_ALL);

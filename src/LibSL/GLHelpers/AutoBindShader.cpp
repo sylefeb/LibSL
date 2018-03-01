@@ -1,4 +1,3 @@
-#pragma once
 
 #include <LibSL/GLHelpers/AutoBindShader.h>
 
