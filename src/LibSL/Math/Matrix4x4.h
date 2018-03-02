@@ -503,8 +503,8 @@ namespace LibSL {
       float tx, ty;
       sx = viewport[2] / w;
       sy = viewport[3] / h;
-      tx = (viewport[2] + 2.0 * (viewport[0] - x)) / w;
-      ty = (viewport[3] + 2.0 * (viewport[1] - y)) / h;
+      tx = (viewport[2] + T_Type(2) * (viewport[0] - x)) / w;
+      ty = (viewport[3] + T_Type(2) * (viewport[1] - y)) / h;
       return Matrix4x4<T_Type>(
         sx, 0, 0, tx,
         0, sy, 0, ty,
