@@ -100,7 +100,7 @@ static void ImGui_generic_init()
 
 // Data
 static double       g_Time = 0.0f;
-static bool         g_MousePressed[3] = { false, false, false };
+static bool         g_MousePressed[5] = { false, false, false, false, false };
 static float        g_MouseWheel = 0.0f;
 static GLuint       g_FontTexture = 0;
 static int          g_ShaderHandle = 0, g_VertHandle = 0, g_FragHandle = 0;
