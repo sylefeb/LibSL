@@ -542,7 +542,8 @@ void trackballUI_debug()
    // draw path
   if (!s_PlayPath) {
     if (s_Path[0].isReady()) {
-      glLineWidth(3.0f);
+      // CORE-PROFILE 2018-03-20
+      glLineWidth(/*3.0f*/1.0f);
       glDisable(GL_LIGHTING);
       glDisable(GL_TEXTURE_2D);
       glDisable(GL_ALPHA_TEST);
