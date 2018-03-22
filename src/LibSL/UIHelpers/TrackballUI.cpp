@@ -543,10 +543,12 @@ void trackballUI_debug()
   if (!s_PlayPath) {
     if (s_Path[0].isReady()) {
       // CORE-PROFILE 2018-03-20
+      // According to Visual Studio, this code may be executed in IceSL. Thus whatever is not core-profile got commented out
       glLineWidth(/*3.0f*/1.0f);
       glDisable(GL_LIGHTING);
       glDisable(GL_TEXTURE_2D);
-      glDisable(GL_ALPHA_TEST);
+      // CORE-PROFILE 2018-03-22
+      //glDisable(GL_ALPHA_TEST);
       glDisable(GL_BLEND);
       glColor3f(0,0,1);
 

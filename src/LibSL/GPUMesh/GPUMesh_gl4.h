@@ -61,6 +61,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #define GPUMESH_QUADS         GL_QUADS
 #define GPUMESH_LINELIST      GL_LINES
 #define GPUMESH_LINESTRIP     GL_LINE_STRIP
+#define GPUMESH_LINELOOP      GL_LINE_LOOP
+#define GPUMESH_POINTLIST     GL_POINTS
 
 // JD: Including GPUTex_gl.h without including LibSL_gl4.h causes incorrect
 //     implicit dependencies between headers.
