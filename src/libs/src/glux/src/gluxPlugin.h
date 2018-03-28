@@ -34,20 +34,20 @@ void *GLUX_LOAD_PROC(const char *name);
 // -------------------------------------------------------- 
 
 namespace glux
-{   
+{
   class gluxPlugin
   {
   protected:
-    
+
     const char *m_szIdString;
     bool        m_bAvailable;
     bool        m_bRequired;
     bool        m_bInitDone;
     bool        m_bDisabled;
     bool        m_bDevel;
-    gluxPlugin *m_Linked;   
+    gluxPlugin *m_Linked;
 
-public:     
+  public:
 
     gluxPlugin(bool required);
     virtual ~gluxPlugin() {}
@@ -56,13 +56,13 @@ public:
     bool         isAvailable();
     bool         isRequired();
     void         linkTo(gluxPlugin *);
-    bool         init(int flags=0);
-    bool         isDevel() const {return (m_bDevel);}
+    bool         init(int flags = 0);
+    bool         isDevel() const { return (m_bDevel); }
     bool         isDisabled() const;
     void         setDisabled(bool b);
     virtual bool load();
-  }; 
-} 
+  };
+}
 
 // -------------------------------------------------------- 
 
@@ -108,7 +108,12 @@ namespace glux \
 
 #define GLUX_PLUGIN_LOAD(idstr) bool glux::gluxPlugin_##idstr::load() 
 
+#ifdef LIBSL_OPENGL_CORE_PROFILE
+inline bool glux_check_extension_string(char* ext);
+#define GLUX_CHECK_EXTENSION_STRING(ext) glux_check_extension_string(ext)
+#else
 #define GLUX_CHECK_EXTENSION_STRING(ext) (strstr((const char *)glGetString(GL_EXTENSIONS),ext) == NULL) 
+#endif
 
 // WGL extensions require special treatment
 #define GLUX_CHECK_WGL_EXTENSION_STRING(ext)       \

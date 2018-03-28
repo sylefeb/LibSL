@@ -222,3 +222,22 @@ void gluxPlugin::setDisabled(bool b)
 }
 
 // --------------------------------------------------------
+#ifdef LIBSL_OPENGL_CORE_PROFILE
+#include "GL_VERSION_3_0.h"
+
+inline bool glux_check_extension_string(char* ext)
+{
+  int num_extensions = 0;
+  glGetIntegerv(GL_NUM_EXTENSIONS, &num_extensions);
+  for (int index = 0; index < num_extensions; index++)
+  {
+    if (strstr((const char*)glGetStringi(GL_EXTENSIONS, index), ext) != NULL) {
+      return true;
+    }
+  }
+  return false;
+}
+
+#endif
+
+// --------------------------------------------------------

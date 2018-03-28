@@ -34,6 +34,7 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL-C license and that you accept its terms.
 -------------------------------------------------------------------- */
 
+#include <string>
 #include "GLBasicPipeline.h"
 
 #define NAMESPACE LibSL::GLHelpers
@@ -44,39 +45,70 @@ NAMESPACE::GLBasicPipeline *NAMESPACE::GLBasicPipeline::s_Instance = NULL;
 
 // ------------------------------------------------------
 
+static std::string vp_string =
+#ifdef LIBSL_OPENGL_CORE_PROFILE
+"#version " + std::to_string(LIBSL_OPENGL_MAJOR_VERSION) + std::to_string(LIBSL_OPENGL_MINOR_VERSION) + "0 core\n" +
+"in vec4 mvf_vertex;\n"
+"in vec4 mvf_texcoord0;\n"
+"uniform mat4 u_mdlview;\n"
+"uniform mat4 u_proj;\n"
+"uniform mat4 u_texmat;\n"
+"out vec4 v_tex;\n"
+"void main()\n"
+"{\n"
+"  v_tex = u_texmat * mvf_texcoord0;\n"
+"  gl_Position = u_proj * u_mdlview * mvf_vertex;\n"
+"}";
+#else
+"attribute vec4 mvf_vertex;\n"
+"attribute vec4 mvf_texcoord0;\n"
+"uniform mat4 u_mdlview;\n"
+"uniform mat4 u_proj;\n"
+"uniform mat4 u_texmat;\n"
+"varying vec4 v_tex;\n"
+"void main()\n"
+"{\n"
+"  v_tex = u_texmat * mvf_texcoord0;\n"
+"  gl_Position = u_proj * u_mdlview * mvf_vertex;\n"
+"}";
+#endif
+
+static std::string fp_string =
+#ifdef LIBSL_OPENGL_CORE_PROFILE
+"#version " + std::to_string(LIBSL_OPENGL_MAJOR_VERSION) + std::to_string(LIBSL_OPENGL_MINOR_VERSION) + "0 core\n" +
+"uniform vec4 u_color;\n"
+"uniform sampler2D u_tex;\n"
+"uniform float u_tex_enabled;\n"
+"in vec4 v_tex;\n"
+"out vec4 o_color;\n"
+"void main()\n"
+"{\n"
+"  vec4 clr = u_color;"
+"  if (u_tex_enabled > 0.0) {\n"
+"    clr = clr * texture(u_tex, v_tex.xy);\n"
+"  }\n"
+"  o_color = clr;\n"
+"}\n";
+#else
+"uniform vec4 u_color;\n"
+"uniform sampler2D u_tex;\n"
+"uniform float u_tex_enabled;\n"
+"varying vec4  v_tex;\n"
+"void main()\n"
+"{\n"
+"  vec4 clr = u_color;"
+"  if (u_tex_enabled > 0.0) {\n"
+"    clr = clr * texture2D(u_tex, v_tex.xy);\n"
+"  }\n"
+"  gl_FragColor = clr;\n"
+"}\n";
+#endif
+
+// ------------------------------------------------------
+
 NAMESPACE::GLBasicPipeline::GLBasicPipeline()
 {
-  // std::cerr << "[GLBasicPipeline::GLBasicPipeline()]" << std::endl;
-  m_Shader.init(
-    // VP
-    "attribute vec4 mvf_vertex;\n"
-    "attribute vec4 mvf_texcoord0;\n"
-    "uniform mat4 u_mdlview;\n"
-    "uniform mat4 u_proj;\n"
-    "uniform mat4 u_texmat;\n"
-    "varying vec4 v_tex;\n"
-    "void main()\n"
-    "{\n"
-    "  v_tex = u_texmat * mvf_texcoord0;\n"
-    "  gl_Position = u_proj * u_mdlview * mvf_vertex;\n"
-    "}",
-    // FP
-#ifdef EMSCRIPTEN
-    "precision mediump float;\n"
-#endif
-    "uniform vec4 u_color;\n"
-    "uniform sampler2D u_tex;\n"
-    "uniform float u_tex_enabled;\n"
-    "varying vec4  v_tex;\n"
-    "void main()\n"
-    "{\n"
-    "  vec4 clr = u_color;"
-    "  if (u_tex_enabled > 0.0) {\n"
-    "    clr = clr * texture2D(u_tex, v_tex.xy);\n"
-    "  }\n"
-    "  gl_FragColor = clr;\n"
-    "}\n"
-   );
+  m_Shader.init(vp_string.c_str(), fp_string.c_str());
   m_Projection.init(m_Shader, "u_proj");
   m_Modelview .init(m_Shader, "u_mdlview");
   m_TextureMatrix.init(m_Shader, "u_texmat");

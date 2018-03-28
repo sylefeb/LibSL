@@ -2,7 +2,7 @@
 // Author: Sylvain.Lefebvre@sophia.inria.fr
 // -------------------------------------------------------- 
 #include "gluxLoader.h"
-#include "gluxPlugin.h" 
+#include "gluxPlugin.h"
 
 #include <cstdlib>
 #include <cstdio>
@@ -73,11 +73,11 @@ void glux::init(int flags,const char *profile)
   // MessageBoxA(NULL,(const char *)glGetString(GL_EXTENSIONS), "", MB_OK);
 
   strout << "-=-=-=-=-=-=-=-=-=-=-=-=-" << endl;
-  strout << "      glux v1.95"           << endl;
-  strout << "-=-=-=-=-=-=-=-=-=-=-=-=-" << endl;   
+  strout << "      glux v1.95"          << endl;
+  strout << "-=-=-=-=-=-=-=-=-=-=-=-=-" << endl;
 
   // check if OpenGL is initialized
-  if (glGetString(GL_EXTENSIONS) == NULL) {
+  if (glGetString(GL_VENDOR) == NULL) {
     strout << "OpenGL should be initialized before calling gluxInit() !" << endl;
 #ifndef GLUX_NO_OUTPUT  
     cerr << strout.str() << endl;
@@ -88,9 +88,11 @@ void glux::init(int flags,const char *profile)
     exit (-1);
   }
 
-	// output rendered
+	// output strings
+  strout << "Vendor   string: " << glGetString(GL_VENDOR)   << std::endl;
 	strout << "Renderer string: " << glGetString(GL_RENDERER) << std::endl;
-
+  strout << "Version  string: " << glGetString(GL_VERSION)  << std::endl;
+  
   // read profile
   if (profile != NULL) {
     ifstream fprof(profile);     
