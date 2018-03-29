@@ -99,6 +99,7 @@ namespace GPUMesh {
     {
     public:
       GLuint uiVB;
+      GLuint uiVBO;
       int    iVertices;
       int    iPrimType;
       int    offsets[nb_vertex_attrib];
@@ -135,6 +136,8 @@ namespace GPUMesh {
           &(storage.m_Attributes[i].front()));
       }
       glBindBufferARB(GL_ARRAY_BUFFER_ARB,0);
+      // create VBO
+      glGenVertexArrays(1,&_mesh.uiVBO);
       // free memory
       if (!(flags & GPUMESH_DYNAMIC)) {
         storage.clear();
@@ -158,6 +161,7 @@ namespace GPUMesh {
 
     static void     bind(const mesh_descriptor& m)
     {
+      glBindVertexArray(m.uiVBO);
       glBindBufferARB(GL_ARRAY_BUFFER_ARB,m.uiVB);
       if (vertex_format_desc::has_position) {
         glVertexAttribPointerARB(gl4::mvf_attrib_location<MVF_BASE_POSITION>::value,vertex_format_desc::type_position::components,GLTypes<typename vertex_format_desc::type_position::type>::gl_define,
@@ -261,12 +265,14 @@ namespace GPUMesh {
         glDisableVertexAttribArrayARB(gl4::mvf_attrib_location<MVF_BASE_TEXCOORD7>::value);
       }
       glBindBufferARB(GL_ARRAY_BUFFER_ARB,0);
+      glBindVertexArray(0);
     }
 
 
     static void     free(const mesh_descriptor& m)
     {
       glDeleteBuffersARB(1,&m.uiVB);
+      glDeleteVertexArrays(1,&m.uiVBO);
     }
 
 
@@ -331,6 +337,8 @@ namespace GPUMesh {
           &(storage.m_Attributes[i].front())
           );
       }
+      // create VBO
+      glGenVertexArrays(1, &_mesh.uiVBO);
       // create index buffer
       _mesh.iIndices=int(indices.size());
       glGenBuffersARB(1,&_mesh.uiIB);
@@ -376,6 +384,7 @@ namespace GPUMesh {
     static void     free(const mesh_descriptor& m)
     {
       glDeleteBuffersARB(1,&m.uiIB);
+      glDeleteVertexArrays(1, &m.uiVBO);
       parent_policy::free(m); // deletes VB
     }
 
