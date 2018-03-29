@@ -17,6 +17,9 @@ using namespace std;
 // string of wgl extensions
 const char *g_glux__wglExtensions = NULL;
 
+// core profile extensins
+vector<string> g_glcore_extensions;
+
 // -------------------------------------------------------- 
 
 #ifdef WIN32

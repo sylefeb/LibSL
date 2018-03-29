@@ -746,6 +746,16 @@ static bool enabelCoreProfile(HWND * hWnd, HDC * hDC, HGLRC * hRC, HWND hWndCP)
   *hRC = hRCCP;
   return true;
 }
+
+static void loadCoreExtensionNames()
+{
+  int num_extensions = 0;
+  glGetIntegerv(GL_NUM_EXTENSIONS, &num_extensions);
+  ForIndex(index, num_extensions)
+  {
+    g_glcore_extensions.push_back(std::string((const char*)glGetStringi(GL_EXTENSIONS, index)));
+  }
+}
 #endif
 
 // Disable OpenGL
@@ -776,43 +786,43 @@ BOOL CALLBACK monitorEnumProc(
 }
 
 void NAMESPACE::init(
-  uint width,uint height,
+  uint width, uint height,
   const char *title,
-  char **argv,int argc,
+  char **argv, int argc,
   bool frameLess,
   bool hidden,
   bool fullscreen)
 {
   WNDCLASS wc;
 
-	// register window class
+  // register window class
   HINSTANCE hInstance = GetModuleHandle(NULL);
-	wc.style         = CS_OWNDC;
-	wc.lpfnWndProc   = SimpleUI_gl_WndProc;
-	wc.cbClsExtra    = 0;
-	wc.cbWndExtra    = 0;
-	wc.hInstance     = hInstance;
-	wc.hIcon         = LoadIcon( NULL, IDI_APPLICATION );
-  wc.hCursor       = frameLess ? NULL : LoadCursor( NULL, IDC_ARROW );
-	wc.hbrBackground = (HBRUSH)GetStockObject( BLACK_BRUSH );
-	wc.lpszMenuName  = NULL;
+  wc.style = CS_OWNDC;
+  wc.lpfnWndProc = SimpleUI_gl_WndProc;
+  wc.cbClsExtra = 0;
+  wc.cbWndExtra = 0;
+  wc.hInstance = hInstance;
+  wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+  wc.hCursor = frameLess ? NULL : LoadCursor(NULL, IDC_ARROW);
+  wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+  wc.lpszMenuName = NULL;
   wc.lpszClassName = L"SimpleUI::GL";
-	RegisterClass( &wc );
+  RegisterClass(&wc);
 
   RECT rc;
   rc.top = 0; rc.left = 0;
   rc.right = width; rc.bottom = height;
 
-  if (fullscreen)	{ // Full screen from NeHe tutorial
+  if (fullscreen) { // Full screen from NeHe tutorial
 
     g_NumMonitors = 0;
-    EnumDisplayMonitors(NULL,NULL,monitorEnumProc,NULL);
-    ForIndex(i,g_NumMonitors) {
-      if ( ! (g_Monitors[i].dwFlags & MONITORINFOF_PRIMARY) ) {
+    EnumDisplayMonitors(NULL, NULL, monitorEnumProc, NULL);
+    ForIndex(i, g_NumMonitors) {
+      if (!(g_Monitors[i].dwFlags & MONITORINFOF_PRIMARY)) {
         // prefer secondary monitor
         rc = g_Monitors[i].rcMonitor;
-        std::cerr << sprint("[SimpleUI] selected monitor %ls\n",g_Monitors[i].szDevice);
-        std::cerr << sprint("[SimpleUI] %d %d %d %d\n",g_Monitors[i].rcMonitor.left,g_Monitors[i].rcMonitor.right,g_Monitors[i].rcMonitor.top,g_Monitors[i].rcMonitor.bottom);
+        std::cerr << sprint("[SimpleUI] selected monitor %ls\n", g_Monitors[i].szDevice);
+        std::cerr << sprint("[SimpleUI] %d %d %d %d\n", g_Monitors[i].rcMonitor.left, g_Monitors[i].rcMonitor.right, g_Monitors[i].rcMonitor.top, g_Monitors[i].rcMonitor.bottom);
         break;
       }
     }
@@ -837,7 +847,7 @@ void NAMESPACE::init(
   DWORD style = 0;
   DWORD exStyle = 0;
   if (fullscreen) {
-    style   = WS_POPUP | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;	// Windows Style
+    style = WS_POPUP | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;	// Windows Style
     exStyle = WS_EX_APPWINDOW;								// Window Extended Style
     // ShowCursor(FALSE);	// Hide Mouse Pointer
   } else {
@@ -848,11 +858,11 @@ void NAMESPACE::init(
   style |= CS_OWNDC;
 
   RECT before = rc;
-  AdjustWindowRectEx(&rc,style,false,exStyle);
-  rc.bottom += (before.top  - rc.top);
-  rc.right  += (before.left - rc.left);
-  rc.top     = before.top;
-  rc.left    = before.left;
+  AdjustWindowRectEx(&rc, style, false, exStyle);
+  rc.bottom += (before.top - rc.top);
+  rc.right += (before.left - rc.left);
+  rc.top = before.top;
+  rc.left = before.left;
 
   s_hWnd = CreateWindowEx(
     0,
@@ -860,11 +870,11 @@ void NAMESPACE::init(
     style,
     rc.left, rc.top,
     rc.right - rc.left, rc.bottom - rc.top,
-    NULL, NULL, hInstance, NULL );
+    NULL, NULL, hInstance, NULL);
 
   if (!s_hWnd) {
     // failed
-    ChangeDisplaySettings(NULL,0);
+    ChangeDisplaySettings(NULL, 0);
     throw Fatal("Cannot change display settings to fullscreen.");
   }
 
@@ -884,6 +894,7 @@ void NAMESPACE::init(
     ChangeDisplaySettings(NULL, 0);
     throw Fatal("Cannot enable opengl core-profile.");
   }
+  loadCoreExtensionNames();
 #endif
   
   s_FullScreen = fullscreen;

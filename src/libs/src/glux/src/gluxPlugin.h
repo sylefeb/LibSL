@@ -109,8 +109,7 @@ namespace glux \
 #define GLUX_PLUGIN_LOAD(idstr) bool glux::gluxPlugin_##idstr::load() 
 
 #ifdef LIBSL_OPENGL_CORE_PROFILE
-inline bool glux_check_extension_string(char* ext);
-#define GLUX_CHECK_EXTENSION_STRING(ext) glux_check_extension_string(ext)
+#define GLUX_CHECK_EXTENSION_STRING(ext) (std::find(g_glcore_extensions.begin(), g_glcore_extensions.end(), ext) == g_glcore_extensions.end())
 #else
 #define GLUX_CHECK_EXTENSION_STRING(ext) (strstr((const char *)glGetString(GL_EXTENSIONS),ext) == NULL) 
 #endif

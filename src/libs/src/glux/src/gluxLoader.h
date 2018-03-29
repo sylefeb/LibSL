@@ -17,6 +17,7 @@
 #include <string>
 #include <map>
 #include <set>
+#include <vector>
 
 // --------------------------------------------------------
 
@@ -33,6 +34,7 @@
 // -------------------------------------------------------- 
 
 extern const char *g_glux__wglExtensions;
+extern std::vector<std::string> g_glcore_extensions;
 
 // --------------------------------------------------------
 
