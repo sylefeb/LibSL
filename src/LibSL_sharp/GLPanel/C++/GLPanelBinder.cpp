@@ -18,7 +18,7 @@ GLPANELBINDER_API int nGLPanelBinder = 0;
 
 static void defaultOnRender(HWND,uint w,uint h)
 {
-  GPUHelpers::clearScreen(LIBSL_COLOR_BUFFER, 1.0f, 1.0f, 0.0f);
+  GPUHelpers::clearScreen(LIBSL_COLOR_BUFFER, 1.0f, 0.0f, 1.0f);
 }
 
 //---------------------------------------------------------------------------
