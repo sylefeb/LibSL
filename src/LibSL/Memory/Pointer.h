@@ -317,8 +317,8 @@ namespace LibSL  {
         t_Reference  operator*()         { P_Check::checkValid(m_RawPointer); return (*m_RawPointer); }
         t_Reference  operator*()   const { P_Check::checkValid(m_RawPointer); return (*m_RawPointer); }
 
-        t_Reference  operator<(const Pointer& ptr)  const { return m_RawPointer < ptr.m_RawPointer; }
-        t_Reference  operator==(const Pointer& ptr) const { return m_RawPointer == ptr.m_RawPointer; }
+        bool         operator<(const Pointer& ptr)  const { return m_RawPointer < ptr.m_RawPointer; }
+        bool         operator==(const Pointer& ptr) const { return m_RawPointer == ptr.m_RawPointer; }
 
         // operator t_RawPointer()            { return (m_RawPointer); }
         // operator T_Type * const ()   const { return (m_RawPointer); }
