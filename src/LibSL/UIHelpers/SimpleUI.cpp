@@ -54,7 +54,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #endif // EMSCRIPTEN
 
 #ifdef OPENGL4
+#ifdef OPENGLCORE
+#include "LibSL_gl4core.h"
+#else
 #include "LibSL_gl4.h"
+#endif
 #else
 #include "LibSL_gl.h"
 #endif // OPENGL4
@@ -694,7 +698,8 @@ static bool enableOpenGL(HWND hWnd, HDC * hDC, HGLRC * hRC)
   return true;
 }
 
-#ifdef LIBSL_OPENGL_CORE_PROFILE
+#ifdef OPENGLCORE
+
 // see https://mariuszbartosik.com/opengl-4-x-initialization-in-windows-without-a-framework/
 static bool enabelCoreProfile(HWND * hWnd, HDC * hDC, HGLRC * hRC, HWND hWndCP)
 {
@@ -747,15 +752,6 @@ static bool enabelCoreProfile(HWND * hWnd, HDC * hDC, HGLRC * hRC, HWND hWndCP)
   return true;
 }
 
-static void loadCoreExtensionNames()
-{
-  int num_extensions = 0;
-  glGetIntegerv(GL_NUM_EXTENSIONS, &num_extensions);
-  ForIndex(index, num_extensions)
-  {
-    g_glcore_extensions.push_back(std::string((const char*)glGetStringi(GL_EXTENSIONS, index)));
-  }
-}
 #endif
 
 // Disable OpenGL
@@ -886,15 +882,19 @@ void NAMESPACE::init(
     throw Fatal("Cannot enable opengl.");
   }
 
-#ifdef LIBSL_OPENGL_CORE_PROFILE
-  HWND hWnd = CreateWindowEx(0, L"SimpleUI::GL", toUnicode(title), style, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance, NULL);
+#ifdef OPENGLCORE
+  HWND hWnd = CreateWindowEx(
+    0, 
+    L"SimpleUI::GL", toUnicode(title), 
+    style, rc.left, rc.top, 
+    rc.right - rc.left, rc.bottom - rc.top, 
+    NULL, NULL, hInstance, NULL);
   success = enabelCoreProfile(&s_hWnd, &s_hDC, &s_hRC, hWnd);
   if (!success) {
     // failed
     ChangeDisplaySettings(NULL, 0);
     throw Fatal("Cannot enable opengl core-profile.");
   }
-  loadCoreExtensionNames();
 #endif
   
   s_FullScreen = fullscreen;

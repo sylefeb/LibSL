@@ -41,7 +41,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #ifdef USE_GLUX
 # include <glux.h>
 #include "GL_ARB_vertex_buffer_object.h"
+#include "GL_ARB_vertex_array_object.h"
 GLUX_LOAD(GL_ARB_vertex_buffer_object)
+GLUX_LOAD(GL_ARB_vertex_array_object)
 #endif
 
 #include <LibSL/Mesh/VertexFormat.h>
@@ -99,7 +101,7 @@ namespace GPUMesh {
     {
     public:
       GLuint uiVB;
-      GLuint uiVBO;
+      GLuint uiVA;
       int    iVertices;
       int    iPrimType;
       int    offsets[nb_vertex_attrib];
@@ -124,9 +126,13 @@ namespace GPUMesh {
         int offset=vertex_format_desc::offset(i);
         _mesh.offsets[i]=offset*nbv;
       }
-      // send to graphics card
+      // create VAO
+      glGenVertexArrays(1, &_mesh.uiVA);
+      glBindVertexArray(_mesh.uiVA);
+      // create VBO
       glGenBuffersARB(1,&_mesh.uiVB);
       glBindBufferARB(GL_ARRAY_BUFFER_ARB,_mesh.uiVB);
+      // send data to graphics card
       glBufferDataARB(GL_ARRAY_BUFFER_ARB,nbv*vertex_format_desc::size_of,NULL,(flags & GPUMESH_DYNAMIC ? GL_DYNAMIC_DRAW_ARB : GL_STATIC_DRAW_ARB));
       for (int i=0;i<vertex_storage::nb_attributes;i++)
       {
@@ -136,8 +142,7 @@ namespace GPUMesh {
           &(storage.m_Attributes[i].front()));
       }
       glBindBufferARB(GL_ARRAY_BUFFER_ARB,0);
-      // create VBO
-      glGenVertexArrays(1,&_mesh.uiVBO);
+      glBindVertexArray(0);
       // free memory
       if (!(flags & GPUMESH_DYNAMIC)) {
         storage.clear();
@@ -149,6 +154,7 @@ namespace GPUMesh {
       vertex_storage&   storage,
       mesh_descriptor& _mesh)
     {
+      glBindVertexArray(_mesh.uiVA);
       glBindBufferARB(GL_ARRAY_BUFFER_ARB,_mesh.uiVB);
       for (int i=0;i<vertex_storage::nb_attributes;i++) {
         glBufferSubDataARB(GL_ARRAY_BUFFER_ARB,
@@ -157,11 +163,12 @@ namespace GPUMesh {
           &(storage.m_Attributes[i].front()));
       }
       glBindBufferARB(GL_ARRAY_BUFFER_ARB,0);
+      glBindVertexArray(0);
     }
 
     static void     bind(const mesh_descriptor& m)
     {
-      glBindVertexArray(m.uiVBO);
+      glBindVertexArray(m.uiVA);
       glBindBufferARB(GL_ARRAY_BUFFER_ARB,m.uiVB);
       if (vertex_format_desc::has_position) {
         glVertexAttribPointerARB(gl4::mvf_attrib_location<MVF_BASE_POSITION>::value,vertex_format_desc::type_position::components,GLTypes<typename vertex_format_desc::type_position::type>::gl_define,
@@ -272,7 +279,7 @@ namespace GPUMesh {
     static void     free(const mesh_descriptor& m)
     {
       glDeleteBuffersARB(1,&m.uiVB);
-      glDeleteVertexArrays(1,&m.uiVBO);
+      glDeleteVertexArrays(1,&m.uiVA);
     }
 
 
@@ -326,9 +333,13 @@ namespace GPUMesh {
         int offset=vertex_format_desc::offset(i);
         _mesh.offsets[i]=offset*nbv;
       }
-      // send to graphics card
+      // create VAO
+      glGenVertexArrays(1, &_mesh.uiVA);
+      glBindVertexArray(_mesh.uiVA);
+      // create VBO
       glGenBuffersARB(1,&_mesh.uiVB);
       glBindBufferARB(GL_ARRAY_BUFFER_ARB,_mesh.uiVB);
+      // send to graphics card
       glBufferDataARB(GL_ARRAY_BUFFER_ARB,nbv*vertex_format_desc::size_of,NULL,(flags & GPUMESH_DYNAMIC ? GL_DYNAMIC_DRAW_ARB : GL_STATIC_DRAW_ARB));
       for (int i=0;i<vertex_storage::nb_attributes;i++) {
         glBufferSubDataARB(GL_ARRAY_BUFFER_ARB,
@@ -337,8 +348,6 @@ namespace GPUMesh {
           &(storage.m_Attributes[i].front())
           );
       }
-      // create VBO
-      glGenVertexArrays(1, &_mesh.uiVBO);
       // create index buffer
       _mesh.iIndices=int(indices.size());
       glGenBuffersARB(1,&_mesh.uiIB);
@@ -358,6 +367,7 @@ namespace GPUMesh {
       vertex_storage&   storage,
       mesh_descriptor& _mesh)
     {
+      glBindVertexArray(_mesh.uiVA);
       glBindBufferARB(GL_ARRAY_BUFFER_ARB,_mesh.uiVB);
       for (int i=0;i<vertex_storage::nb_attributes;i++) {
         glBufferSubDataARB(GL_ARRAY_BUFFER_ARB,
@@ -365,6 +375,8 @@ namespace GPUMesh {
           storage.m_Attributes[i].size(),
           &(storage.m_Attributes[i].front()));
       }
+      glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
+      glBindVertexArray(0);
     }
 
     static void     bind(const mesh_descriptor& m)
@@ -384,8 +396,7 @@ namespace GPUMesh {
     static void     free(const mesh_descriptor& m)
     {
       glDeleteBuffersARB(1,&m.uiIB);
-      glDeleteVertexArrays(1, &m.uiVBO);
-      parent_policy::free(m); // deletes VB
+      parent_policy::free(m); // deletes VB,VA
     }
 
 

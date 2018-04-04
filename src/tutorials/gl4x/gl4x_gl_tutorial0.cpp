@@ -47,6 +47,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 LIBSL_WIN32_FIX; // necessary due to a VC compiler issue
 #endif
 
+#include "GL_NV_shader_buffer_load.h"
+GLUX_REQUIRE(GL_NV_shader_buffer_load)
+
 /* -------------------------------------------------------- */
 
 #include "gl4x_gl_tutorial0.h"
@@ -78,21 +81,21 @@ void mainKeyboard(uchar key)
 void mainRender()
 {
   // viewport
-  GPUHelpers::Renderer::setViewport(0,0,256,256);
+  LibSL::GPUHelpers::Renderer::setViewport(0,0,256,256);
 
   // clear screen
-  clearScreen(LIBSL_COLOR_BUFFER | LIBSL_DEPTH_BUFFER,0.5,0.5,0.5);
+  clearScreen(LIBSL_COLOR_BUFFER | LIBSL_DEPTH_BUFFER,1.0,0.5,0.5);
   
   // draw
   // -> activate shader
   shader.begin();
   shader.u_Projection.set( orthoMatrixGL(0.0f,1.0f,0.0f,1.0f,-1.0f,1.0f) );
   shader.u_ModelView .set( m4x4f::identity() );
-  shader.u_Buffer    .set( g_Buffer );
   // -> render quad
   g_Square->render();
   // -> deactivate shader
   shader.end();
+  
 }
 
 /* -------------------------------------------------------- */
@@ -109,8 +112,21 @@ int main(int argc, char **argv)
     // init shader
     shader  .init();
     
-    g_Square = new Shapes::Square();
+    g_Square = AutoPtr<Shapes::Square>(new Shapes::Square());
+    
     g_Buffer.init(256);
+
+    // get NVidia 64 bits GPU pointer to buffer
+    glBindBufferARB(g_Buffer.type(), g_Buffer.glId());
+    GLuint64EXT ptr = 0;
+    glGetBufferParameterui64vNV(g_Buffer.type(), GL_BUFFER_GPU_ADDRESS_NV, &ptr);
+    glMakeBufferResidentNV(g_Buffer.type(), GL_READ_WRITE);
+    glBindBufferARB(g_Buffer.type(), 0);
+
+    // pass pointer to shader
+    shader.begin();
+    glUniformui64NV(shader.u_Buffer.handle(), ptr);
+    shader.end();
 
     // help
     printf("[q]     - quit\n");
@@ -128,7 +144,7 @@ int main(int argc, char **argv)
 
     shader  .terminate();
     g_Buffer.terminate();
-    g_Square = NULL;
+    g_Square = AutoPtr<Shapes::Square>();
 
     // shutdown
     TrackballUI::shutdown();
