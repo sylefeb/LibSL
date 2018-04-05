@@ -376,6 +376,13 @@ void NAMESPACE::init(uint width,uint height,const char *title,char **argv,int ar
   sl_assert(!fullscreen); // not supported
 
   glutInit              (&argc, argv);
+
+#ifdef OPENGLCORE
+  glutInitContextVersion(LIBSL_OPENGL_MAJOR_VERSION,LIBSL_OPENGL_MINOR_VERSION);
+  glutInitContextFlags(GLUT_FORWARD_COMPATIBLE);
+  glutInitContextProfile(GLUT_CORE_PROFILE);
+#endif
+
   glutInitDisplayMode   (GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA | GLUT_STENCIL | GLUT_ALPHA);
   glutInitWindowPosition(0,0);
   glutInitWindowSize    (width,height);
@@ -389,7 +396,7 @@ void NAMESPACE::init(uint width,uint height,const char *title,char **argv,int ar
   glutPassiveMotionFunc (glutMotion);
   glutMouseFunc         (glutMouse);
   glutKeyboardFunc      (glutKeyboard);
-  glutKeyboardUpFunc	  (glutKeyboardUp);
+  glutKeyboardUpFunc	(glutKeyboardUp);
   glutSpecialFunc       (glutKeyboardSpecial);
   glutSpecialUpFunc     (glutKeyboardSpecialUp);
   glutReshapeFunc       (glutReshape);
