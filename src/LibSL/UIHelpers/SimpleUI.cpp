@@ -893,7 +893,7 @@ void NAMESPACE::init(
 #ifdef OPENGLCORE
   HWND hWnd = CreateWindowEx(
     0, 
-    L"SimpleUI::GL-core", toUnicode(title), 
+    L"SimpleUI::GL", toUnicode(title), 
     style, rc.left, rc.top, 
     rc.right - rc.left, rc.bottom - rc.top, 
     NULL, NULL, hInstance, NULL);
