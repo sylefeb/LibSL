@@ -88,7 +88,8 @@ namespace LibSL  {
     template <> class GL_format<unsigned char,1>
     {
     public:
-      enum {internal_format     = GL_R8,
+      enum {
+            internal_format     = GL_R8,
             format              = GL_RED,
             int_internal_format = GL_R8UI,
 #ifndef __APPLE__
@@ -100,7 +101,8 @@ namespace LibSL  {
     template <> class GL_format<unsigned char,2>
     {
     public:
-      enum {internal_format     = GL_RG8,
+      enum {
+            internal_format     = GL_RG8,
             format              = GL_RG,
             int_internal_format = GL_RG8UI,
             int_format          = GL_RG_INTEGER,
@@ -150,7 +152,8 @@ namespace LibSL  {
     template <> class GL_format<unsigned short,1>
     {
     public:
-      enum {internal_format     = GL_R16,
+      enum {
+            internal_format     = GL_R16,
             format              = GL_RED,
             int_internal_format = GL_R16UI,
             int_format          = GL_RED_INTEGER,
@@ -160,7 +163,8 @@ namespace LibSL  {
     template <> class GL_format<unsigned short,2>
     {
     public:
-      enum {internal_format     = GL_RG16,
+      enum {
+            internal_format     = GL_RG16,
             format              = GL_RG,
             int_internal_format = GL_RG16UI,
             int_format          = GL_RG_INTEGER,
@@ -170,7 +174,8 @@ namespace LibSL  {
     template <> class GL_format<short,2>
     {
     public:
-      enum {internal_format     = GL_RG16,
+      enum {
+            internal_format     = GL_RG16,
             format              = GL_RG,
             int_internal_format = GL_RG16I,
             int_format          = GL_RG_INTEGER,
@@ -180,7 +185,8 @@ namespace LibSL  {
     template <> class GL_format<unsigned short,3>
     {
     public:
-      enum {internal_format     = GL_RGB16,
+      enum {
+            internal_format     = GL_RGB16,
             format              = GL_RGB,
             int_internal_format = GL_RGB16UI,
             int_format          = GL_RGB_INTEGER,
@@ -190,7 +196,8 @@ namespace LibSL  {
     template <> class GL_format<unsigned short,4>
     {
     public:
-      enum {internal_format     = GL_RGBA16,
+      enum {
+            internal_format     = GL_RGBA16,
             format              = GL_RGBA,
             int_internal_format = GL_RGBA16UI,
             int_format          = GL_RGBA_INTEGER,
@@ -201,7 +208,8 @@ namespace LibSL  {
     template <> class GL_format<half,1>
     {
     public:
-      enum {internal_format     = GL_R16F,
+      enum {
+            internal_format     = GL_R16F,
             format              = GL_RED,
             int_internal_format = -1,
             int_format          = -1,
@@ -300,31 +308,34 @@ namespace LibSL  {
     template <> class GL_format<depth32,1>
     {
     public:
-      enum {internal_format     = GL_DEPTH_COMPONENT32F, // SP 2018-04-06 (CORE-PROFILE): According to the official OpenGL documentation, this value is possible but not listed. Replace with GL_DEPTH_COMPONENT if it doesn't work
+      enum {
+            internal_format     = GL_DEPTH_COMPONENT32F, // SP 2018-04-06 (CORE-PROFILE): According to the official OpenGL documentation, this value is possible but not listed. Replace with GL_DEPTH_COMPONENT if it doesn't work
             format              = GL_DEPTH_COMPONENT,
             int_internal_format = -1,
             int_format          = -1,
-            isdepth             = 1};
+            isdepth             =  1};
     };
 
     template <> class GL_format<depth24,1>
     {
     public:
-      enum {internal_format     = GL_DEPTH_COMPONENT24,
+      enum {
+            internal_format     = GL_DEPTH_COMPONENT24, // SP 2018-04-06 (CORE-PROFILE): According to the official OpenGL documentation, this value is possible but not listed. Replace with GL_DEPTH_COMPONENT if it doesn't work
             format              = GL_DEPTH_COMPONENT,
             int_internal_format = -1,
             int_format          = -1,
-            isdepth             = 1};
+            isdepth             =  1};
     };
 
     template <> class GL_format<depth16,1>
     {
     public:
-      enum {internal_format     = GL_DEPTH_COMPONENT16,
+      enum {
+            internal_format     = GL_DEPTH_COMPONENT16, // SP 2018-04-06 (CORE-PROFILE): According to the official OpenGL documentation, this value is possible but not listed. Replace with GL_DEPTH_COMPONENT if it doesn't work
             format              = GL_DEPTH_COMPONENT,
             int_internal_format = -1,
             int_format          = -1,
-            isdepth             = 1};
+            isdepth             =  1};
     };
 #endif
 
