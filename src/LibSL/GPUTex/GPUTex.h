@@ -489,13 +489,7 @@ namespace LibSL  {
 #endif
 
 #ifdef OPENGL
-#ifdef OPENGL4
-//#include <LibSL/LibSL_gl4.h>
 #include <LibSL/GPUTex/GPUTex_gl.h>
-#else
-//#include <LibSL/LibSL_gl.h>
-#include <LibSL/GPUTex/GPUTex_gl.h>
-#endif
 #endif
 
 #endif

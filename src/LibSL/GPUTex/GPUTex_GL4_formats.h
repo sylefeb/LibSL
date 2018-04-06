@@ -43,6 +43,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 
 #pragma once
 
+// #pragma message("Including GPUTex_GL4_formats.h")
+
 // ------------------------------------------------------
 
 #include <LibSL/System/Types.h>
