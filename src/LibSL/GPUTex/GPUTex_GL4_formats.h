@@ -120,8 +120,8 @@ namespace LibSL  {
 #else
             internal_format     = GL_RGB8,
             format              = GL_RGB,
-            int_internal_format = GL_RGB8UI_EXT,
-            int_format          = GL_RGB_INTEGER_EXT,
+            int_internal_format = GL_RGB8UI,
+            int_format          = GL_RGB_INTEGER,
 #endif
             isdepth             = 0};
     };
@@ -138,8 +138,8 @@ namespace LibSL  {
 #else
             internal_format     = GL_RGBA8,
             format              = GL_RGBA,
-            int_internal_format = GL_RGBA8UI_EXT,
-            int_format          = GL_RGBA_INTEGER_EXT,
+            int_internal_format = GL_RGBA8UI,
+            int_format          = GL_RGBA_INTEGER,
 #endif
             isdepth             = 0};
     };
@@ -150,54 +150,50 @@ namespace LibSL  {
     template <> class GL_format<unsigned short,1>
     {
     public:
-      enum {internal_format     = GL_ALPHA16_EXT,
-            format              = GL_ALPHA,
-            int_internal_format = GL_ALPHA16UI_EXT,
-            int_format          = GL_ALPHA_INTEGER_EXT,
+      enum {internal_format     = GL_R16,
+            format              = GL_RED,
+            int_internal_format = GL_R16UI,
+            int_format          = GL_RED_INTEGER,
             isdepth             = 0};
     };
 
     template <> class GL_format<unsigned short,2>
     {
     public:
-      enum {internal_format = GL_HILO16_NV,  /// FIXME this is a problem, since HiLo is .xy and LUM_ALPHA is .xw
-            format          = GL_HILO_NV,
-//            internal_format     = GL_LUMINANCE16_ALPHA16_EXT,
-//            format              = GL_LUMINANCE_ALPHA,
-            int_internal_format = GL_LUMINANCE_ALPHA16UI_EXT,
-            int_format          = GL_LUMINANCE_ALPHA_INTEGER_EXT,
-            isdepth         = 0};
+      enum {internal_format     = GL_RG16,
+            format              = GL_RG,
+            int_internal_format = GL_RG16UI,
+            int_format          = GL_RG_INTEGER,
+            isdepth             = 0};
     };
 
     template <> class GL_format<short,2>
     {
     public:
-      enum {internal_format = GL_SIGNED_HILO16_NV,  /// FIXME this is a problem, since HiLo is .xy and LUM_ALPHA is .xw
-            format          = GL_HILO_NV,
-//            internal_format     = GL_LUMINANCE16_ALPHA16_EXT,
-//            format              = GL_LUMINANCE_ALPHA,
-            int_internal_format = GL_LUMINANCE_ALPHA16I_EXT,
-            int_format          = GL_LUMINANCE_ALPHA_INTEGER_EXT,
+      enum {internal_format     = GL_RG16,
+            format              = GL_RG,
+            int_internal_format = GL_RG16I,
+            int_format          = GL_RG_INTEGER,
             isdepth             = 0};
     };
 
     template <> class GL_format<unsigned short,3>
     {
     public:
-      enum {internal_format     = GL_RGB16_EXT,
+      enum {internal_format     = GL_RGB16,
             format              = GL_RGB,
-            int_internal_format = GL_RGB16UI_EXT,
-            int_format          = GL_RGB_INTEGER_EXT,
+            int_internal_format = GL_RGB16UI,
+            int_format          = GL_RGB_INTEGER,
             isdepth             = 0};
     };
 
     template <> class GL_format<unsigned short,4>
     {
     public:
-      enum {internal_format     = GL_RGBA16_EXT,
+      enum {internal_format     = GL_RGBA16,
             format              = GL_RGBA,
-            int_internal_format = GL_RGBA16UI_EXT,
-            int_format          = GL_RGBA_INTEGER_EXT,
+            int_internal_format = GL_RGBA16UI,
+            int_format          = GL_RGBA_INTEGER,
             isdepth             = 0};
     };
 #endif
@@ -205,11 +201,11 @@ namespace LibSL  {
     template <> class GL_format<half,1>
     {
     public:
-      enum {internal_format     = GL_LUMINANCE16F_ARB,
-            format              = GL_LUMINANCE,
+      enum {internal_format     = GL_R16F,
+            format              = GL_RED,
             int_internal_format = -1,
             int_format          = -1,
-            isdepth             = 0};
+            isdepth             =  0};
     };
 
 #endif
@@ -227,7 +223,7 @@ namespace LibSL  {
 #endif
             int_internal_format = -1,
             int_format          = -1,
-            isdepth             = 0};
+            isdepth             =  0};
     };
 
 #ifndef EMSCRIPTEN
@@ -235,11 +231,11 @@ namespace LibSL  {
     template <> class GL_format<half, 3>
     {
     public:
-      enum {internal_format     = GL_RGB16F_ARB,
+      enum {internal_format     = GL_RGB16F,
             format              = GL_RGB,
             int_internal_format = -1,
             int_format          = -1,
-            isdepth             = 0};
+            isdepth             =  0};
     };
 
 #endif
@@ -248,7 +244,7 @@ namespace LibSL  {
     {
     public:
       enum {
-            internal_format     = GL_RGBA16F_ARB,
+            internal_format     = GL_RGBA16F,
             format              = GL_RGBA,
             int_internal_format = -1,
             int_format          = -1,
@@ -260,31 +256,23 @@ namespace LibSL  {
     template <> class GL_format<float, 1>
     {
     public:
-		enum {internal_format=GL_R32F,
-      //       internal_format=GL_LUMINANCE32F_ARB,
-      //       internal_format     = GL_LUMINANCE_FLOAT32_ATI,
-          format              = GL_LUMINANCE,
-          int_internal_format = -1,
-          int_format          = -1,
-          isdepth = 0};
+      enum {
+            internal_format     = GL_R32F,
+            format              = GL_RED,
+            int_internal_format = -1,
+            int_format          = -1,
+            isdepth             =  0};
     };
-    /*
-    template <> class GL_format<float,2>
-    {
-    public:
-      enum {internal_format = ,
-            format          = ,
-            isdepth         = };
-    };
-    */
+
     template <> class GL_format<float,3>
     {
     public:
-      enum {internal_format     = GL_RGB32F_ARB,
+      enum {
+            internal_format     = GL_RGB32F,
             format              = GL_RGB,
             int_internal_format = -1,
             int_format          = -1,
-            isdepth             = 0};
+            isdepth             =  0};
     };
 
 #endif
@@ -292,18 +280,17 @@ namespace LibSL  {
     template <> class GL_format<float,4>
     {
     public:
-      //enum {internal_format=GL_RGBA32F_ARB};
       enum {
 #ifdef EMSCRIPTEN
             internal_format     = GL_RGBA,
             format              = GL_RGBA,
 #else
-            internal_format     = GL_RGBA_FLOAT32_ATI,
+            internal_format     = GL_RGBA32F,
             format              = GL_RGBA,
 #endif
             int_internal_format = -1,
             int_format          = -1,
-            isdepth             = 0};
+            isdepth             =  0};
     };
 
 #ifndef EMSCRIPTEN
@@ -313,7 +300,7 @@ namespace LibSL  {
     template <> class GL_format<depth32,1>
     {
     public:
-      enum {internal_format     = GL_DEPTH_COMPONENT32,
+      enum {internal_format     = GL_DEPTH_COMPONENT32F, // SP 2018-04-06 (CORE-PROFILE): According to the official OpenGL documentation, this value is possible but not listed. Replace with GL_DEPTH_COMPONENT if it doesn't work
             format              = GL_DEPTH_COMPONENT,
             int_internal_format = -1,
             int_format          = -1,
@@ -341,7 +328,7 @@ namespace LibSL  {
     };
 #endif
 
-  } // namespace LibSL::GPUTex
-} // namespace LibSL
+  } 
+}
 
 // ------------------------------------------------------
