@@ -39,7 +39,7 @@ typedef const char * (APIENTRYP t_wglGetExtensionsStringARB) (HDC hdc);
 // for core profile compatibility
 #define GL_NUM_EXTENSIONS                 0x821D // how to avoid this?
 #define GL_EXTENSIONS                     0x1F03 // how to avoid this?
-typedef const GLubyte* (*t_glGetStringi) (GLenum name, GLuint index);
+typedef const GLubyte *(APIENTRYP t_glGetStringi) (GLenum name, GLuint index);
 
 // -------------------------------------------------------- 
 

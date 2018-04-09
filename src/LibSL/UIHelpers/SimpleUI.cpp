@@ -735,7 +735,7 @@ static bool enabelCoreProfile(HWND * hWnd, HDC * hDC, HGLRC * hRC, HWND hWndCP)
   HDC hDCCP = GetDC(hWndCP);
   PIXELFORMATDESCRIPTOR PFD;
   int pixelFormatID; UINT numFormats;
-  bool status = wglChoosePixelFormatARB(hDCCP, pixelAttribs, NULL, 1, &pixelFormatID, &numFormats);
+  BOOL status = wglChoosePixelFormatARB(hDCCP, pixelAttribs, NULL, 1, &pixelFormatID, &numFormats);
   DescribePixelFormat(hDCCP, pixelFormatID, sizeof(PFD), &PFD);
   SetPixelFormat(hDCCP, pixelFormatID, &PFD);
   HGLRC hRCCP = wglCreateContextAttribsARB(hDCCP, NULL, contextAttributes);
