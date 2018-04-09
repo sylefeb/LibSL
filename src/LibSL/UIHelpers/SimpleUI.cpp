@@ -723,8 +723,6 @@ static bool enabelCoreProfile(HWND * hWnd, HDC * hDC, HGLRC * hRC, HWND hWndCP)
     WGL_ALPHA_BITS_ARB, 8,
     WGL_DEPTH_BITS_ARB, 24,
     WGL_STENCIL_BITS_ARB, 8,
-    //WGL_SAMPLE_BUFFERS_ARB, GL_TRUE,
-    //WGL_SAMPLES_ARB, 4,
     0
   };
   int contextAttributes[] = {
