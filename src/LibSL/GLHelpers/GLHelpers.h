@@ -430,7 +430,6 @@ namespace LibSL {
 		protected:
 
       GLuint   m_glId;
-			GLuint64 m_gpuPtr;
 			uint     m_Sz;
 
       static const GLuint c_buf_type = GL_TEXTURE_BUFFER;
@@ -446,6 +445,7 @@ namespace LibSL {
       void forget();
 
 			GLuint glId() const { return m_glId; }
+      GLuint type() const { return c_buf_type; }
 			uint size() const { return m_Sz; }
 			void copy(GLBuffer const& buffer);
 
@@ -485,10 +485,8 @@ namespace LibSL {
 			{
 				sl_assert( m_glId != 0 );
 				sl_assert( nBytes <= m_Sz );
-//				LIBSL_GL_CHECK_ERROR;
 				glBindBufferARB(c_buf_type, m_glId);
 				glGetBufferSubDataARB(c_buf_type,0,nBytes,raw);
-//				LIBSL_GL_CHECK_ERROR;
         glBindBufferARB(c_buf_type, 0);
 			}
 
@@ -510,8 +508,6 @@ namespace LibSL {
 				glGetBufferSubDataARB(c_buf_type,offset,nBytes,raw);
         glBindBufferARB(c_buf_type, 0);
 			}
-
-      GLuint64 ptr() const { sl_assert( m_glId != 0 ); return m_gpuPtr; }
 		};
 
 		class GLTexBuffer : public GLBuffer

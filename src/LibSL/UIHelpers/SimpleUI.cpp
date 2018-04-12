@@ -54,7 +54,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #endif // EMSCRIPTEN
 
 #ifdef OPENGL4
+#ifdef OPENGLCORE
+#include "LibSL_gl4core.h"
+#else
 #include "LibSL_gl4.h"
+#endif
 #else
 #include "LibSL_gl.h"
 #endif // OPENGL4
@@ -372,6 +376,13 @@ void NAMESPACE::init(uint width,uint height,const char *title,char **argv,int ar
   sl_assert(!fullscreen); // not supported
 
   glutInit              (&argc, argv);
+
+#ifdef OPENGLCORE
+  glutInitContextVersion(LIBSL_OPENGL_MAJOR_VERSION,LIBSL_OPENGL_MINOR_VERSION);
+  glutInitContextFlags(GLUT_FORWARD_COMPATIBLE);
+  glutInitContextProfile(GLUT_CORE_PROFILE);
+#endif
+
   glutInitDisplayMode   (GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA | GLUT_STENCIL | GLUT_ALPHA);
   glutInitWindowPosition(0,0);
   glutInitWindowSize    (width,height);
@@ -385,7 +396,7 @@ void NAMESPACE::init(uint width,uint height,const char *title,char **argv,int ar
   glutPassiveMotionFunc (glutMotion);
   glutMouseFunc         (glutMouse);
   glutKeyboardFunc      (glutKeyboard);
-  glutKeyboardUpFunc	  (glutKeyboardUp);
+  glutKeyboardUpFunc	(glutKeyboardUp);
   glutSpecialFunc       (glutKeyboardSpecial);
   glutSpecialUpFunc     (glutKeyboardSpecialUp);
   glutReshapeFunc       (glutReshape);
@@ -694,6 +705,61 @@ static bool enableOpenGL(HWND hWnd, HDC * hDC, HGLRC * hRC)
   return true;
 }
 
+#ifdef OPENGLCORE
+
+// see https://mariuszbartosik.com/opengl-4-x-initialization-in-windows-without-a-framework/
+static bool enabelCoreProfile(HWND * hWnd, HDC * hDC, HGLRC * hRC, HWND hWndCP)
+{
+  PFNWGLCHOOSEPIXELFORMATARBPROC wglChoosePixelFormatARB = reinterpret_cast<PFNWGLCHOOSEPIXELFORMATARBPROC>(wglGetProcAddress("wglChoosePixelFormatARB"));
+  PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = reinterpret_cast<PFNWGLCREATECONTEXTATTRIBSARBPROC>(wglGetProcAddress("wglCreateContextAttribsARB"));
+
+  const int pixelAttribs[] = {
+    WGL_DRAW_TO_WINDOW_ARB, GL_TRUE,
+    WGL_SUPPORT_OPENGL_ARB, GL_TRUE,
+    WGL_DOUBLE_BUFFER_ARB, GL_TRUE,
+    WGL_PIXEL_TYPE_ARB, WGL_TYPE_RGBA_ARB,
+    WGL_ACCELERATION_ARB, WGL_FULL_ACCELERATION_ARB,
+    WGL_COLOR_BITS_ARB, 24,
+    WGL_ALPHA_BITS_ARB, 8,
+    WGL_DEPTH_BITS_ARB, 24,
+    WGL_STENCIL_BITS_ARB, 8,
+    0
+  };
+  int contextAttributes[] = {
+    WGL_CONTEXT_MAJOR_VERSION_ARB, LIBSL_OPENGL_MAJOR_VERSION,
+    WGL_CONTEXT_MINOR_VERSION_ARB, LIBSL_OPENGL_MINOR_VERSION,
+    WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
+    WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB, 
+    0 };
+
+  HDC hDCCP = GetDC(hWndCP);
+  PIXELFORMATDESCRIPTOR PFD;
+  int pixelFormatID; UINT numFormats;
+  BOOL status = wglChoosePixelFormatARB(hDCCP, pixelAttribs, NULL, 1, &pixelFormatID, &numFormats);
+  DescribePixelFormat(hDCCP, pixelFormatID, sizeof(PFD), &PFD);
+  SetPixelFormat(hDCCP, pixelFormatID, &PFD);
+  HGLRC hRCCP = wglCreateContextAttribsARB(hDCCP, NULL, contextAttributes);
+
+  wglMakeCurrent(NULL, NULL);
+  wglDeleteContext(*hRC);
+  ReleaseDC(*hWnd, *hDC);
+  DestroyWindow(*hWnd);
+
+  if (!wglMakeCurrent(hDCCP, hRCCP)) {
+    wglDeleteContext(hRCCP);
+    ReleaseDC(hWndCP, hDCCP);
+    DestroyWindow(hWndCP);
+    return false;
+  }
+
+  *hWnd = hWndCP;
+  *hDC = hDCCP;
+  *hRC = hRCCP;
+  return true;
+}
+
+#endif
+
 // Disable OpenGL
 static void disableOpenGL(HWND hWnd, HDC hDC, HGLRC hRC)
 {
@@ -722,43 +788,43 @@ BOOL CALLBACK monitorEnumProc(
 }
 
 void NAMESPACE::init(
-  uint width,uint height,
+  uint width, uint height,
   const char *title,
-  char **argv,int argc,
+  char **argv, int argc,
   bool frameLess,
   bool hidden,
   bool fullscreen)
 {
   WNDCLASS wc;
 
-	// register window class
+  // register window class
   HINSTANCE hInstance = GetModuleHandle(NULL);
-	wc.style         = CS_OWNDC;
-	wc.lpfnWndProc   = SimpleUI_gl_WndProc;
-	wc.cbClsExtra    = 0;
-	wc.cbWndExtra    = 0;
-	wc.hInstance     = hInstance;
-	wc.hIcon         = LoadIcon( NULL, IDI_APPLICATION );
-  wc.hCursor       = frameLess ? NULL : LoadCursor( NULL, IDC_ARROW );
-	wc.hbrBackground = (HBRUSH)GetStockObject( BLACK_BRUSH );
-	wc.lpszMenuName  = NULL;
+  wc.style = CS_OWNDC;
+  wc.lpfnWndProc = SimpleUI_gl_WndProc;
+  wc.cbClsExtra = 0;
+  wc.cbWndExtra = 0;
+  wc.hInstance = hInstance;
+  wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+  wc.hCursor = frameLess ? NULL : LoadCursor(NULL, IDC_ARROW);
+  wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+  wc.lpszMenuName = NULL;
   wc.lpszClassName = L"SimpleUI::GL";
-	RegisterClass( &wc );
+  RegisterClass(&wc);
 
   RECT rc;
   rc.top = 0; rc.left = 0;
   rc.right = width; rc.bottom = height;
 
-  if (fullscreen)	{ // Full screen from NeHe tutorial
+  if (fullscreen) { // Full screen from NeHe tutorial
 
     g_NumMonitors = 0;
-    EnumDisplayMonitors(NULL,NULL,monitorEnumProc,NULL);
-    ForIndex(i,g_NumMonitors) {
-      if ( ! (g_Monitors[i].dwFlags & MONITORINFOF_PRIMARY) ) {
+    EnumDisplayMonitors(NULL, NULL, monitorEnumProc, NULL);
+    ForIndex(i, g_NumMonitors) {
+      if (!(g_Monitors[i].dwFlags & MONITORINFOF_PRIMARY)) {
         // prefer secondary monitor
         rc = g_Monitors[i].rcMonitor;
-        std::cerr << sprint("[SimpleUI] selected monitor %ls\n",g_Monitors[i].szDevice);
-        std::cerr << sprint("[SimpleUI] %d %d %d %d\n",g_Monitors[i].rcMonitor.left,g_Monitors[i].rcMonitor.right,g_Monitors[i].rcMonitor.top,g_Monitors[i].rcMonitor.bottom);
+        std::cerr << sprint("[SimpleUI] selected monitor %ls\n", g_Monitors[i].szDevice);
+        std::cerr << sprint("[SimpleUI] %d %d %d %d\n", g_Monitors[i].rcMonitor.left, g_Monitors[i].rcMonitor.right, g_Monitors[i].rcMonitor.top, g_Monitors[i].rcMonitor.bottom);
         break;
       }
     }
@@ -783,7 +849,7 @@ void NAMESPACE::init(
   DWORD style = 0;
   DWORD exStyle = 0;
   if (fullscreen) {
-    style   = WS_POPUP | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;	// Windows Style
+    style = WS_POPUP | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;	// Windows Style
     exStyle = WS_EX_APPWINDOW;								// Window Extended Style
     // ShowCursor(FALSE);	// Hide Mouse Pointer
   } else {
@@ -794,11 +860,11 @@ void NAMESPACE::init(
   style |= CS_OWNDC;
 
   RECT before = rc;
-  AdjustWindowRectEx(&rc,style,false,exStyle);
-  rc.bottom += (before.top  - rc.top);
-  rc.right  += (before.left - rc.left);
-  rc.top     = before.top;
-  rc.left    = before.left;
+  AdjustWindowRectEx(&rc, style, false, exStyle);
+  rc.bottom += (before.top - rc.top);
+  rc.right += (before.left - rc.left);
+  rc.top = before.top;
+  rc.left = before.left;
 
   s_hWnd = CreateWindowEx(
     0,
@@ -806,22 +872,37 @@ void NAMESPACE::init(
     style,
     rc.left, rc.top,
     rc.right - rc.left, rc.bottom - rc.top,
-    NULL, NULL, hInstance, NULL );
+    NULL, NULL, hInstance, NULL);
 
   if (!s_hWnd) {
     // failed
-    ChangeDisplaySettings(NULL,0);
+    ChangeDisplaySettings(NULL, 0);
     throw Fatal("Cannot change display settings to fullscreen.");
   }
 
   // enable OpenGL for the window
-  bool success = enableOpenGL( s_hWnd, &s_hDC, &s_hRC );
+  bool success = enableOpenGL(s_hWnd, &s_hDC, &s_hRC);
   if (!success) {
     // failed
-    ChangeDisplaySettings(NULL,0);
-    throw Fatal("Cannot change display settings to fullscreen.");
+    ChangeDisplaySettings(NULL, 0);
+    throw Fatal("Cannot enable opengl.");
   }
 
+#ifdef OPENGLCORE
+  HWND hWnd = CreateWindowEx(
+    0, 
+    L"SimpleUI::GL", toUnicode(title), 
+    style, rc.left, rc.top, 
+    rc.right - rc.left, rc.bottom - rc.top, 
+    NULL, NULL, hInstance, NULL);
+  success = enabelCoreProfile(&s_hWnd, &s_hDC, &s_hRC, hWnd);
+  if (!success) {
+    // failed
+    ChangeDisplaySettings(NULL, 0);
+    throw Fatal("Cannot enable opengl core-profile.");
+  }
+#endif
+  
   s_FullScreen = fullscreen;
 
 #ifndef EMSCRIPTEN
