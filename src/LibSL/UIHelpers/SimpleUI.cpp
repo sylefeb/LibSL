@@ -745,10 +745,10 @@ static bool enabelCoreProfile(HWND * hWnd, HDC * hDC, HGLRC * hRC, HWND hWndCP)
   ReleaseDC(*hWnd, *hDC);
   DestroyWindow(*hWnd);
 
-  if (!wglMakeCurrent(hDCCP, hRCCP)) {
+  if (!wglMakeCurrent(hDCCP, hRCCP) || hRCCP == NULL) {
     wglDeleteContext(hRCCP);
     ReleaseDC(hWndCP, hDCCP);
-    DestroyWindow(hWndCP);
+    *hWnd = hWndCP;
     return false;
   }
 
@@ -897,9 +897,12 @@ void NAMESPACE::init(
     NULL, NULL, hInstance, NULL);
   success = enabelCoreProfile(&s_hWnd, &s_hDC, &s_hRC, hWnd);
   if (!success) {
-    // failed
-    ChangeDisplaySettings(NULL, 0);
-    throw Fatal("Cannot enable opengl core-profile.");
+    // failed core-profile intialization, retry with compatibility mode
+    success = enableOpenGL(s_hWnd, &s_hDC, &s_hRC);
+    if (!success) {
+      ChangeDisplaySettings(NULL, 0);
+      throw Fatal("Cannot enable opengl.");
+    }
   }
 #endif
   
