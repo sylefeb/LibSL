@@ -17,7 +17,7 @@ SET(LIBSL_CORE_HEADERS
 	DataStructures/GraphAlgorithms.h
 	DataStructures/Hierarchy.h
 	DataStructures/Pod.h
-	DataStructures/Pow2Tree.h
+        DataStructures/Pow2Tree.h
 	Errors/Errors.h
 	Geometry/AAB.h
 	Geometry/Bezier.h
@@ -394,9 +394,11 @@ ADD_DEFINITIONS("-DLIBSL_IDKFK")
 ENDIF (LIBSL_POWER_USER)
 
 IF(WIN32)
-TARGET_LINK_LIBRARIES(LibSL jpeg png 3ds zlib loki qhull shlwapi psapi winmm tinyxml hashlibpp)
+#TARGET_LINK_LIBRARIES(LibSL jpeg png 3ds zlib loki qhull shlwapi psapi winmm tinyxml hashlibpp)
+TARGET_LINK_LIBRARIES(LibSL jpeg png 3ds zlib qhull shlwapi psapi winmm tinyxml hashlibpp)
 ELSE(WIN32)
-TARGET_LINK_LIBRARIES(LibSL jpeg png 3ds zlib loki qhull tinyxml hashlibpp)
+#TARGET_LINK_LIBRARIES(LibSL jpeg png 3ds zlib loki qhull tinyxml hashlibpp)
+TARGET_LINK_LIBRARIES(LibSL jpeg png 3ds zlib qhull tinyxml hashlibpp)
 ENDIF(WIN32)
 
 INSTALL(TARGETS LibSL

@@ -147,7 +147,7 @@ ENDIF (NOT WIN32)
 ###############################################################################
 
 # Add C++11 to LibSL target
-#Include(UseCXX11)
+#Include(UseCXX17)
 #AddGlobalCXX11()
 
 ADD_SUBDIRECTORY(src)
