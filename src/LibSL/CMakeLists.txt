@@ -149,7 +149,7 @@ SET(LIBSL_CORE_SOURCE
 	Mesh/VertexFormat_dynamic.cpp
 	Mesh/AnimatedMesh.cpp
 	Mesh/AnimatedMeshController.cpp
-    Mesh/AnimatedMeshFormat_animesh.cpp
+  Mesh/AnimatedMeshFormat_animesh.cpp
 	Geometry/Intersections/Intersection_Plane_AABox.cpp
 	Geometry/Intersections/Intersection_Polygon_AABox.cpp
 	Geometry/Intersections/Intersection_Ray_Plane.cpp
@@ -201,8 +201,8 @@ SET(LIBSL_GL_SOURCE
 	UIHelpers/Trackball.cpp
 	UIHelpers/BindAntTweakBar.cpp
  	UIHelpers/BindImGui.cpp
-    ../libs/src/imgui/imgui.cpp
-    ../libs/src/imgui/imgui_draw.cpp
+  ../libs/src/imgui/imgui.cpp
+  ../libs/src/imgui/imgui_draw.cpp
 )
 
 SET(LIBSL_GL4_HEADERS
@@ -231,8 +231,36 @@ SET(LIBSL_GL4_SOURCE
 	UIHelpers/Trackball.cpp
 	UIHelpers/BindAntTweakBar.cpp
  	UIHelpers/BindImGui.cpp
-    ../libs/src/imgui/imgui.cpp
-    ../libs/src/imgui/imgui_draw.cpp
+  ../libs/src/imgui/imgui.cpp
+  ../libs/src/imgui/imgui_draw.cpp
+)
+
+SET(LIBSL_GL4CORE_HEADERS
+	./LibSL_gl4core.h
+	GLHelpers/GLHelpers.h
+  GLHelpers/GLBasicPipeline.h
+	UIHelpers/BindAntTweakBar.h
+ 	UIHelpers/BindImGui.h
+  ../libs/src/imgui/imgui.h
+  )
+
+SET(LIBSL_GL4CORE_SOURCE
+	GLHelpers/GLHelpers.cpp
+	GLHelpers/AutoBindShader.cpp
+  GLHelpers/GLBasicPipeline.cpp
+	GLHelpers/Triangulate.cpp
+	GPUHelpers/Font.cpp
+	GPUHelpers/GPUHelpers.cpp
+	GPUHelpers/Profiler.cpp
+	GPUHelpers/Shapes.cpp
+	UIHelpers/Manipulator.cpp
+	UIHelpers/SimpleUI.cpp
+	UIHelpers/TrackballUI.cpp
+	UIHelpers/Trackball.cpp
+	UIHelpers/BindAntTweakBar.cpp
+ 	UIHelpers/BindImGui.cpp
+  ../libs/src/imgui/imgui.cpp
+  ../libs/src/imgui/imgui_draw.cpp
 )
 
 CreateSourceGroups("Header files" src "${LIBSL_GL_HEADERS}")
@@ -240,6 +268,9 @@ CreateSourceGroups("Source files" src "${LIBSL_GL_SOURCE}")
 
 CreateSourceGroups("Header files" src "${LIBSL_GL4_HEADERS}")
 CreateSourceGroups("Source files" src "${LIBSL_GL4_SOURCE}")
+
+CreateSourceGroups("Header files" src "${LIBSL_GL4CORE_HEADERS}")
+CreateSourceGroups("Source files" src "${LIBSL_GL4CORE_SOURCE}")
 
 ###############################
 
@@ -434,6 +465,13 @@ IF(LIBSL_BUILD_GL4)
 	ENDIF(NOT LIBSL_BUILD_GL)
 ENDIF(LIBSL_BUILD_GL4)
 
+IF(LIBSL_BUILD_GL4CORE)
+	IF(NOT LIBSL_BUILD_GL)
+		message( FATAL_ERROR "LibSL for OpenGL 4.x core profile requires to build the standard OpenGL version")
+	ENDIF(NOT LIBSL_BUILD_GL)
+ENDIF(LIBSL_BUILD_GL4CORE)
+
+###############################
 
 IF(LIBSL_BUILD_GL)
 
@@ -478,6 +516,8 @@ IF(LIBSL_BUILD_GL)
 		ARCHIVE DESTINATION ${CMAKE_SOURCE_DIR}/lib
 	)
 
+  #####
+  
 IF (LIBSL_BUILD_GL4)
 	ADD_LIBRARY(LibSL_gl4 STATIC ${LIBSL_GL4_SOURCE} ${LIBSL_GL4_HEADERS})
 	SET_TARGET_PROPERTIES(LibSL_gl4 PROPERTIES DEBUG_POSTFIX "-d")
@@ -509,13 +549,55 @@ IF (LIBSL_BUILD_GL4)
 	ENDIF(APPLE)
 	SET_PROPERTY(TARGET LibSL_gl4 APPEND PROPERTY INTERFACE_COMPILE_DEFINITIONS TW_STATIC TW_NO_LIB_PRAGMA)
 
-	TARGET_LINK_LIBRARIES(LibSL_gl4 LibSL glux AntTweakBar)
+	TARGET_LINK_LIBRARIES(LibSL_gl4 LibSL glux)
 	INSTALL(TARGETS LibSL_gl4
 		RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/bin
 		LIBRARY DESTINATION ${CMAKE_SOURCE_DIR}/lib
 		ARCHIVE DESTINATION ${CMAKE_SOURCE_DIR}/lib
 	)
 ENDIF(LIBSL_BUILD_GL4)
+
+  #####
+  
+IF (LIBSL_BUILD_GL4CORE)
+	ADD_LIBRARY(LibSL_gl4core STATIC ${LIBSL_GL4CORE_SOURCE} ${LIBSL_GL4CORE_HEADERS})
+	SET_TARGET_PROPERTIES(LibSL_gl4core PROPERTIES DEBUG_POSTFIX "-d")
+
+	IF (LIBSL_USE_GLUX)
+	  ADD_DEFINITIONS(-DUSE_GLUX)
+	  SET_TARGET_PROPERTIES(LibSL_gl4core PROPERTIES COMPILE_DEFINITIONS "USE_GLUX")
+	  SET_PROPERTY(TARGET LibSL_gl4core APPEND PROPERTY INTERFACE_COMPILE_DEFINITIONS USE_GLUX)
+	  IF(NOT WIN32)
+	    # hack due to MESA headers including ARB_multitexture
+	    ADD_DEFINITIONS(-DGL_ARB_multitexture=1)
+	    SET_PROPERTY(TARGET LibSL_gl4core APPEND PROPERTY COMPILE_DEFINITIONS GL_ARB_multitexture=1)
+	    SET_PROPERTY(TARGET LibSL_gl4core APPEND PROPERTY INTERFACE_COMPILE_DEFINITIONS GL_ARB_multitexture=1)
+	  ENDIF(NOT WIN32)
+	ENDIF (LIBSL_USE_GLUX)
+
+	IF(WIN32)
+		SET_TARGET_PROPERTIES(LibSL_gl4core PROPERTIES COMPILE_DEFINITIONS "OPENGL;OPENGL4;OPENGLCORE;_WIN32_WINNT=0x0400;WINVER=0x500")
+	ELSE(WIN32)
+		FIND_PACKAGE(OpenGL)
+		FIND_PACKAGE(GLUT)
+		SET_TARGET_PROPERTIES(LibSL_gl4core PROPERTIES COMPILE_DEFINITIONS "OPENGL;OPENGL4;OPENGLCORE;USE_GLUT")
+		TARGET_LINK_LIBRARIES(LibSL_gl4core ${OPENGL_LIBRARIES})
+		TARGET_LINK_LIBRARIES(LibSL_gl4core ${GLUT_LIBRARIES})
+		INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/libLibSL_gl4core.a" DESTINATION ${CMAKE_SOURCE_DIR}/lib)
+	ENDIF(WIN32)
+	IF(APPLE)
+		ADD_DEFINITIONS(-DGL_GLEXT_LEGACY)
+	ENDIF(APPLE)
+	SET_PROPERTY(TARGET LibSL_gl4core APPEND PROPERTY INTERFACE_COMPILE_DEFINITIONS TW_STATIC TW_NO_LIB_PRAGMA)
+
+	TARGET_LINK_LIBRARIES(LibSL_gl4core LibSL glux)
+	INSTALL(TARGETS LibSL_gl4core
+		RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/bin
+		LIBRARY DESTINATION ${CMAKE_SOURCE_DIR}/lib
+		ARCHIVE DESTINATION ${CMAKE_SOURCE_DIR}/lib
+	)
+ENDIF(LIBSL_BUILD_GL4CORE)
+
 
 ENDIF(LIBSL_BUILD_GL)
 

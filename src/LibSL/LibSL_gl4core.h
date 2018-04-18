@@ -38,19 +38,21 @@ knowledge of the CeCILL-C license and that you accept its terms.
 // ------------------------------------------------------
 //
 // ------------------------------------------------------
-// Sylvain Lefebvre - 2006-04-03
+// Sylvain Lefebvre - 2012-10-23
 // ------------------------------------------------------
 
 #pragma once
 
-#define LIBSL_GL_INCLUDED
+#define LIBSL_GL4_INCLUDED
 
-// #pragma message("Including LibSL_gl.h")
+#pragma message("Including LibSL_gl4core.h")
 
 #include <LibSL/LibSL_gl.config.h>
 
 #ifndef OPENGL
 #define OPENGL
+#define OPENGL4
+#define OPENGLCORE
 #endif
 
 #ifdef OPENGL
@@ -59,8 +61,8 @@ ERROR_____either_OPENGL_or_DIRECT3D_must_be_defined__not_both _;
 #endif
 #endif
 
-#define LIBSL_OPENGL_MAJOR_VERSION 1
-#define LIBSL_OPENGL_MINOR_VERSION 1
+#define LIBSL_OPENGL_MAJOR_VERSION 4
+#define LIBSL_OPENGL_MINOR_VERSION 3
 
 #ifndef LIBSL_CORE_INCLUDED
 #include <LibSL/LibSL.h>
@@ -70,39 +72,25 @@ ERROR_____either_OPENGL_or_DIRECT3D_must_be_defined__not_both _;
 #include <windows.h>
 #endif
 
+#ifdef USE_GLUX
+#include <glux.h>
+#endif
+
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
 #else
-#ifndef EMSCRIPTEN
 #include <GL/gl.h>
 #include <GL/glu.h>
-#else
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
-#endif
-#endif
-
-#ifndef EMSCRIPTEN
-#ifdef USE_GLUX
-#include <glux.h>
-#endif
 #endif
 
 #include <LibSL/GPUTex/GPUTex_gl.h>
-#include <LibSL/GPUMesh/GPUMesh_gl.h>
+#include <LibSL/GPUMesh/GPUMesh_gl4.h>
 
 #include <LibSL/GLHelpers/GLHelpers.h>
 
 #include <LibSL/Mesh/MeshRenderer.h>
 #include <LibSL/Mesh/TexturedMeshRenderer.h>
-
-// Cg dependencies
-// #include <LibSL/CgHelpers/CgHelpers.h>
-// #include <LibSL/CgHelpers/CgImageProcessing.h>
-// #include <LibSL/Mesh/AnimatedMeshCgRenderer.h>
-// #include <LibSL/GPUHelpers/GPUFillArray2D.h>
-// #include <LibSL/Shaders/Nature/Sky.h>
 
 #include <LibSL/GPUHelpers/GPUHelpers.h>
 #include <LibSL/GPUHelpers/GPUHelpers_gl.h>
@@ -114,7 +102,6 @@ ERROR_____either_OPENGL_or_DIRECT3D_must_be_defined__not_both _;
 #include <LibSL/UIHelpers/TrackballUI.h>
 #include <LibSL/UIHelpers/Manipulator.h>
 #include <LibSL/UIHelpers/BindAntTweakBar.h>
-#include <LibSL/UIHelpers/BindImGui.h>
 
 #ifndef LIBSL_SAFE_NAMESPACE
 
@@ -123,7 +110,5 @@ using namespace LibSL::GPUTex;
 using namespace LibSL::GLHelpers;
 using namespace LibSL::GPUHelpers;
 using namespace LibSL::UIHelpers;
-// using namespace LibSL::Shaders::Nature;
-// using namespace LibSL::CgHelpers;
 
 #endif

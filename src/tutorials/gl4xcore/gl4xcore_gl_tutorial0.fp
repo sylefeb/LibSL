@@ -1,4 +1,4 @@
-#version 420
+#version 420 core
 #extension GL_NV_shader_buffer_load : enable
 #extension GL_NV_gpu_shader5        : enable
 

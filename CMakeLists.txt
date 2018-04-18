@@ -9,9 +9,6 @@ PROJECT(LibSL)
 
 # MESSAGE(STATUS "[in LibSL/]")
 
-set (LIBSL_VERSION_MAJOR 1)
-set (LIBSL_VERSION_MINOR 2)
-
 SET(LibSL_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 #############################################################################
@@ -20,6 +17,7 @@ if(EMSCRIPTEN)
 
 OPTION(LIBSL_BUILD_GL              "Build LibSL_gl" OFF)
 OPTION(LIBSL_BUILD_GL4             "Build LibSL_gl for OpenGL 4.x" ON)
+OPTION(LIBSL_BUILD_GL4CORE         "Build LibSL_gl for OpenGL 4.x core profile" OFF)
 OPTION(LIBSL_BUILD_DX9             "Build LibSL_d3d" OFF)
 OPTION(LIBSL_BUILD_DX10            "Build LibSL_dx10" OFF)
 OPTION(LIBSL_BUILD_LINALG          "Build LibSL_linalg" ON)
@@ -36,6 +34,7 @@ else(EMSCRIPTEN)
 
 OPTION(LIBSL_BUILD_GL              "Build LibSL_gl" ON)
 OPTION(LIBSL_BUILD_GL4             "Build LibSL_gl for OpenGL 4.x" ON)
+OPTION(LIBSL_BUILD_GL4CORE         "Build LibSL_gl for OpenGL 4.x core profile" ON)
 OPTION(LIBSL_BUILD_DX9             "Build LibSL_d3d" OFF)
 OPTION(LIBSL_BUILD_DX10            "Build LibSL_dx10" OFF)
 OPTION(LIBSL_BUILD_LINALG          "Build LibSL_linalg" ON)

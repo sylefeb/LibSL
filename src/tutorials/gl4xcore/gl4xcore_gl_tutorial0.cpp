@@ -41,7 +41,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #include <cmath>
 /* -------------------------------------------------------- */
 
-#include <LibSL/LibSL_gl4.h>
+#include <LibSL/LibSL_gl4core.h>
 
 #ifdef WIN32
 LIBSL_WIN32_FIX; // necessary due to a VC compiler issue
@@ -52,9 +52,9 @@ GLUX_REQUIRE(GL_NV_shader_buffer_load)
 
 /* -------------------------------------------------------- */
 
-#include "gl4x_gl_tutorial0.h"
+#include "gl4xcore_gl_tutorial0.h"
 
-AutoBindShader::gl4x_gl_tutorial0 shader;
+AutoBindShader::gl4xcore_gl_tutorial0 shader;
 
 AutoPtr<Shapes::Square> g_Square;
 GLBuffer                g_Buffer;
@@ -80,12 +80,18 @@ void mainKeyboard(uchar key)
 
 void mainRender()
 {
+  LIBSL_GL_CHECK_ERROR;
+
   // viewport
   LibSL::GPUHelpers::Renderer::setViewport(0,0,256,256);
+
+  LIBSL_GL_CHECK_ERROR;
 
   // clear screen
   clearScreen(LIBSL_COLOR_BUFFER | LIBSL_DEPTH_BUFFER,1.0,0.5,0.5);
   
+  LIBSL_GL_CHECK_ERROR;
+
   // draw
   // -> activate shader
   shader.begin();
@@ -95,25 +101,26 @@ void mainRender()
   g_Square->render();
   // -> deactivate shader
   shader.end();
-  
+
+  LIBSL_GL_CHECK_ERROR;
 }
 
 /* -------------------------------------------------------- */
 
-int main(int argc, char **argv) 
+int main(int argc, char **argv)
 {
   try {
 
     // init trackball
     TrackballUI::onKeyPressed = mainKeyboard;
     TrackballUI::onRender     = mainRender;
-    TrackballUI::init(256,256,"OpenGL 4.x tutorial");
+    TrackballUI::init(256,256,"OpenGL 4.x core profile tutorial");
     
     // init shader
     shader  .init();
     
     g_Square = AutoPtr<Shapes::Square>(new Shapes::Square());
-    
+
     g_Buffer.init(256);
 
     // get NVidia 64 bits GPU pointer to buffer
