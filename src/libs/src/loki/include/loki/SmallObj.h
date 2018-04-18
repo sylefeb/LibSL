@@ -455,12 +455,7 @@ namespace Loki
     public:
 
         /// Throwing single-object new throws bad_alloc when allocation fails.
-#ifdef _MSC_VER
-        /// @note MSVC complains about non-empty exception specification lists.
         static void * operator new ( std::size_t size )
-#else
-        static void * operator new ( std::size_t size ) noexcept(false)
-#endif
         {
             typename MyThreadingModel::Lock lock;
             (void)lock; // get rid of warning

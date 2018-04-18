@@ -146,6 +146,12 @@ ENDIF (NOT WIN32)
 
 ###############################################################################
 
+if(EMSCRIPTEN)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s WASM=1")
+endif(EMSCRIPTEN)
+
+###############################################################################
+
 # Add C++11 to LibSL target
 #Include(UseCXX17)
 #AddGlobalCXX11()

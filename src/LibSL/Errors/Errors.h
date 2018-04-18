@@ -72,9 +72,10 @@ namespace LibSL {
 
     public:
 
-      Fatal(const std::string &str) {
-          auto  length = str.copy(m_Message,e_MessageBufferSize-1);
-          m_Message[length] = '\0';
+      Fatal(const std::string &str) 
+      {
+        size_t length = str.copy(m_Message,e_MessageBufferSize-1);
+        m_Message[length] = '\0';
       }
 
 #ifdef WIN32

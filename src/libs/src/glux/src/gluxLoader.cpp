@@ -88,6 +88,9 @@ void glux::init(int flags,const char *profile)
     exit (-1);
   }
 
+	// output rendered
+	strout << "Renderer string: " << glGetString(GL_RENDERER) << std::endl;
+
   // read profile
   if (profile != NULL) {
     ifstream fprof(profile);     

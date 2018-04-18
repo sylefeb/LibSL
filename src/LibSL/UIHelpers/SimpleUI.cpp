@@ -788,7 +788,7 @@ void NAMESPACE::init(
     // ShowCursor(FALSE);	// Hide Mouse Pointer
   } else {
     // create main window
-    style = frameLess ? (WS_POPUP) : (WS_CAPTION | WS_POPUPWINDOW | /*WS_BORDER |*/ WS_SIZEBOX | WS_MAXIMIZEBOX);
+    style = frameLess ? (WS_POPUP) : (WS_CAPTION | WS_POPUPWINDOW | /*WS_BORDER |*/ WS_SIZEBOX | WS_MAXIMIZEBOX | WS_MINIMIZEBOX);
     exStyle = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
   }
   style |= CS_OWNDC;

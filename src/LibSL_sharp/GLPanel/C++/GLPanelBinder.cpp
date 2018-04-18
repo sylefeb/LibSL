@@ -18,22 +18,7 @@ GLPANELBINDER_API int nGLPanelBinder = 0;
 
 static void defaultOnRender(HWND,uint w,uint h)
 {
-  GPUHelpers::clearScreen( LIBSL_COLOR_BUFFER, 1.0f, 1.0f, 0.0f);
-
-  glDisable(GL_LIGHTING);
-  glDisable(GL_TEXTURE_2D);
-  glDisable(GL_CULL_FACE);
-  static float t = 0;
-  t += 0.01f;
-  GPUHelpers::Transform::ortho2D(LIBSL_PROJECTION_MATRIX,0,1,0,1);
-  GPUHelpers::Transform::identity(LIBSL_MODELVIEW_MATRIX);
-  glTranslatef(0.5f + cos(t)*0.2f,0.5f + sin(t)*0.2f,0);
-  glScalef(0.1f,0.1f,0.1f);
-  glColor3f(0.5f,0.5f,0.5f);
-  glBegin(GL_QUADS);
-  glVertex2i(0,0);  glVertex2i(0,1);
-  glVertex2i(1,1);  glVertex2i(1,0);
-  glEnd();
+  GPUHelpers::clearScreen(LIBSL_COLOR_BUFFER, 1.0f, 0.0f, 1.0f);
 }
 
 //---------------------------------------------------------------------------
