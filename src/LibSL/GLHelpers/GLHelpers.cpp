@@ -735,12 +735,12 @@ void NAMESPACE::GLTexBuffer::createTexture()
 
 void NAMESPACE::GLTexBuffer::deleteTexture()
 {
-  LIBSL_GL_CHECK_ERROR;
   if ( m_glTexId != 0 ) {
+    LIBSL_GL_CHECK_ERROR;
     glDeleteTextures  (1, &m_glTexId);
     m_glTexId = 0;
+    LIBSL_GL_CHECK_ERROR;
   }
-  LIBSL_GL_CHECK_ERROR;
 }
 
 // -----------------------------------------------------
