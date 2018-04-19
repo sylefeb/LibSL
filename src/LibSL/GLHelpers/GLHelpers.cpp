@@ -650,7 +650,6 @@ void NAMESPACE::GLBuffer::terminate()
 
 NAMESPACE::GLBuffer::~GLBuffer()
 {
-  // NOTE: do not call check error from here as GL may no longer be initialized
   terminate();
 }
 
