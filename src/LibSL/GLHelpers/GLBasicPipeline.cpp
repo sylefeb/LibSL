@@ -39,6 +39,16 @@ knowledge of the CeCILL-C license and that you accept its terms.
 
 #define NAMESPACE LibSL::GLHelpers
 
+#ifdef OPENGL4
+#ifdef OPENGLCORE
+#include <LibSL/LibSL_gl4core.h>
+#else
+#include <LibSL/LibSL_gl4.h>
+#endif
+#else
+#include <LibSL/LibSL_gl.h>
+#endif
+
 // ------------------------------------------------------
 
 NAMESPACE::GLBasicPipeline *NAMESPACE::GLBasicPipeline::s_Instance = NULL;
@@ -46,7 +56,7 @@ NAMESPACE::GLBasicPipeline *NAMESPACE::GLBasicPipeline::s_Instance = NULL;
 // ------------------------------------------------------
 
 static std::string vp_string =
-#ifdef LIBSL_OPENGL_CORE_PROFILE
+#ifdef OPENGLCORE
 "#version " + std::to_string(LIBSL_OPENGL_MAJOR_VERSION) + std::to_string(LIBSL_OPENGL_MINOR_VERSION) + "0 core\n" +
 "in vec4 mvf_vertex;\n"
 "in vec4 mvf_texcoord0;\n"
@@ -74,7 +84,7 @@ static std::string vp_string =
 #endif
 
 static std::string fp_string =
-#ifdef LIBSL_OPENGL_CORE_PROFILE
+#ifdef OPENGLCORE
 "#version " + std::to_string(LIBSL_OPENGL_MAJOR_VERSION) + std::to_string(LIBSL_OPENGL_MINOR_VERSION) + "0 core\n" +
 "uniform vec4 u_color;\n"
 "uniform sampler2D u_tex;\n"

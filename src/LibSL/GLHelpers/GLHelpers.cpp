@@ -566,26 +566,15 @@ void NAMESPACE::GLParameter::setArray(const v4u *pv,int size)
 
 #ifdef OPENGL4
 
-#if 1
-void NAMESPACE::GLParameter::set(const GLBuffer& buf)
-{
-  authorize();
-  if (!m_Strict && m_Handle == -1) return;
-  glUniformui64NV( m_Handle, buf.ptr() );
-}
-#endif
-
 NAMESPACE::GLBuffer::GLBuffer()
 {
   m_glId   = 0;
-  m_gpuPtr = 0;
   m_Sz     = 0;
 }
 
 NAMESPACE::GLBuffer::GLBuffer(uint sz)
 {
   m_glId   = 0;
-  m_gpuPtr = 0;
   m_Sz     = 0;
   init( sz );
 }
@@ -599,14 +588,12 @@ NAMESPACE::GLBuffer::GLBuffer(GLBuffer const& buffer)
 void NAMESPACE::GLBuffer::adopt(GLBuffer const& buffer)
 {
   m_glId   = buffer.m_glId;
-  m_gpuPtr = buffer.m_gpuPtr;
   m_Sz     = buffer.m_Sz;
 }
 
 void NAMESPACE::GLBuffer::forget()
 {
   m_glId   = 0;
-  m_gpuPtr = 0;
   m_Sz     = 0;
 }
 
@@ -635,12 +622,6 @@ void NAMESPACE::GLBuffer::init(uint sz)
 	glGenBuffersARB(1, &m_glId);
   glBindBufferARB(c_buf_type, m_glId);
   glBufferDataARB(c_buf_type, sz, NULL, GL_DYNAMIC_DRAW);
-#if 0
-  if (GLUX_IS_AVAILABLE(GL_NV_shader_buffer_load)) {
-    glGetBufferParameterui64vNV(c_buf_type, GL_BUFFER_GPU_ADDRESS_NV, &m_gpuPtr );
-    glMakeBufferResidentNV(c_buf_type, GL_READ_WRITE);
-  }
-#endif
   glBindBufferARB(c_buf_type, 0);
   LIBSL_GL_CHECK_ERROR;
 }
@@ -651,34 +632,24 @@ void NAMESPACE::GLBuffer::resize(uint sz)
   m_Sz     = sz;
   glBindBufferARB(c_buf_type, m_glId);
   glBufferDataARB(c_buf_type, sz, NULL, GL_DYNAMIC_DRAW);
-#if 0
-  if (GLUX_IS_AVAILABLE(GL_NV_shader_buffer_load)) {
-    glGetBufferParameterui64vNV(c_buf_type, GL_BUFFER_GPU_ADDRESS_NV, &m_gpuPtr );
-    glMakeBufferResidentNV(c_buf_type, GL_READ_WRITE);
-  }
-#endif
   glBindBufferARB(c_buf_type, 0);
   LIBSL_GL_CHECK_ERROR;
 }
 
 void NAMESPACE::GLBuffer::terminate()
 {
-  // TODO/FIXME is that enough to cleanup?
   if (m_glId != 0) {
     LIBSL_GL_CHECK_ERROR;
     glBindBufferARB(c_buf_type, 0);
-    LIBSL_GL_CHECK_ERROR;
     glDeleteBuffersARB(1,&m_glId);
     LIBSL_GL_CHECK_ERROR;
     m_glId   = 0;
-    m_gpuPtr = 0;
     m_Sz     = 0;
   }
 }
 
 NAMESPACE::GLBuffer::~GLBuffer()
 {
-  // NOTE: do not call check error from here as GL may no longer be initialized
   terminate();
 }
 
@@ -763,12 +734,12 @@ void NAMESPACE::GLTexBuffer::createTexture()
 
 void NAMESPACE::GLTexBuffer::deleteTexture()
 {
-  LIBSL_GL_CHECK_ERROR;
   if ( m_glTexId != 0 ) {
+    LIBSL_GL_CHECK_ERROR;
     glDeleteTextures  (1, &m_glTexId);
     m_glTexId = 0;
+    LIBSL_GL_CHECK_ERROR;
   }
-  LIBSL_GL_CHECK_ERROR;
 }
 
 // -----------------------------------------------------

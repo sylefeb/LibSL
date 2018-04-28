@@ -69,7 +69,12 @@ using namespace LibSL::System::Types;
 // ------------------------------------------------------
 
 #include <LibSL/GPUTex/GPUTex_GL_types.h>
+
+#ifdef OPENGL4
+#include <LibSL/GPUTex/GPUTex_GL4_formats.h>
+#else
 #include <LibSL/GPUTex/GPUTex_GL_formats.h>
+#endif
 
 // ------------------------------------------------------
 

@@ -54,7 +54,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #endif // EMSCRIPTEN
 
 #ifdef OPENGL4
+#ifdef OPENGLCORE
+#include "LibSL_gl4core.h"
+#else
 #include "LibSL_gl4.h"
+#endif
 #else
 #include "LibSL_gl.h"
 #endif // OPENGL4
@@ -372,6 +376,13 @@ void NAMESPACE::init(uint width,uint height,const char *title,char **argv,int ar
   sl_assert(!fullscreen); // not supported
 
   glutInit              (&argc, argv);
+
+#ifdef OPENGLCORE
+  glutInitContextVersion(LIBSL_OPENGL_MAJOR_VERSION,LIBSL_OPENGL_MINOR_VERSION);
+  glutInitContextFlags(GLUT_FORWARD_COMPATIBLE);
+  glutInitContextProfile(GLUT_CORE_PROFILE);
+#endif
+
   glutInitDisplayMode   (GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA | GLUT_STENCIL | GLUT_ALPHA);
   glutInitWindowPosition(0,0);
   glutInitWindowSize    (width,height);
@@ -385,7 +396,7 @@ void NAMESPACE::init(uint width,uint height,const char *title,char **argv,int ar
   glutPassiveMotionFunc (glutMotion);
   glutMouseFunc         (glutMouse);
   glutKeyboardFunc      (glutKeyboard);
-  glutKeyboardUpFunc	  (glutKeyboardUp);
+  glutKeyboardUpFunc	(glutKeyboardUp);
   glutSpecialFunc       (glutKeyboardSpecial);
   glutSpecialUpFunc     (glutKeyboardSpecialUp);
   glutReshapeFunc       (glutReshape);
@@ -694,7 +705,8 @@ static bool enableOpenGL(HWND hWnd, HDC * hDC, HGLRC * hRC)
   return true;
 }
 
-#ifdef LIBSL_OPENGL_CORE_PROFILE
+#ifdef OPENGLCORE
+
 // see https://mariuszbartosik.com/opengl-4-x-initialization-in-windows-without-a-framework/
 static bool enabelCoreProfile(HWND * hWnd, HDC * hDC, HGLRC * hRC, HWND hWndCP)
 {
@@ -711,20 +723,19 @@ static bool enabelCoreProfile(HWND * hWnd, HDC * hDC, HGLRC * hRC, HWND hWndCP)
     WGL_ALPHA_BITS_ARB, 8,
     WGL_DEPTH_BITS_ARB, 24,
     WGL_STENCIL_BITS_ARB, 8,
-    WGL_SAMPLE_BUFFERS_ARB, GL_TRUE,
-    WGL_SAMPLES_ARB, 4,
     0
   };
   int contextAttributes[] = {
     WGL_CONTEXT_MAJOR_VERSION_ARB, LIBSL_OPENGL_MAJOR_VERSION,
     WGL_CONTEXT_MINOR_VERSION_ARB, LIBSL_OPENGL_MINOR_VERSION,
     WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
+    WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB, 
     0 };
 
   HDC hDCCP = GetDC(hWndCP);
   PIXELFORMATDESCRIPTOR PFD;
   int pixelFormatID; UINT numFormats;
-  bool status = wglChoosePixelFormatARB(hDCCP, pixelAttribs, NULL, 1, &pixelFormatID, &numFormats);
+  BOOL status = wglChoosePixelFormatARB(hDCCP, pixelAttribs, NULL, 1, &pixelFormatID, &numFormats);
   DescribePixelFormat(hDCCP, pixelFormatID, sizeof(PFD), &PFD);
   SetPixelFormat(hDCCP, pixelFormatID, &PFD);
   HGLRC hRCCP = wglCreateContextAttribsARB(hDCCP, NULL, contextAttributes);
@@ -734,10 +745,10 @@ static bool enabelCoreProfile(HWND * hWnd, HDC * hDC, HGLRC * hRC, HWND hWndCP)
   ReleaseDC(*hWnd, *hDC);
   DestroyWindow(*hWnd);
 
-  if (!wglMakeCurrent(hDCCP, hRCCP)) {
+  if (!wglMakeCurrent(hDCCP, hRCCP) || hRCCP == NULL) {
     wglDeleteContext(hRCCP);
     ReleaseDC(hWndCP, hDCCP);
-    DestroyWindow(hWndCP);
+    *hWnd = hWndCP;
     return false;
   }
 
@@ -747,15 +758,6 @@ static bool enabelCoreProfile(HWND * hWnd, HDC * hDC, HGLRC * hRC, HWND hWndCP)
   return true;
 }
 
-static void loadCoreExtensionNames()
-{
-  int num_extensions = 0;
-  glGetIntegerv(GL_NUM_EXTENSIONS, &num_extensions);
-  ForIndex(index, num_extensions)
-  {
-    g_glcore_extensions.push_back(std::string((const char*)glGetStringi(GL_EXTENSIONS, index)));
-  }
-}
 #endif
 
 // Disable OpenGL
@@ -886,15 +888,22 @@ void NAMESPACE::init(
     throw Fatal("Cannot enable opengl.");
   }
 
-#ifdef LIBSL_OPENGL_CORE_PROFILE
-  HWND hWnd = CreateWindowEx(0, L"SimpleUI::GL", toUnicode(title), style, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance, NULL);
+#ifdef OPENGLCORE
+  HWND hWnd = CreateWindowEx(
+    0, 
+    L"SimpleUI::GL", toUnicode(title), 
+    style, rc.left, rc.top, 
+    rc.right - rc.left, rc.bottom - rc.top, 
+    NULL, NULL, hInstance, NULL);
   success = enabelCoreProfile(&s_hWnd, &s_hDC, &s_hRC, hWnd);
   if (!success) {
-    // failed
-    ChangeDisplaySettings(NULL, 0);
-    throw Fatal("Cannot enable opengl core-profile.");
+    // failed core-profile intialization, retry with compatibility mode
+    success = enableOpenGL(s_hWnd, &s_hDC, &s_hRC);
+    if (!success) {
+      ChangeDisplaySettings(NULL, 0);
+      throw Fatal("Cannot enable opengl.");
+    }
   }
-  loadCoreExtensionNames();
 #endif
   
   s_FullScreen = fullscreen;

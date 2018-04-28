@@ -17,8 +17,8 @@ using namespace std;
 // string of wgl extensions
 const char *g_glux__wglExtensions = NULL;
 
-// core profile extensins
-vector<string> g_glcore_extensions;
+// core profile extensions
+std::set<std::string>  g_glux__glExtensions;
 
 // -------------------------------------------------------- 
 
@@ -33,6 +33,13 @@ typedef const char * (APIENTRYP t_wglGetExtensionsStringARB) (HDC hdc);
 #else
 #include <GL/gl.h>
 #endif
+
+// -------------------------------------------------------- 
+
+// for core profile compatibility
+#define GL_NUM_EXTENSIONS                 0x821D // how to avoid this?
+#define GL_EXTENSIONS                     0x1F03 // how to avoid this?
+typedef const GLubyte *(APIENTRYP t_glGetStringi) (GLenum name, GLuint index);
 
 // -------------------------------------------------------- 
 
@@ -76,7 +83,7 @@ void glux::init(int flags,const char *profile)
   // MessageBoxA(NULL,(const char *)glGetString(GL_EXTENSIONS), "", MB_OK);
 
   strout << "-=-=-=-=-=-=-=-=-=-=-=-=-" << endl;
-  strout << "      glux v1.95"          << endl;
+  strout << "      glux v1.96"          << endl;
   strout << "-=-=-=-=-=-=-=-=-=-=-=-=-" << endl;
 
   // check if OpenGL is initialized
@@ -125,6 +132,17 @@ void glux::init(int flags,const char *profile)
   if (__wglGetExtensionsStringARB != NULL)
     g_glux__wglExtensions = __wglGetExtensionsStringARB(wglGetCurrentDC());
 #endif
+
+  // attempt to load extension list with getStringi
+  t_glGetStringi __glGetStringi = NULL;
+  __glGetStringi = (t_glGetStringi)GLUX_LOAD_PROC("glGetStringi");
+  if (__glGetStringi != NULL) {
+    int num_extensions = 0;
+    glGetIntegerv(GL_NUM_EXTENSIONS, &num_extensions);
+    for (int i = 0; i < num_extensions; i++) {
+      g_glux__glExtensions.insert(std::string((const char*)__glGetStringi(GL_EXTENSIONS, i)));
+    }
+  }
 
   // check if plugins are available
   if (s_Plugins != NULL) {

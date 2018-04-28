@@ -33,21 +33,19 @@
 
 // -------------------------------------------------------- 
 
-extern const char *g_glux__wglExtensions;
-extern std::vector<std::string> g_glcore_extensions;
+extern const char            *g_glux__wglExtensions;
+extern std::set<std::string>  g_glux__glExtensions;
 
 // --------------------------------------------------------
 
 namespace glux
 {
-
   class gluxPlugin;
 
   void init(int flags,const char *profile);
   void shutdown();
   void registerPlugin(gluxPlugin *pl); 
   bool validateExtension(const std::pair<std::string,gluxPlugin*>& ext,int flags,bool use_profile,const char *profile,const std::set<std::string>& ext_profile,std::stringstream& strout);
-
 } 
 
 // -------------------------------------------------------- 
