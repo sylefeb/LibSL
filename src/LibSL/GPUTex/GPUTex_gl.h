@@ -60,7 +60,12 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #include <LibSL/GPUTex/GPUTex.h>
 #endif
 
+#ifdef OPENGL4
+#include <LibSL/GPUTex/GPUTex_CompilePolicy_GL4.h>
+#else
 #include <LibSL/GPUTex/GPUTex_CompilePolicy_GL.h>
+#endif
+
 #include <LibSL/Math/Tuple.h>
 
 // ------------------------------------------------------
