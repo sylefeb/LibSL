@@ -48,7 +48,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
 #else
-#include <GL/gl.h>
 #include <GL_VERSION_1_2.h>
 #endif
 
