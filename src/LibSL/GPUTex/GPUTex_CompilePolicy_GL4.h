@@ -45,10 +45,12 @@ knowledge of the CeCILL-C license and that you accept its terms.
 
 // ------------------------------------------------------
 
-#ifdef __APPLE__
+#if defined(__APPLE__)
 #include <OpenGL/gl.h>
-#else
+#elif defined(WIN32)
 #include <GL_VERSION_1_2.h>
+#else
+#include <GL/gl.h>
 #endif
 
 // ------------------------------------------------------
