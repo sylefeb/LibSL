@@ -37,7 +37,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 // LibSL::SimpleUI
 // ------------------------------------------------------
 //
-// Simple UI, build upon glut / DXUT
+// Simple UI, build upon glfw / DXUT
 //
 // TODO / FIXME How to deal with scan codes across linux-glut / windows?
 //              Introduce translation table? 
