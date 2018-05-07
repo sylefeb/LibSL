@@ -67,9 +67,9 @@ namespace LibSL {
 
       MeshRenderer(LibSL::Mesh::TriangleMesh *m)
       {
-        //if (m->sizeOfVertexData() != MVF_sizeof<T_VertexFormat>::value) {
-        //  throw Fatal("[MeshRenderer::MeshRenderer] - vertex format non compatible with vertex data! (sizeof(vf)=%d sizeof(vd)=%d)",MVF_sizeof<T_VertexFormat>::value,m->sizeOfVertexData());
-        //}
+        if (m->sizeOfVertexData() != MVF_sizeof<T_VertexFormat>::value) {
+          throw Fatal("[MeshRenderer::MeshRenderer] - vertex format non compatible with vertex data! (sizeof(vf)=%d sizeof(vd)=%d)",MVF_sizeof<T_VertexFormat>::value,m->sizeOfVertexData());
+        }
         // build mesh
         m_RenderMesh = LibSL::Memory::Pointer::AutoPtr<t_RenderMesh>(new t_RenderMesh());
         m_RenderMesh->begin(GPUMESH_TRIANGLELIST);

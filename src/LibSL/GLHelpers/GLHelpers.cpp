@@ -650,7 +650,6 @@ void NAMESPACE::GLBuffer::terminate()
 
 NAMESPACE::GLBuffer::~GLBuffer()
 {
-  // NOTE: do not call check error from here as GL may no longer be initialized
   terminate();
 }
 
@@ -735,12 +734,12 @@ void NAMESPACE::GLTexBuffer::createTexture()
 
 void NAMESPACE::GLTexBuffer::deleteTexture()
 {
-  LIBSL_GL_CHECK_ERROR;
   if ( m_glTexId != 0 ) {
+    LIBSL_GL_CHECK_ERROR;
     glDeleteTextures  (1, &m_glTexId);
     m_glTexId = 0;
+    LIBSL_GL_CHECK_ERROR;
   }
-  LIBSL_GL_CHECK_ERROR;
 }
 
 // -----------------------------------------------------

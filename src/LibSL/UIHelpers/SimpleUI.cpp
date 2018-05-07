@@ -232,7 +232,7 @@ uint glut_to_LibSL_scancode(uchar key,uint sc)
   case GLUT_KEY_HOME: return LIBSL_KEY_HOME;
   case GLUT_KEY_END: return LIBSL_KEY_END;
   case GLUT_KEY_INSERT: return LIBSL_KEY_INSERT;
-  case 111: return LIBSL_KEY_DELETE;
+  case GLUT_KEY_DELETE: return LIBSL_KEY_DELETE;
   case 112: return LIBSL_KEY_SHIFT;
   case 114: return LIBSL_KEY_CTRL;
   case 116: return LIBSL_KEY_ALT;
@@ -723,8 +723,6 @@ static bool enabelCoreProfile(HWND * hWnd, HDC * hDC, HGLRC * hRC, HWND hWndCP)
     WGL_ALPHA_BITS_ARB, 8,
     WGL_DEPTH_BITS_ARB, 24,
     WGL_STENCIL_BITS_ARB, 8,
-    //WGL_SAMPLE_BUFFERS_ARB, GL_TRUE,
-    //WGL_SAMPLES_ARB, 4,
     0
   };
   int contextAttributes[] = {
@@ -737,7 +735,7 @@ static bool enabelCoreProfile(HWND * hWnd, HDC * hDC, HGLRC * hRC, HWND hWndCP)
   HDC hDCCP = GetDC(hWndCP);
   PIXELFORMATDESCRIPTOR PFD;
   int pixelFormatID; UINT numFormats;
-  bool status = wglChoosePixelFormatARB(hDCCP, pixelAttribs, NULL, 1, &pixelFormatID, &numFormats);
+  BOOL status = wglChoosePixelFormatARB(hDCCP, pixelAttribs, NULL, 1, &pixelFormatID, &numFormats);
   DescribePixelFormat(hDCCP, pixelFormatID, sizeof(PFD), &PFD);
   SetPixelFormat(hDCCP, pixelFormatID, &PFD);
   HGLRC hRCCP = wglCreateContextAttribsARB(hDCCP, NULL, contextAttributes);
@@ -747,10 +745,10 @@ static bool enabelCoreProfile(HWND * hWnd, HDC * hDC, HGLRC * hRC, HWND hWndCP)
   ReleaseDC(*hWnd, *hDC);
   DestroyWindow(*hWnd);
 
-  if (!wglMakeCurrent(hDCCP, hRCCP)) {
+  if (!wglMakeCurrent(hDCCP, hRCCP) || hRCCP == NULL) {
     wglDeleteContext(hRCCP);
     ReleaseDC(hWndCP, hDCCP);
-    DestroyWindow(hWndCP);
+    *hWnd = hWndCP;
     return false;
   }
 
@@ -893,15 +891,18 @@ void NAMESPACE::init(
 #ifdef OPENGLCORE
   HWND hWnd = CreateWindowEx(
     0, 
-    L"SimpleUI::GL-core", toUnicode(title), 
+    L"SimpleUI::GL", toUnicode(title), 
     style, rc.left, rc.top, 
     rc.right - rc.left, rc.bottom - rc.top, 
     NULL, NULL, hInstance, NULL);
   success = enabelCoreProfile(&s_hWnd, &s_hDC, &s_hRC, hWnd);
   if (!success) {
-    // failed
-    ChangeDisplaySettings(NULL, 0);
-    throw Fatal("Cannot enable opengl core-profile.");
+    // failed core-profile intialization, retry with compatibility mode
+    success = enableOpenGL(s_hWnd, &s_hDC, &s_hRC);
+    if (!success) {
+      ChangeDisplaySettings(NULL, 0);
+      throw Fatal("Cannot enable opengl.");
+    }
   }
 #endif
   

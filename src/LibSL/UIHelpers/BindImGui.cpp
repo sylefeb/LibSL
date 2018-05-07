@@ -292,7 +292,7 @@ static bool ImGui_ImplSimpleUI_CreateDeviceObjects()
     "varying vec4 Frag_Color;\n"
     "void main()\n"
     "{\n"
-    "	gl_FragColor = Frag_Color * texture2Drer( Texture, Frag_UV.st);\n"
+    "	gl_FragColor = Frag_Color * texture2D( Texture, Frag_UV.st);\n"
     "}\n";
 
   g_ShaderHandle = glCreateProgram();
