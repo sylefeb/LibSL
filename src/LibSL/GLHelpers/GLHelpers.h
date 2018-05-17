@@ -225,7 +225,10 @@ namespace LibSL {
 
 		public:
 
-			GLShader() : m_Shader(0), m_Strict(true), m_Active(false), m_gsMaxVerticesOut(0) { m_Name="[null]"; }
+			GLShader() : m_Shader(0), m_Strict(true), m_Active(false), m_gsMaxVerticesOut(0) 
+      { 
+        m_Name="[null]"; 
+      }
 
 			void init(const char *vp_code,const char *fp_code,const t_GeometryShaderNfo *gs_code = NULL,const char *name="[noname]");
 
@@ -266,7 +269,7 @@ namespace LibSL {
 
 		public:
 
-			GLParameter() : m_Shader(NULL), m_Handle(-1), m_Strict(true)  { /*m_Name = "[null]";*/ }
+			GLParameter() : m_Shader(NULL), m_Handle(-1), m_Strict(true)  { }
 
 			// init
 			void init(GLBaseShader& shader,const char *name);
