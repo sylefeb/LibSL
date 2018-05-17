@@ -258,9 +258,6 @@ namespace LibSL {
 			// handle to parameter
 			GLint            m_Handle;
 
-			// parameter name
-			std::string      m_Name;
-
 			// check everything is properly loaded
 			void authorize() const;
 
@@ -269,7 +266,7 @@ namespace LibSL {
 
 		public:
 
-			GLParameter() : m_Shader(NULL), m_Handle(-1), m_Strict(true)  { m_Name = "[null]"; }
+			GLParameter() : m_Shader(NULL), m_Handle(-1), m_Strict(true)  { /*m_Name = "[null]";*/ }
 
 			// init
 			void init(GLBaseShader& shader,const char *name);

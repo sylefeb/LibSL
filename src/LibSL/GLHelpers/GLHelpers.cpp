@@ -350,7 +350,6 @@ void NAMESPACE::GLParameter::init(GLBaseShader& shader,const char *name)
       // cerr << sprint("GLParameter - WARNING: shader '%s' - parameter '%s' was not found\n",shader.name(),name);
     }
   }
-  m_Name = string(name);
 }
 
 // -----------------------------------------------------

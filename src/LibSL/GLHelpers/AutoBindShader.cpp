@@ -21,6 +21,8 @@ static std::string base64_decode(std::string const& encoded_string)
   unsigned char char_array_4[4], char_array_3[3];
   std::string ret;
   while (in_len-- && (encoded_string[in_] != '=') && is_base64(encoded_string[in_])) {
+    sl_assert(i<4);
+    sl_assert(in_<(int)encoded_string.size());
     char_array_4[i++] = encoded_string[in_]; in_++;
     if (i == 4) {
       for (i = 0; i < 4; i++) {
@@ -36,6 +38,7 @@ static std::string base64_decode(std::string const& encoded_string)
     }
   }
   if (i) {
+    sl_assert(i<4);
     for (j = i; j < 4; j++) {
       char_array_4[j] = 0;
     }
