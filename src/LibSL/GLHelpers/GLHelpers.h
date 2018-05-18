@@ -210,7 +210,6 @@ namespace LibSL {
 
 		private:
 
-			std::string            m_Name;
 			GLhandleARB            m_Shader;
 
 			// error or warnings ?
@@ -225,12 +224,9 @@ namespace LibSL {
 
 		public:
 
-			GLShader() : m_Shader(0), m_Strict(true), m_Active(false), m_gsMaxVerticesOut(0) 
-      { 
-        m_Name="[null]"; 
-      }
+			GLShader() : m_Shader(0), m_Strict(true), m_Active(false), m_gsMaxVerticesOut(0) { }
 
-			void init(const char *vp_code,const char *fp_code,const t_GeometryShaderNfo *gs_code = NULL,const char *name="[noname]");
+			void init(const char *vp_code,const char *fp_code,const t_GeometryShaderNfo *gs_code = NULL);
 
 			void init(GLhandleARB shader);
 
@@ -239,8 +235,8 @@ namespace LibSL {
 			void begin();
 			void end();
 
-			GLhandleARB                        handle()     const {return (m_Shader);}
-			const char *                  name()       const {return (m_Name.c_str());}
+			GLhandleARB handle() const {return (m_Shader);}
+      const char *name()   const { return "[runtime]"; }
 
 			bool  isReady()  const {return (m_Shader!=0);}
 			bool  isActive() const {return (m_Active);}
@@ -543,7 +539,6 @@ namespace LibSL {
 		{
 		private:
 
-			std::string            m_Name;
 			GLuint                 m_Shader;
 
 			// error or warnings ?
@@ -555,9 +550,9 @@ namespace LibSL {
 
 		public:
 
-			GLCompute() : m_Shader(0), m_Strict(true), m_Active(false) { m_Name="[null]"; }
+			GLCompute() : m_Shader(0), m_Strict(true), m_Active(false) { }
 
-			void init(const char *cp_code,const char *name="[noname]");
+			void init(const char *cp_code);
 			void init(GLuint shader);
 
 			void run(const LibSL::Math::v3i& numGroups);
@@ -568,7 +563,6 @@ namespace LibSL {
 			void end();
 
 			GLuint                        handle()     const {return (m_Shader);}
-			const char *                  name()       const {return (m_Name.c_str());}
 
 			bool  isReady()  const {return (m_Shader!=0);}
 			bool  isActive() const {return (m_Active);}

@@ -126,10 +126,8 @@ GLhandleARB NAMESPACE::loadGLSLProgram(const char *prg,GLuint type)
 void NAMESPACE::GLShader::init(
 	const char				  *vp_code,
 	const char			    *fp_code,
-	const t_GeometryShaderNfo *gs_code,
-	const char				  *name)
+	const t_GeometryShaderNfo *gs_code)
 {
-  m_Name   = string(name);
   m_Shader = glCreateProgramObjectARB();
 
   GLhandleARB vp,fp,gs;
@@ -244,7 +242,7 @@ void NAMESPACE::GLShader::init(
       if (fp_code) out << fp_code;
       out.close();
     }
-    throw GLException("\n\n**** GLSL program failed to link (%s) ****\n%s",m_Name.c_str(),infoLog.raw());
+    throw GLException("\n\n**** GLSL program failed to link (%s) ****\n%s",name(),infoLog.raw());
   }
 
   LIBSL_GL_CHECK_ERROR;
@@ -283,7 +281,6 @@ void NAMESPACE::GLShader::init(
 void NAMESPACE::GLShader::init(GLhandleARB shader)
 {
   m_Shader = shader;
-  m_Name   = string("[runtime]");
 }
 
 // -----------------------------------------------------
@@ -749,7 +746,6 @@ void NAMESPACE::GLCompute::init(
 	const char				  *cs_code,
 	const char				  *name)
 {
-  m_Name   = string(name);
   m_Shader = glCreateProgramObjectARB();
 
   GLuint cs;
@@ -769,7 +765,7 @@ void NAMESPACE::GLCompute::init(
 			     GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
     Array<GLcharARB> infoLog(maxLength);
     glGetInfoLogARB(m_Shader, maxLength, NULL, infoLog.raw());
-    throw GLException("\n\n**** GLSL compute shader failed to link (%s) ****\n%s",m_Name.c_str(),infoLog.raw());
+    throw GLException("\n\n**** GLSL compute shader failed to link (%s) ****\n%s",name(),infoLog.raw());
   }
 
   glDeleteObjectARB(cs);
@@ -784,7 +780,6 @@ void NAMESPACE::GLCompute::init(
 void NAMESPACE::GLCompute::init(GLuint shader)
 {
   m_Shader = shader;
-  m_Name   = string("[runtime]");
 }
 
 // -----------------------------------------------------
