@@ -742,9 +742,7 @@ void NAMESPACE::GLTexBuffer::deleteTexture()
 // -----------------------------------------------------
 // -----------------------------------------------------
 
-void NAMESPACE::GLCompute::init(
-	const char				  *cs_code,
-	const char				  *name)
+void NAMESPACE::GLCompute::init(const char *cs_code)
 {
   m_Shader = glCreateProgramObjectARB();
 

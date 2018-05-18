@@ -562,7 +562,8 @@ namespace LibSL {
 			void begin();
 			void end();
 
-			GLuint                        handle()     const {return (m_Shader);}
+      const char *name()   const { return "[runtime]"; }
+			GLuint      handle() const {return (m_Shader);}
 
 			bool  isReady()  const {return (m_Shader!=0);}
 			bool  isActive() const {return (m_Active);}
