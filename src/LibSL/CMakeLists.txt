@@ -413,8 +413,8 @@ ADD_DEFINITIONS(-D_UNICODE -DUNICODE)
 ADD_DEFINITIONS(-DTW_STATIC -DTW_NO_LIB_PRAGMA)
 
 # Compile LibSL with CXX11 support if available (ConvexHull with multithread support)
-Include(UseCXX11_bis)
-#AddTargetCXX11(LibSL)
+Include(UseCXX11)
+AddTargetCXX11(LibSL)
 
 IF    (LIBSL_BUILD_MAX_PERFORMANCE)
 ADD_DEFINITIONS("-DNDEBUG")
