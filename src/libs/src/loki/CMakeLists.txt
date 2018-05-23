@@ -1,6 +1,8 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 PROJECT(loki)
 
+include(UseCXX11_bis)
+
 SET(LOKI_SOURCES 
 src/LevelMutex.cpp
 src/OrderedStatic.cpp
