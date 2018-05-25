@@ -1,6 +1,11 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 PROJECT(loki)
 
+IF("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+INCLUDE(UseCXX11_clang)
+ENDIF()
+
+
 SET(LOKI_SOURCES 
 src/LevelMutex.cpp
 src/OrderedStatic.cpp
