@@ -139,7 +139,6 @@ using namespace LibSL::System::Types;
 //#define GL_OBJECT_INFO_LOG_LENGTH_ARB GL_INFO_LOG_LENGTH
 //#define GL_OBJECT_LINK_STATUS_ARB GL_LINK_STATUS
 // #define glGetObjectParameterivARB glGetProgramiv
-#define glGetInfoLogARB glGetProgramInfoLog
 //#define GL_GEOMETRY_SHADER_ARB GL_GEOMETRY_SHADER
 #define glUseProgramObjectARB glUseProgram
 //#define glDeleteObjectARB glDeleteProgram

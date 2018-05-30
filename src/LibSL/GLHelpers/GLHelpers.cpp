@@ -94,7 +94,7 @@ GLhandleARB NAMESPACE::loadGLSLProgram(const char *prg,GLuint type)
   glGetObjectParameterivARB(id,GL_OBJECT_COMPILE_STATUS_ARB, &compiled);
   #endif
   if (!compiled) {
-    cout << "**** GLSL shader failed to compile (" << (type == GL_VERTEX_SHADER ? "vertex" : (type == GL_FRAGMENT_SHADER ? "fragment" : "geometry")) << ") ****" << endl;
+    cerr << "**** GLSL shader failed to compile (" << (type == GL_VERTEX_SHADER ? "vertex" : (type == GL_FRAGMENT_SHADER ? "fragment" : "geometry")) << ") ****" << endl;
     GLint maxLength;
     #ifdef EMSCRIPTEN
     glGetShaderiv(id,GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
@@ -103,8 +103,12 @@ GLhandleARB NAMESPACE::loadGLSLProgram(const char *prg,GLuint type)
     #endif
     Array<GLcharARB> infoLog(maxLength+1);
     GLint len = 0;
+#ifdef EMSCRIPTEN
+    glGetShaderInfoLog(id, maxLength, &len, infoLog.raw());    
+#else
     glGetInfoLogARB(id, maxLength, &len, infoLog.raw());
-    cout << Console::yellow << infoLog.raw() << Console::gray << endl;
+#endif
+    cerr << Console::yellow << infoLog.raw() << Console::gray << endl;
     if (0) {
       ofstream out("lasterror.glsl.txt");
       out << prg;
@@ -233,7 +237,11 @@ void NAMESPACE::GLShader::init(
     glGetObjectParameterivARB(m_Shader,GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
     #endif
     Array<GLcharARB> infoLog(maxLength);
+#ifdef EMSCRIPTEN
+    glGetProgramInfoLog(m_Shader, maxLength, NULL, infoLog.raw());
+#else
     glGetInfoLogARB(m_Shader, maxLength, NULL, infoLog.raw());
+#endif
     if (0) {
       ofstream out("lasterror.glsl.txt");
       out << "// ========== VP ===========\n";
