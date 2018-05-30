@@ -45,8 +45,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 
 #define LIBSL_GL4_INCLUDED
 
-#pragma message("Including LibSL_gl4core.h")
-
 #include <LibSL/LibSL_gl.config.h>
 
 #ifndef OPENGL
