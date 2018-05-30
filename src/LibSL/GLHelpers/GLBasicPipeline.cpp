@@ -100,6 +100,9 @@ static std::string fp_string =
 "  o_color = clr;\n"
 "}\n";
 #else
+#ifdef EMSCRIPTEN
+  "precision mediump float;"
+#endif
 "uniform vec4 u_color;\n"
 "uniform sampler2D u_tex;\n"
 "uniform float u_tex_enabled;\n"
@@ -119,6 +122,7 @@ static std::string fp_string =
 NAMESPACE::GLBasicPipeline::GLBasicPipeline()
 {
   m_Shader.init(vp_string.c_str(), fp_string.c_str());
+
   m_Projection.init(m_Shader, "u_proj");
   m_Modelview .init(m_Shader, "u_mdlview");
   m_TextureMatrix.init(m_Shader, "u_texmat");
