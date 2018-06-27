@@ -71,6 +71,7 @@ set(
         src/libqhull_r/random_r.h
         src/libqhull_r/stat_r.h
         src/libqhull_r/user_r.h
+        src/libqhull_r/io_r.h
 )
 set(
     libqhull_SOURCES
@@ -88,6 +89,7 @@ set(
         src/libqhull_r/usermem_r.c
         src/libqhull_r/userprintf_r.c
         src/libqhull_r/user_r.c
+        src/libqhull_r/io_r.c
         src/libqhull_r/rboxlib_r.c
         src/libqhull_r/userprintf_rbox_r.c
         ${libqhull_HEADERS}
