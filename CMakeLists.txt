@@ -103,7 +103,7 @@ INCLUDE_DIRECTORIES(
 			${CMAKE_CURRENT_SOURCE_DIR}/src/libs/src/OpenNL/src
 			${CMAKE_CURRENT_SOURCE_DIR}/src/libs/src/anttweakbar/include
 			${CMAKE_CURRENT_SOURCE_DIR}/src/libs/src/SQLite
-			${CMAKE_CURRENT_SOURCE_DIR}/src/libs/src/qhull/src/libqhull
+			${CMAKE_CURRENT_SOURCE_DIR}/src/libs/src/qhull/src/libqhull_r
 			${CMAKE_CURRENT_SOURCE_DIR}/src/libs/src/rply
 			)
 

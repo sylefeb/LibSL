@@ -1,19 +1,19 @@
 /****************************************************************************
 **
-** Copyright (c) 2009-2012 C.B. Barber. All rights reserved.
-** $Id: //main/2011/qhull/src/qhulltest/Coordinates_test.cpp#4 $$Change: 1490 $
-** $DateTime: 2012/02/19 20:27:01 $$Author: bbarber $
+** Copyright (c) 2009-2015 C.B. Barber. All rights reserved.
+** $Id: //main/2015/qhull/src/qhulltest/Coordinates_test.cpp#2 $$Change: 2062 $
+** $DateTime: 2016/01/17 13:13:18 $$Author: bbarber $
 **
 ****************************************************************************/
 
 //pre-compiled headers
 #include <iostream>
-#include "RoadTest.h" // QT_VERSION
+#include "qhulltest/RoadTest.h" // QT_VERSION
 
-#include "Coordinates.h"
-#include "QhullError.h"
-#include "RboxPoints.h"
-#include "Qhull.h"
+#include "libqhullcpp/Coordinates.h"
+#include "libqhullcpp/QhullError.h"
+#include "libqhullcpp/RboxPoints.h"
+#include "libqhullcpp/Qhull.h"
 
 using std::cout;
 using std::endl;
@@ -27,7 +27,7 @@ class Coordinates_test : public RoadTest
 {
     Q_OBJECT
 
-#//Test slots
+#//!\name Test slots
 private slots:
     void t_construct();
     void t_convert();
@@ -46,7 +46,7 @@ private slots:
 void
 add_Coordinates_test()
 {
-    new Coordinates_test();
+    new Coordinates_test();  // RoadTest::s_testcases
 }
 
 void Coordinates_test::
@@ -87,8 +87,8 @@ t_convert()
     const coordT *c3= c.data();
     QCOMPARE(c2, c3);
     std::vector<coordT> vc= c.toStdVector();
-    QCOMPARE(vc.size(), c.size());
-    for(size_t k= vc.size(); k--; ){
+    QCOMPARE((size_t)vc.size(), c.size());
+    for(int k= (int)vc.size(); k--; ){
         QCOMPARE(vc[k], c[k]);
     }
     QList<coordT> qc= c.toQList();
@@ -143,12 +143,10 @@ t_readonly()
     Coordinates c;
     QCOMPARE(c.size(), 0u);
     QCOMPARE(c.count(), 0);
-    QVERIFY(c.empty());
     QVERIFY(c.isEmpty());
     c << 1.0 << -2.0;
     QCOMPARE(c.size(), 2u);
     QCOMPARE(c.count(), 2);
-    QVERIFY(!c.empty());
     QVERIFY(!c.isEmpty());
 }//t_readonly
 
@@ -412,6 +410,13 @@ t_readwrite()
     c << 1.0 << 3.0;
     c.clear();
     QCOMPARE(c.count(), 0);
+    coordT c2[4]= { 0.0, 1.0, 2.0, 3.0};
+    c.append(4, c2);
+    QCOMPARE(c.count(), 4);
+    QCOMPARE(c[0], 0.0);
+    QCOMPARE(c[1], 1.0);
+    QCOMPARE(c[3], 3.0);
+    c.clear();
     c << 1.0 << 3.0;
     c.erase(c.begin(), c.end());
     QCOMPARE(c.count(), 0);

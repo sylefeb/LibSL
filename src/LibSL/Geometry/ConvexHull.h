@@ -41,6 +41,7 @@ namespace LibSL {
         std::vector<VectorXd> m_Vertices;
         std::vector<VectorXi> m_Faces;
         std::vector<int>      m_IndexMap;
+        void                 *m_Context = NULL;
     };
 
     // Explicit specializations for 2D and 3D cases

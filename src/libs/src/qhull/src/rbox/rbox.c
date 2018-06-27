@@ -9,19 +9,13 @@
 
 */
 
-#include "random.h"
-#include "libqhull.h"
+#include "libqhull/libqhull.h"
+#include "libqhull/random.h"
 
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-#if __MWERKS__ && __POWERPC__
-#include <SIOUX.h>
-#include <Files.h>
-#include <console.h>
-#include <Desk.h>
-#endif
+#include <string.h>
 
 #ifdef _MSC_VER  /* Microsoft Visual C++ -- warning level 4 */
 #pragma warning( disable : 4706)  /* assignment within conditional function */
@@ -30,7 +24,7 @@
 char prompt[]= "\n\
 -rbox- generate various point distributions.  Default is random in cube.\n\
 \n\
-args (any order, space separated):                    Version: 2001/06/24\n\
+args (any order, space separated):                    Version: 2016/01/18\n\
   3000    number of random points in cube, lens, spiral, sphere or grid\n\
   D3      dimension 3-d\n\
   c       add a unit cube to the output ('c G2.0' sets size)\n\
@@ -40,7 +34,8 @@ args (any order, space separated):                    Version: 2001/06/24\n\
   s       generate cospherical points\n\
   x       generate random points in simplex, may use 'r' or 'Wn'\n\
   y       same as 'x', plus simplex\n\
-  Pn,m,r  add point [n,m,r] first, pads with 0\n\
+  Cn,r,m  add n nearly coincident points within radius r of m points\n\
+  Pn,m,r  add point [n,m,r] first, pads with 0, maybe repeated\n\
 \n\
   Ln      lens distribution of radius n.  Also 's', 'r', 'G', 'W'.\n\
   Mn,m,r  lattice(Mesh) rotated by [n,-m,0], [m,n,0], [0,0,r], ...\n\
@@ -66,34 +61,26 @@ int main(int argc, char **argv) {
   int command_size;
   int return_status;
 
-#if __MWERKS__ && __POWERPC__
-  char inBuf[BUFSIZ], outBuf[BUFSIZ], errBuf[BUFSIZ];
-  SIOUXSettings.showstatusline= False;
-  SIOUXSettings.tabspaces= 1;
-  SIOUXSettings.rows= 40;
-  if (setvbuf(stdin, inBuf, _IOFBF, sizeof(inBuf)) < 0   /* w/o, SIOUX I/O is slow*/
-  || setvbuf(stdout, outBuf, _IOFBF, sizeof(outBuf)) < 0
-  || (stdout != stderr && setvbuf(stderr, errBuf, _IOFBF, sizeof(errBuf)) < 0))
-    fprintf(stderr, "qhull internal warning (main): could not change stdio to fully buffered.\n");
-  argc= ccommand(&argv);
-#endif
+  QHULL_LIB_CHECK_RBOX
 
   if (argc == 1) {
     printf(prompt, qh_DEFAULTbox, qh_DEFAULTzbox);
     return 1;
   }
+  if (argc == 2 && strcmp(argv[1], "D4")==0)
+    qh_fprintf_stderr(0, "\nStarting the rbox smoketest for qhull.  An immediate failure indicates\nthat non-reentrant rbox was linked to reentrant routines.  An immediate\nfailure of qhull may indicate that qhull was linked to the wrong\nqhull library.  Also try 'rbox D4 | qhull T1'\n");
 
   command_size= qh_argv_to_command_size(argc, argv);
   if ((command= (char *)qh_malloc((size_t)command_size))) {
     if (!qh_argv_to_command(argc, argv, command, command_size)) {
-      fprintf(stderr, "rbox internal error: allocated insufficient memory (%d) for arguments\n", command_size);
+      qh_fprintf_stderr(6264, "rbox internal error: allocated insufficient memory (%d) for arguments\n", command_size);
       return_status= qh_ERRinput;
     }else{
       return_status= qh_rboxpoints(stdout, stderr, command);
     }
     qh_free(command);
   }else {
-    fprintf(stderr, "rbox error: insufficient memory for %d bytes\n", command_size);
+    qh_fprintf_stderr(6265, "rbox error: insufficient memory for %d bytes\n", command_size);
     return_status= qh_ERRmem;
   }
   return return_status;

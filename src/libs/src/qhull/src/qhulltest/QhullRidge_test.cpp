@@ -1,20 +1,20 @@
 /****************************************************************************
 **
-** Copyright (c) 2008-2012 C.B. Barber. All rights reserved.
-** $Id: //main/2011/qhull/src/qhulltest/QhullRidge_test.cpp#5 $$Change: 1490 $
-** $DateTime: 2012/02/19 20:27:01 $$Author: bbarber $
+** Copyright (c) 2008-2015 C.B. Barber. All rights reserved.
+** $Id: //main/2015/qhull/src/qhulltest/QhullRidge_test.cpp#3 $$Change: 2062 $
+** $DateTime: 2016/01/17 13:13:18 $$Author: bbarber $
 **
 ****************************************************************************/
 
 //pre-compiled headers
 #include <iostream>
-#include "RoadTest.h"
+#include "RoadTest.h" // QT_VERSION
 
-#include "QhullRidge.h"
-#include "QhullError.h"
-#include "RboxPoints.h"
-#include "QhullFacet.h"
-#include "Qhull.h"
+#include "libqhullcpp/QhullRidge.h"
+#include "libqhullcpp/QhullError.h"
+#include "libqhullcpp/RboxPoints.h"
+#include "libqhullcpp/QhullFacet.h"
+#include "libqhullcpp/Qhull.h"
 
 using std::cout;
 using std::endl;
@@ -28,7 +28,7 @@ class QhullRidge_test : public RoadTest
 {
     Q_OBJECT
 
-#//Test slots
+#//!\name Test slots
 private slots:
     void cleanup();
     void t_construct();
@@ -40,14 +40,13 @@ private slots:
 void
 add_QhullRidge_test()
 {
-    new QhullRidge_test();
+    new QhullRidge_test();  // RoadTest::s_testcases
 }
 
 //Executed after each testcase
 void QhullRidge_test::
 cleanup()
 {
-    UsingLibQhull::checkQhullMemoryEmpty();
     RoadTest::cleanup();
 }
 
@@ -55,22 +54,22 @@ void QhullRidge_test::
 t_construct()
 {
     // Qhull.runQhull() constructs QhullFacets as facetT
-    QhullRidge r;
-    QVERIFY(!r.isDefined());
-    QCOMPARE(r.dimension(),0);
     RboxPoints rcube("c");
     Qhull q(rcube,"QR0");  // triangulation of rotated unit cube
+    QhullRidge r(q);
+    QVERIFY(!r.isValid());
+    QCOMPARE(r.dimension(),2);
     QhullFacet f(q.firstFacet());
     QhullRidgeSet rs(f.ridges());
     QVERIFY(!rs.isEmpty()); // Simplicial facets do not have ridges()
     QhullRidge r2(rs.first());
     QCOMPARE(r2.dimension(), 2); // One dimension lower than the facet
     r= r2;
-    QVERIFY(r.isDefined());
+    QVERIFY(r.isValid());
     QCOMPARE(r.dimension(), 2);
-    QhullRidge r3= r2.getRidgeT();
+    QhullRidge r3(q, r2.getRidgeT());
     QCOMPARE(r,r3);
-    QhullRidge r4= r2.getBaseT();
+    QhullRidge r4(q, r2.getBaseT());
     QCOMPARE(r,r4);
     QhullRidge r5= r2; // copy constructor
     QVERIFY(r5==r2);
@@ -94,15 +93,12 @@ t_getSet()
             QVERIFY(r.bottomFacet()!=r.topFacet());
             QCOMPARE(r.dimension(), 2); // Ridge one-dimension less than facet
             QVERIFY(r.id()>=0 && r.id()<9*27);
-            QVERIFY(r.isDefined());
+            QVERIFY(r.isValid());
             QVERIFY(r==r);
             QVERIFY(r==i.peekPrevious());
             QCOMPARE(r.otherFacet(r.bottomFacet()),r.topFacet());
             QCOMPARE(r.otherFacet(r.topFacet()),r.bottomFacet());
         }
-        QhullRidgeSetIterator i2(i);
-        QEXPECT_FAIL("", "SetIterator copy constructor not reset to BOT", Continue);
-        QVERIFY(!i2.hasPrevious());
     }
 }//t_getSet
 
@@ -113,10 +109,10 @@ t_foreach()
     {
         Qhull q(rcube, "QR0"); // rotated cube
         QhullFacet f(q.firstFacet());
-        foreach (QhullRidge r, f.ridges()){  // Qt only
+        foreach (const QhullRidge &r, f.ridges()){  // Qt only
             QhullVertexSet vs= r.vertices();
             QCOMPARE(vs.count(), 2);
-            foreach (QhullVertex v, vs){  // Qt only
+            foreach (const QhullVertex &v, vs){  // Qt only
                 QVERIFY(f.vertices().contains(v));
             }
         }
@@ -127,7 +123,7 @@ t_foreach()
         int count= 0;
         while(!count || r2!=r){
             ++count;
-            QhullVertex v;
+            QhullVertex v(q);
             QVERIFY2(r2.hasNextRidge3d(f),"A cube should only have non-simplicial facets.");
             QhullRidge r3= r2.nextRidge3d(f, &v);
             QVERIFY(!vs.contains(v));
@@ -150,11 +146,11 @@ t_io()
         QhullRidgeSet rs= f.ridges();
         QhullRidge r= rs.first();
         ostringstream os;
-        os << "Ridges Without runId\n" << rs << "Ridge\n" << r;
-        os << "Ridge with runId\n" << r.print(q.runId());
+        os << "Ridges\n" << rs << "Ridge\n" << r;
+        os << r.print("\nRidge with message");
         cout << os.str();
         QString s= QString::fromStdString(os.str());
-        QCOMPARE(s.count(" r"), 6+2);
+        QCOMPARE(s.count(" r"), 6);
     }
 }//t_io
 
