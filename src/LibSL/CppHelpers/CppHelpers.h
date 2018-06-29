@@ -157,7 +157,19 @@ namespace LibSL {
       std::ostream& white  (std::ostream& s);
       std::ostream& gray   (std::ostream& s);
     } // namespace LibSL::CppHelpers::Console
-
+    namespace WConsole {
+      std::wostream& normal(std::wostream& s);
+      std::wostream& bold(std::wostream& s);
+      std::wostream& black(std::wostream& s);
+      std::wostream& red(std::wostream& s);
+      std::wostream& green(std::wostream& s);
+      std::wostream& yellow(std::wostream& s);
+      std::wostream& blue(std::wostream& s);
+      std::wostream& magenta(std::wostream& s);
+      std::wostream& cyan(std::wostream& s);
+      std::wostream& white(std::wostream& s);
+      std::wostream& gray(std::wostream& s);
+    }
     //! print arg as bits
     template <typename T_Type>
     void printBits(T_Type v)

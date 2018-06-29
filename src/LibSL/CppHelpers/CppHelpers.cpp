@@ -552,6 +552,118 @@ std::ostream& NAMESPACE::Console::gray(std::ostream& s)
 
 // ------------------------------------------------------
 
+std::wostream& NAMESPACE::WConsole::normal(std::wostream& s)
+{
+#ifdef WIN32
+  SetConsoleTextAttribute(GetStdHandle(STD_ERROR_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+#else
+  s << wchar_t(27) << L"[0m";
+#endif
+  return (s);
+}
+
+std::wostream& NAMESPACE::WConsole::bold(std::wostream& s)
+{
+#ifdef WIN32
+  SetConsoleTextAttribute(GetStdHandle(STD_ERROR_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+#else
+  s << wchar_t(27) << L"[1m";
+#endif
+  return (s);
+}
+
+std::wostream& NAMESPACE::WConsole::black(std::wostream& s)
+{
+#ifdef WIN32
+  SetConsoleTextAttribute(GetStdHandle(STD_ERROR_HANDLE), FOREGROUND_INTENSITY);
+#else
+  s << wchar_t(27) << L"[30m";
+#endif
+  return (s);
+}
+
+std::wostream& NAMESPACE::WConsole::red(std::wostream& s)
+{
+#ifdef WIN32
+  SetConsoleTextAttribute(GetStdHandle(STD_ERROR_HANDLE), FOREGROUND_RED | FOREGROUND_INTENSITY);
+#else
+  s << wchar_t(27) << L"[31m";
+#endif
+  return (s);
+}
+
+std::wostream& NAMESPACE::WConsole::green(std::wostream& s)
+{
+#ifdef WIN32
+  SetConsoleTextAttribute(GetStdHandle(STD_ERROR_HANDLE), FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+#else
+  s << wchar_t(27) << L"[32m";
+#endif
+  return (s);
+}
+
+std::wostream& NAMESPACE::WConsole::yellow(std::wostream& s)
+{
+#ifdef WIN32
+  SetConsoleTextAttribute(GetStdHandle(STD_ERROR_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+#else
+  s << wchar_t(27) << L"[33m";
+#endif
+  return (s);
+}
+
+std::wostream& NAMESPACE::WConsole::blue(std::wostream& s)
+{
+#ifdef WIN32
+  SetConsoleTextAttribute(GetStdHandle(STD_ERROR_HANDLE), FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+#else
+  s << wchar_t(27) << L"[34m";
+#endif
+  return (s);
+}
+
+std::wostream& NAMESPACE::WConsole::magenta(std::wostream& s)
+{
+#ifdef WIN32
+  SetConsoleTextAttribute(GetStdHandle(STD_ERROR_HANDLE), FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+#else
+  s << wchar_t(27) << L"[35m";
+#endif
+  return (s);
+}
+
+std::wostream& NAMESPACE::WConsole::cyan(std::wostream& s)
+{
+#ifdef WIN32
+  SetConsoleTextAttribute(GetStdHandle(STD_ERROR_HANDLE), FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+#else
+  s << wchar_t(27) << L"[36m";
+#endif
+  return (s);
+}
+
+std::wostream& NAMESPACE::WConsole::white(std::wostream& s)
+{
+#ifdef WIN32
+  SetConsoleTextAttribute(GetStdHandle(STD_ERROR_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+#else
+  s << wchar_t(27) << L"[37m";
+#endif
+  return (s);
+}
+
+std::wostream& NAMESPACE::WConsole::gray(std::wostream& s)
+{
+#ifdef WIN32
+  SetConsoleTextAttribute(GetStdHandle(STD_ERROR_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+#else
+  s << wchar_t(27) << L"[37m";
+#endif
+  return (s);
+}
+
+// ------------------------------------------------------
+
 std::string& NAMESPACE::replaceAll(std::string& str, const std::string& from, const std::string& to)
 {
   size_t lookHere = 0;
