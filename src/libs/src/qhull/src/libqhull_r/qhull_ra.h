@@ -14,8 +14,8 @@
    defines internal functions for libqhull_r.c global_r.c
 
    Copyright (c) 1993-2015 The Geometry Center.
-   $Id: //main/2015/qhull/src/libqhull_r/qhull_ra.h#5 $$Change: 2062 $
-   $DateTime: 2016/01/17 13:13:18 $$Author: bbarber $
+   $Id: //main/2015/qhull/src/libqhull_r/qhull_ra.h#6 $$Change: 2079 $
+   $DateTime: 2016/02/07 17:43:34 $$Author: bbarber $
 
    Notes:  grep for ((" and (" to catch fprintf("lkasdjf");
            full parens around (x?y:z)
@@ -109,6 +109,10 @@ inline void qhullUnused(T &x) { (void)x; }
 #  define QHULL_UNUSED(x) (void)x;
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /***** -libqhull_r.c prototypes (alphabetical after qhull) ********************/
 
 void    qh_qhull(qhT *qh);
@@ -146,5 +150,9 @@ void    qh_allstatG(qhT *qh);
 void    qh_allstatH(qhT *qh);
 void    qh_freebuffers(qhT *qh);
 void    qh_initbuffers(qhT *qh, coordT *points, int numpoints, int dim, boolT ismalloc);
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif /* qhDEFqhulla */

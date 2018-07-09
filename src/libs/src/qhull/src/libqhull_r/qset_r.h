@@ -17,8 +17,8 @@
     - sets may be sorted or unsorted, the caller must distinguish this
 
    Copyright (c) 1993-2015 The Geometry Center.
-   $Id: //main/2015/qhull/src/libqhull_r/qset_r.h#3 $$Change: 2062 $
-   $DateTime: 2016/01/17 13:13:18 $$Author: bbarber $
+   $Id: //main/2015/qhull/src/libqhull_r/qset_r.h#4 $$Change: 2079 $
+   $DateTime: 2016/02/07 17:43:34 $$Author: bbarber $
 */
 
 #ifndef qhDEFset
@@ -452,6 +452,10 @@ struct setT {
 
 /*======= prototypes in alphabetical order ============*/
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void  qh_setaddsorted(qhT *qh, setT **setp, void *elem);
 void  qh_setaddnth(qhT *qh, setT **setp, int nth, void *newelem);
 void  qh_setappend(qhT *qh, setT **setp, void *elem);
@@ -491,5 +495,8 @@ void  qh_settruncate(qhT *qh, setT *set, int size);
 int   qh_setunique(qhT *qh, setT **set, void *elem);
 void  qh_setzero(qhT *qh, setT *set, int idx, int size);
 
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif /* qhDEFset */

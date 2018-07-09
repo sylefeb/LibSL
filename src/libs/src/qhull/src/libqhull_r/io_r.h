@@ -7,8 +7,8 @@
    see README, libqhull_r.h and io_r.c
 
    Copyright (c) 1993-2015 The Geometry Center.
-   $Id: //main/2015/qhull/src/libqhull_r/io_r.h#2 $$Change: 2042 $
-   $DateTime: 2016/01/03 13:26:21 $$Author: bbarber $
+   $Id: //main/2015/qhull/src/libqhull_r/io_r.h#3 $$Change: 2079 $
+   $DateTime: 2016/02/07 17:43:34 $$Author: bbarber $
 */
 
 #ifndef qhDEFio
@@ -76,6 +76,10 @@ qh_RIDGE;
 typedef void (*printvridgeT)(qhT *qh, FILE *fp, vertexT *vertex, vertexT *vertexA, setT *centers, boolT unbounded);
 
 /*============== -prototypes in alphabetical order =========*/
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 void    qh_dfacet(qhT *qh, unsigned id);
 void    qh_dvertex(qhT *qh, unsigned id);
@@ -155,5 +159,9 @@ coordT *qh_readpoints(qhT *qh, int *numpoints, int *dimension, boolT *ismalloc);
 void    qh_setfeasible(qhT *qh, int dim);
 boolT   qh_skipfacet(qhT *qh, facetT *facet);
 char   *qh_skipfilename(qhT *qh, char *filename);
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif /* qhDEFio */

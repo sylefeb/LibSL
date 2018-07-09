@@ -7,8 +7,8 @@
    see qh-qhull_r.htm, qhull_ra.h
 
    Copyright (c) 1993-2015 The Geometry Center.
-   $Id: //main/2015/qhull/src/libqhull_r/libqhull_r.h#7 $$Change: 2066 $
-   $DateTime: 2016/01/18 19:29:17 $$Author: bbarber $
+   $Id: //main/2015/qhull/src/libqhull_r/libqhull_r.h#8 $$Change: 2079 $
+   $DateTime: 2016/02/07 17:43:34 $$Author: bbarber $
 
    includes function prototypes for libqhull_r.c, geom_r.c, global_r.c, io_r.c, user.c
 
@@ -1017,6 +1017,10 @@ struct qhT {
 */
 #define FOREACHvertex_i_(qh, vertices) FOREACHsetelement_i_(qh, vertexT, vertices,vertex)
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /********* -libqhull_r.c prototypes (duplicated from qhull_ra.h) **********************/
 
 void    qh_qhull(qhT *qh);
@@ -1122,5 +1126,9 @@ void    qh_errexit_rbox(qhT *qh, int exitcode);
 
 void    qh_collectstatistics(qhT *qh);
 void    qh_printallstatistics(qhT *qh, FILE *fp, const char *string);
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif /* qhDEFlibqhull */

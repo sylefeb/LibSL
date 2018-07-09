@@ -7,8 +7,8 @@
    see qh-geom_r.htm and geom_r.c
 
    Copyright (c) 1993-2015 The Geometry Center.
-   $Id: //main/2015/qhull/src/libqhull_r/geom_r.h#2 $$Change: 2042 $
-   $DateTime: 2016/01/03 13:26:21 $$Author: bbarber $
+   $Id: //main/2015/qhull/src/libqhull_r/geom_r.h#3 $$Change: 2079 $
+   $DateTime: 2016/02/07 17:43:34 $$Author: bbarber $
 */
 
 #ifndef qhDEFgeom
@@ -98,6 +98,10 @@
 
 /*============= prototypes in alphabetical order, infrequent at end ======= */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void    qh_backnormal(qhT *qh, realT **rows, int numrow, int numcol, boolT sign, coordT *normal, boolT *nearzero);
 void    qh_distplane(qhT *qh, pointT *point, facetT *facet, realT *dist);
 facetT *qh_findbest(qhT *qh, pointT *point, facetT *startfacet,
@@ -169,6 +173,10 @@ boolT   qh_sethalfspace(qhT *qh, int dim, coordT *coords, coordT **nextp,
               coordT *normal, coordT *offset, coordT *feasible);
 coordT *qh_sethalfspace_all(qhT *qh, int dim, int count, coordT *halfspaces, pointT *feasible);
 pointT *qh_voronoi_center(qhT *qh, int dim, setT *points);
+
+#ifdef __cplusplus
+} /* extern "C"*/
+#endif
 
 #endif /* qhDEFgeom */
 

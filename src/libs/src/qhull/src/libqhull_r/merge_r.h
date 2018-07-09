@@ -7,8 +7,8 @@
    see qh-merge_r.htm and merge_r.c
 
    Copyright (c) 1993-2015 C.B. Barber.
-   $Id: //main/2015/qhull/src/libqhull_r/merge_r.h#2 $$Change: 2042 $
-   $DateTime: 2016/01/03 13:26:21 $$Author: bbarber $
+   $Id: //main/2015/qhull/src/libqhull_r/merge_r.h#3 $$Change: 2079 $
+   $DateTime: 2016/02/07 17:43:34 $$Author: bbarber $
 */
 
 #ifndef qhDEFmerge
@@ -113,6 +113,10 @@ struct mergeT {         /* initialize in qh_appendmergeset */
 
 /*============ prototypes in alphabetical order after pre/postmerge =======*/
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void    qh_premerge(qhT *qh, vertexT *apex, realT maxcentrum, realT maxangle);
 void    qh_postmerge(qhT *qh, const char *reason, realT maxcentrum, realT maxangle,
              boolT vneighbors);
@@ -174,5 +178,9 @@ void    qh_updatetested(qhT *qh, facetT *facet1, facetT *facet2);
 setT   *qh_vertexridges(qhT *qh, vertexT *vertex);
 void    qh_vertexridges_facet(qhT *qh, vertexT *vertex, facetT *facet, setT **ridges);
 void    qh_willdelete(qhT *qh, facetT *facet, facetT *replace);
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif /* qhDEFmerge */

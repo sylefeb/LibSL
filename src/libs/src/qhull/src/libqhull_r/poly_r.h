@@ -7,8 +7,8 @@
    see qh-poly_r.htm, libqhull_r.h and poly_r.c
 
    Copyright (c) 1993-2015 The Geometry Center.
-   $Id: //main/2015/qhull/src/libqhull_r/poly_r.h#4 $$Change: 2062 $
-   $DateTime: 2016/01/17 13:13:18 $$Author: bbarber $
+   $Id: //main/2015/qhull/src/libqhull_r/poly_r.h#5 $$Change: 2079 $
+   $DateTime: 2016/02/07 17:43:34 $$Author: bbarber $
 */
 
 #ifndef qhDEFpoly
@@ -207,6 +207,10 @@
 
 /*=============== prototypes poly_r.c in alphabetical order ================*/
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void    qh_appendfacet(qhT *qh, facetT *facet);
 void    qh_appendvertex(qhT *qh, vertexT *vertex);
 void    qh_attachnewfacets(qhT *qh /* qh.visible_list, qh.newfacet_list */);
@@ -292,5 +296,8 @@ setT   *qh_vertexintersect_new(qhT *qh, setT *vertexsetA,setT *vertexsetB);
 void    qh_vertexneighbors(qhT *qh /*qh.facet_list*/);
 boolT   qh_vertexsubset(setT *vertexsetA, setT *vertexsetB);
 
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif /* qhDEFpoly */
