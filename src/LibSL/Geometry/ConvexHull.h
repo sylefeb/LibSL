@@ -23,8 +23,11 @@ namespace LibSL {
     template<int Dim>
     class ConvexHullEngine {
       public:
+        
         typedef LibSL::Math::Tuple<double, Dim> VectorXd;
         typedef LibSL::Math::Tuple<int   , Dim> VectorXi;
+
+        ConvexHullEngine() { m_Context = NULL; }
 
       public:
         void run(const std::vector<VectorXd>& points);
@@ -41,7 +44,7 @@ namespace LibSL {
         std::vector<VectorXd> m_Vertices;
         std::vector<VectorXi> m_Faces;
         std::vector<int>      m_IndexMap;
-        void                 *m_Context = NULL;
+        void                 *m_Context;
     };
 
     // Explicit specializations for 2D and 3D cases

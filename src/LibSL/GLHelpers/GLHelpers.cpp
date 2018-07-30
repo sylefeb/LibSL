@@ -155,7 +155,6 @@ void NAMESPACE::GLShader::init(
     gs = loadGLSLProgram(gs_code->code.c_str(),GL_GEOMETRY_SHADER_ARB);
 #endif
     glAttachObjectARB(m_Shader,gs);
-    LIBSL_GL_CHECK_ERROR;
     /*
     // set default values as linking may fail otherwise
     glProgramParameteriEXT( m_Shader, GL_GEOMETRY_INPUT_TYPE_EXT,   gs_code->typeIn );
@@ -187,7 +186,6 @@ void NAMESPACE::GLShader::init(
   LIBSL_GL_CHECK_ERROR;
 #else
 #ifdef EMSCRIPTEN
-  LIBSL_GL_CHECK_ERROR;
   // set default bindings
   glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_POSITION >::value, "mvf_position");
   glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_POSITION >::value, "mvf_vertex"); // aliasing
@@ -202,7 +200,6 @@ void NAMESPACE::GLShader::init(
   glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_TEXCOORD5>::value, "mvf_texcoord5");
   glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_TEXCOORD6>::value, "mvf_texcoord6");
   glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_TEXCOORD7>::value, "mvf_texcoord7");
-  LIBSL_GL_CHECK_ERROR;
 #else
   glBindAttribLocationARB(m_Shader, LibSL::GPUMesh::gl::mvf_attrib_location<MVF_BASE_POSITION >::value, "mvf_position");
   glBindAttribLocationARB(m_Shader, LibSL::GPUMesh::gl::mvf_attrib_location<MVF_BASE_POSITION >::value, "mvf_vertex"); // aliasing
@@ -253,8 +250,6 @@ void NAMESPACE::GLShader::init(
     throw GLException("\n\n**** GLSL program failed to link (%s) ****\n%s",name(),infoLog.raw());
   }
 
-  LIBSL_GL_CHECK_ERROR;
-
   if (vp_code) {
     #ifdef EMSCRIPTEN
     glDeleteShader(vp);
@@ -262,7 +257,6 @@ void NAMESPACE::GLShader::init(
     glDeleteObjectARB(vp);
     #endif
   }
-  LIBSL_GL_CHECK_ERROR;
   if (fp_code) {
     #ifdef EMSCRIPTEN
     glDeleteShader(fp);
@@ -270,7 +264,6 @@ void NAMESPACE::GLShader::init(
     glDeleteObjectARB(fp);
     #endif
   }
-  LIBSL_GL_CHECK_ERROR;
   if (gs_code) {
     // default values for geometry shader inputs / outputs
     #ifdef EMSCRIPTEN
@@ -279,9 +272,7 @@ void NAMESPACE::GLShader::init(
     glDeleteObjectARB(gs);
     #endif
   }
-  LIBSL_GL_CHECK_ERROR;
   glUseProgramObjectARB(0);
-  LIBSL_GL_CHECK_ERROR;
 }
 
 // -----------------------------------------------------

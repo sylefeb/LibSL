@@ -279,6 +279,9 @@ void NAMESPACE::Process::sleep(uint msec)
 
 const char *NAMESPACE::Application::executablePath()
 {
+#ifdef EMSCRIPTEN
+  return "/";
+#endif
   static char appPath[1024]=".";
 #ifdef WIN32
   GetModuleFileNameExA(GetCurrentProcess(),NULL,appPath,1024);

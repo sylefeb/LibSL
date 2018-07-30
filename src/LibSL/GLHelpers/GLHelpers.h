@@ -166,7 +166,7 @@ using namespace LibSL::System::Types;
 
 // ------------------------------------------------------
 
-#define LIBSL_GL_CHECK_ERROR {GLenum err; err=glGetError(); if (err) throw LibSL::GLHelpers::GLException("LibSL::GLHelpers - OpenGL error (%d), line %d, file %s",err,__LINE__,__FILE__); }
+#define LIBSL_GL_CHECK_ERROR {GLenum err; err=glGetError(); if (err) { std::cerr << "LIBSL_GL_CHECK_ERROR failed" << std::endl; throw LibSL::GLHelpers::GLException("LibSL::GLHelpers - OpenGL error (%d), line %d, file %s",err,__LINE__,__FILE__); } }
 
 // ------------------------------------------------------
 
