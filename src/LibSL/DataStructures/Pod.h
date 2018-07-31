@@ -540,9 +540,10 @@ namespace LibSL
 #define POD8(P0,P1,P2,P3,P4,P5,P6,P7           ) LibSL::DataStructures::POD::Pod< LOKI_TYPELIST_8(P0,P1,P2,P3,P4,P5,P6,P7           ) >
 #define POD9(P0,P1,P2,P3,P4,P5,P6,P7,P8        ) LibSL::DataStructures::POD::Pod< LOKI_TYPELIST_9(P0,P1,P2,P3,P4,P5,P6,P7,P8        ) >
 #define POD10(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9    ) LibSL::DataStructures::POD::Pod< LOKI_TYPELIST_10(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9    ) >
-#define POD11(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10)              LibSL::DataStructures::POD::Pod< LOKI_TYPELIST_11(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10) >
-#define POD12(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10,P11)          LibSL::DataStructures::POD::Pod< LOKI_TYPELIST_12(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10,P11) >
-#define POD13(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12)      LibSL::DataStructures::POD::Pod< LOKI_TYPELIST_13(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12) >
-#define POD14(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12,P13)  LibSL::DataStructures::POD::Pod< LOKI_TYPELIST_14(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12,P13) >
+#define POD11(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10)                  LibSL::DataStructures::POD::Pod< LOKI_TYPELIST_11(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10) >
+#define POD12(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10,P11)              LibSL::DataStructures::POD::Pod< LOKI_TYPELIST_12(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10,P11) >
+#define POD13(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12)          LibSL::DataStructures::POD::Pod< LOKI_TYPELIST_13(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12) >
+#define POD14(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12,P13)      LibSL::DataStructures::POD::Pod< LOKI_TYPELIST_14(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12,P13) >
+#define POD15(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12,P13,P14)  LibSL::DataStructures::POD::Pod< LOKI_TYPELIST_15(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12,P13,P14) >
 
 // ----------------------------------------------------------
