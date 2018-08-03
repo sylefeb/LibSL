@@ -1,8 +1,8 @@
 /****************************************************************************
 **
-** Copyright (c) 2008-2012 C.B. Barber. All rights reserved.
-** $Id: //main/2011/qhull/src/libqhullcpp/QhullIterator.h#6 $$Change: 1464 $
-** $DateTime: 2012/01/25 22:58:41 $$Author: bbarber $
+** Copyright (c) 2008-2015 C.B. Barber. All rights reserved.
+** $Id: //main/2015/qhull/src/libqhullcpp/QhullIterator.h#3 $$Change: 2066 $
+** $DateTime: 2016/01/18 19:29:17 $$Author: bbarber $
 **
 ****************************************************************************/
 
@@ -10,25 +10,26 @@
 #define QHULLITERATOR_H
 
 extern "C" {
-    #include "libqhull/qhull_a.h"
+    #include "libqhull_r/qhull_ra.h"
 }
 
 #include <assert.h>
+#include <iterator>
 #include <string>
 #include <vector>
-//! Avoid dependence on <iterator>
-namespace std { struct bidirectional_iterator_tag; struct random_access_iterator_tag; }
 
 namespace orgQhull {
 
-#//Defined here
+#//!\name Defined here
+    //! Only QHULL_DECLARE_SEQUENTIAL_ITERATOR is used in libqhullcpp.  The others need further development
     //! QHULL_DECLARE_SEQUENTIAL_ITERATOR(C) -- Declare a Java-style iterator
     //! QHULL_DECLARE_MUTABLE_SEQUENTIAL_ITERATOR(C) -- Declare a mutable Java-style iterator
     //! QHULL_DECLARE_SET_ITERATOR(C) -- Declare a set iterator
     //! QHULL_DECLARE_MUTABLE_SET_ITERATOR(C) -- Declare a mutable set iterator
-    //! Derived from Qt/core/tools/qiterator.h and qset.h/FOREACHsetelement_()
+    //! Derived from Qt/core/tools/qiterator.h and qset_r.h/FOREACHsetelement_()
 
-// Changed c to C* as in Mutable...  Assumes c does not go away.
+// Stores C* as done in Mutable...  Assumes the container is not deleted.
+// C::const_iterator is an STL-style iterator that returns T&
 #define QHULL_DECLARE_SEQUENTIAL_ITERATOR(C, T) \
     \
     class C##Iterator \
@@ -59,6 +60,7 @@ namespace orgQhull {
 // Remove setShareable() from Q_DECLARE_MUTABLE_SEQUENTIAL_ITERATOR
 // Uses QHULL_ASSERT (assert.h)
 // Duplicated in MutablePointIterator without insert or remove
+// Not used in libqhullcpp.  See Coordinates.h
 #define QHULL_DECLARE_MUTABLE_SEQUENTIAL_ITERATOR(C, T) \
     class Mutable##C##Iterator \
     { \
@@ -97,6 +99,7 @@ namespace orgQhull {
         n = c->end(); return false;  } \
     };//Mutable##C##Iterator
 
+// Not used in libqhullcpp.
 #define QHULL_DECLARE_SET_ITERATOR(C) \
 \
     template <class T> \
@@ -125,6 +128,7 @@ namespace orgQhull {
         return false;  } \
     };//Qhull##C##Iterator
 
+// Not used in libqhullcpp.
 #define QHULL_DECLARE_MUTABLE_SET_ITERATOR(C) \
 \
 template <class T> \

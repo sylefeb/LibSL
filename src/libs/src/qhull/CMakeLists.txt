@@ -61,133 +61,41 @@ message(STATUS)
 # Order libqhull object files by frequency of execution.  Small files at end.
 set(
     libqhull_HEADERS
-        src/libqhull/libqhull.h
-        src/libqhull/geom.h
-        src/libqhull/qhio.h
-        src/libqhull/mem.h
-        src/libqhull/merge.h
-        src/libqhull/poly.h
-        src/libqhull/qhull_a.h
-        src/libqhull/qset.h
-        src/libqhull/random.h
-        src/libqhull/stat.h
-        src/libqhull/user.h
+        src/libqhull_r/libqhull_r.h
+        src/libqhull_r/geom_r.h
+        src/libqhull_r/mem_r.h
+        src/libqhull_r/merge_r.h
+        src/libqhull_r/poly_r.h
+        src/libqhull_r/qhull_ra.h
+        src/libqhull_r/qset_r.h
+        src/libqhull_r/random_r.h
+        src/libqhull_r/stat_r.h
+        src/libqhull_r/user_r.h
+        src/libqhull_r/io_r.h
 )
 set(
     libqhull_SOURCES
-        src/libqhull/global.c
-        src/libqhull/stat.c
-        src/libqhull/geom2.c
-        src/libqhull/poly2.c
-        src/libqhull/merge.c
-        src/libqhull/libqhull.c
-        src/libqhull/geom.c
-        src/libqhull/poly.c
-        src/libqhull/qset.c
-        src/libqhull/mem.c
-        src/libqhull/random.c
-        src/libqhull/usermem.c
-        src/libqhull/userprintf.c
-        src/libqhull/qhio.c
-        src/libqhull/user.c
-        src/libqhull/rboxlib.c
-        src/libqhull/userprintf_rbox.c
+        src/libqhull_r/global_r.c
+        src/libqhull_r/stat_r.c
+        src/libqhull_r/geom2_r.c
+        src/libqhull_r/poly2_r.c
+        src/libqhull_r/merge_r.c
+        src/libqhull_r/libqhull_r.c
+        src/libqhull_r/geom_r.c
+        src/libqhull_r/poly_r.c
+        src/libqhull_r/qset_r.c
+        src/libqhull_r/mem_r.c
+        src/libqhull_r/random_r.c
+        src/libqhull_r/usermem_r.c
+        src/libqhull_r/userprintf_r.c
+        src/libqhull_r/user_r.c
+        src/libqhull_r/io_r.c
+        src/libqhull_r/rboxlib_r.c
+        src/libqhull_r/userprintf_rbox_r.c
         ${libqhull_HEADERS}
 )
 
-set(
-    libqhull_DOC
-        src/libqhull/index.htm
-        src/libqhull/qh-geom.htm
-        src/libqhull/qh-globa.htm
-        src/libqhull/qh-io.htm
-        src/libqhull/qh-mem.htm
-        src/libqhull/qh-merge.htm
-        src/libqhull/qh-poly.htm
-        src/libqhull/qh-qhull.htm
-        src/libqhull/qh-set.htm
-        src/libqhull/qh-stat.htm
-        src/libqhull/qh-user.htm
-)
-
-set(
-    testqset_HEADERS
-        src/libqhull/mem.h
-        src/libqhull/qset.h
-)
-set(
-    testqset_SOURCES
-        src/libqhull/qset.c
-        src/libqhull/mem.c
-        src/testqset/testqset.c
-        ${testqset_HEADERS}
-)
-
-set(
-    libqhullcpp_HEADERS
-        src/libqhullcpp/Coordinates.h
-        src/libqhullcpp/functionObjects.h
-        src/libqhullcpp/PointCoordinates.h
-        src/libqhullcpp/Qhull.h
-        src/libqhullcpp/QhullError.h
-        src/libqhullcpp/QhullFacet.h
-        src/libqhullcpp/QhullFacetList.h
-        src/libqhullcpp/QhullFacetSet.h
-        src/libqhullcpp/QhullHyperplane.h
-        src/libqhullcpp/QhullIterator.h
-        src/libqhullcpp/QhullLinkedList.h
-        src/libqhullcpp/QhullPoint.h
-        src/libqhullcpp/QhullPoints.h
-        src/libqhullcpp/QhullPointSet.h
-        src/libqhullcpp/QhullQh.h
-        src/libqhullcpp/QhullRidge.h
-        src/libqhullcpp/QhullSet.h
-        src/libqhullcpp/QhullSets.h
-        src/libqhullcpp/QhullStat.h
-        src/libqhullcpp/QhullVertex.h
-        src/libqhullcpp/QhullVertexSet.h
-        src/libqhullcpp/RboxPoints.h
-        src/libqhullcpp/RoadError.h
-        src/libqhullcpp/RoadLogEvent.h
-        src/libqhullcpp/UsingLibQhull.h
-        src/qhulltest/RoadTest.h
-)
-
-set(
-    libqhullcpp_SOURCES
-        src/libqhullcpp/Coordinates.cpp
-        src/libqhullcpp/PointCoordinates.cpp
-        src/libqhullcpp/Qhull.cpp
-        src/libqhullcpp/QhullFacet.cpp
-        src/libqhullcpp/QhullFacetList.cpp
-        src/libqhullcpp/QhullFacetSet.cpp
-        src/libqhullcpp/QhullHyperplane.cpp
-        src/libqhullcpp/QhullPoint.cpp
-        src/libqhullcpp/QhullPointSet.cpp
-        src/libqhullcpp/QhullPoints.cpp
-        src/libqhullcpp/QhullQh.cpp
-        src/libqhullcpp/QhullRidge.cpp
-        src/libqhullcpp/QhullSet.cpp
-        src/libqhullcpp/QhullStat.cpp
-        src/libqhullcpp/QhullVertex.cpp
-        src/libqhullcpp/QhullVertexSet.cpp
-        src/libqhullcpp/RboxPoints.cpp
-        src/libqhullcpp/RoadError.cpp
-        src/libqhullcpp/RoadLogEvent.cpp
-        src/libqhullcpp/UsingLibQhull.cpp
-        ${libqhullcpp_HEADERS}
-)
-
-set(
-    doc_FILES
-        README.txt
-        REGISTER.txt
-        Announce.txt
-        COPYING.txt
-        index.htm
-)
-
-include_directories(${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/src/libqhull)
+include_directories(${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/src/libqhull_r)
 
 # ---------------------------------------
 # Define static library qhull

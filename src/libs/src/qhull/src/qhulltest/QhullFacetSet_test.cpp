@@ -1,19 +1,20 @@
 /****************************************************************************
 **
-** Copyright (c) 2008-2012 C.B. Barber. All rights reserved.
-** $Id: //main/2011/qhull/src/qhulltest/QhullFacetSet_test.cpp#4 $$Change: 1490 $
-** $DateTime: 2012/02/19 20:27:01 $$Author: bbarber $
+** Copyright (c) 2008-2015 C.B. Barber. All rights reserved.
+** $Id: //main/2015/qhull/src/qhulltest/QhullFacetSet_test.cpp#3 $$Change: 2062 $
+** $DateTime: 2016/01/17 13:13:18 $$Author: bbarber $
 **
 ****************************************************************************/
 
 //pre-compiled headers
 #include <iostream>
-#include "RoadTest.h"
+#include "qhulltest/RoadTest.h" // QT_VERSION
 
-#include "QhullFacetSet.h"
-#include "QhullError.h"
-#include "QhullFacet.h"
-#include "Qhull.h"
+#include "libqhullcpp/QhullFacetSet.h"
+#include "libqhullcpp/QhullError.h"
+#include "libqhullcpp/QhullFacet.h"
+#include "libqhullcpp/Qhull.h"
+#include "libqhullcpp/RboxPoints.h"
 
 using std::cout;
 using std::endl;
@@ -27,7 +28,7 @@ class QhullFacetSet_test : public RoadTest
 {
     Q_OBJECT
 
-#//Test slots
+#//!\name Test slots
 private slots:
     void cleanup();
     void t_construct();
@@ -40,7 +41,7 @@ private slots:
 void
 add_QhullFacetSet_test()
 {
-    new QhullFacetSet_test();
+    new QhullFacetSet_test();  // RoadTest::s_testcases
 }
 
 //Executed after each testcase
@@ -48,7 +49,6 @@ void QhullFacetSet_test::
 cleanup()
 {
     RoadTest::cleanup();
-    UsingLibQhull::checkQhullMemoryEmpty();
 }
 
 void QhullFacetSet_test::
@@ -62,7 +62,7 @@ t_construct()
     QCOMPARE(fs2.count(),4);
     QhullFacetSet fs4= fs2; // copy constructor
     QVERIFY(fs4==fs2);
-    QhullFacetSet fs3(q.qhullQh()->facet_mergeset);
+    QhullFacetSet fs3(q, q.qh()->facet_mergeset);
     QVERIFY(fs3.isEmpty());
 }//t_construct
 
@@ -124,7 +124,7 @@ t_foreach()
     QVERIFY(!fs.contains(q.firstFacet()));
     QVERIFY(fs.contains(fs.first()));
     QhullFacet f= q.firstFacet().next();
-    if(!fs.contains(f)){
+    if(!fs.contains(f)){  // check if 'f' is the facet opposite firstFacet()
         f= f.next();
     }
     QVERIFY(fs.contains(f));
@@ -140,7 +140,7 @@ t_io()
         Qhull q(rcube,"QR0 QV0");   // good facets are adjacent to point 0
         QhullFacetSet fs= q.firstFacet().neighborFacets();
         ostringstream os;
-        os << fs.print(q.runId(), "Neighbors of first facet with point 0");
+        os << fs.print("Neighbors of first facet with point 0");
         os << fs.printIdentifiers("\nFacet identifiers: ");
         cout << os.str();
         QString facets= QString::fromStdString(os.str());

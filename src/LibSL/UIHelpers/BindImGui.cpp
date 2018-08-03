@@ -409,12 +409,7 @@ static void bindOnRender()
 {
   ImGui_ImplSimpleUI_NewFrame();
 
-  ImGuiIO& io = ImGui::GetIO();
-  ForIndex(i, 512) {
-    io.KeysDown[i] = false;
-  }
   if (prevOnRender) prevOnRender();
-
 }
 
 static void bindMouseMotion(uint x, uint y)
@@ -452,7 +447,7 @@ static void bindMouseButtonPressed(uint x, uint y, uint button, uint flags)
   }
 }
 
-static void bindKeypressed(uchar key)
+static void bindKeyPressed(uchar key)
 {
   //std::cout << "bindKeypressed " << (int)key << std::endl;
   ImGuiIO& io = ImGui::GetIO();
@@ -461,6 +456,16 @@ static void bindKeypressed(uchar key)
   if (!io.WantCaptureKeyboard) {
     if (prevKeyPressed) prevKeyPressed(key);
   } 
+}
+
+static void bindKeyUnpressed(uchar key)
+{
+  //std::cout << "bindKeyUnpressed " << (int)key << std::endl;
+  ImGuiIO& io = ImGui::GetIO();
+  io.KeysDown[key] = false;
+  if (!io.WantCaptureKeyboard) {
+    if (prevKeyPressed) prevKeyUnpressed(key);
+  }
 }
 
 static void bindScanCodePressed(uint sc)
@@ -512,7 +517,8 @@ void NAMESPACE::bindImGui()
   prevOnRender = SimpleUI::onRender;
   // redirect
   SimpleUI::onMouseButtonPressed = bindMouseButtonPressed;
-  SimpleUI::onKeyPressed = bindKeypressed;
+  SimpleUI::onKeyPressed = bindKeyPressed;
+  SimpleUI::onKeyUnpressed = bindKeyUnpressed;
   SimpleUI::onScanCodePressed = bindScanCodePressed;
   SimpleUI::onScanCodeUnpressed = bindScanCodeUnpressed;
   SimpleUI::onMouseWheel = bindMouseWheel;
@@ -529,6 +535,10 @@ void NAMESPACE::initImGui()
   io.RenderDrawListsFn  = ImGui_ImplSimpleUI_RenderDrawLists;
   io.SetClipboardTextFn = ImGui_ImplSimpleUI_SetClipboardText;
   io.GetClipboardTextFn = ImGui_ImplSimpleUI_GetClipboardText;
+
+  ForIndex(i, IM_ARRAYSIZE(io.KeysDown)) {
+    io.KeysDown[i] = false;
+  }
 
   ImGui_ImplSimpleUI_CreateDeviceObjects();
 }

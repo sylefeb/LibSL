@@ -1,34 +1,49 @@
 /****************************************************************************
 **
-** Copyright (c) 2008-2012 C.B. Barber. All rights reserved.
-** $Id: //main/2011/qhull/src/libqhullcpp/QhullSet.cpp#4 $$Change: 1464 $
-** $DateTime: 2012/01/25 22:58:41 $$Author: bbarber $
+** Copyright (c) 2008-2015 C.B. Barber. All rights reserved.
+** $Id: //main/2015/qhull/src/libqhullcpp/QhullSet.cpp#3 $$Change: 2066 $
+** $DateTime: 2016/01/18 19:29:17 $$Author: bbarber $
 **
 ****************************************************************************/
 
-#//! QhullSet -- Qhull's facet structure, facetT, as a C++ class
+#//! QhullSet -- Qhull's set structure, setT, as a C++ class
 
-#include "QhullError.h"
-#include "QhullSet.h"
+#include "libqhullcpp/QhullSet.h"
+
+#include "libqhullcpp/Qhull.h"
+#include "libqhullcpp/QhullError.h"
 
 #ifdef _MSC_VER  // Microsoft Visual C++ -- warning level 4
 #endif
 
 namespace orgQhull {
 
-#//static members
+#//!\name Class objects
 
 setT QhullSetBase::
 s_empty_set;
 
-// Same code for qh_setsize [qset.c] and QhullSetBase::count
-int QhullSetBase::count(const setT *set)
+#//!\name Constructors
+
+QhullSetBase::
+QhullSetBase(const Qhull &q, setT *s) 
+: qh_set(s ? s : &s_empty_set)
+, qh_qh(q.qh())
 {
-    int size;
+}
+
+#//!\name Class methods
+
+// Same code for qh_setsize [qset_r.c] and QhullSetBase::count [static]
+countT QhullSetBase::
+count(const setT *set)
+{
+    countT size;
     const setelemT *sizep;
 
-    if (!set)
+    if (!set){
         return(0);
+    }
     sizep= SETsizeaddr_(set);
     if ((size= sizep->i)) {
         size--;
@@ -37,11 +52,11 @@ int QhullSetBase::count(const setT *set)
             throw QhullError(10032, "QhullSet internal error: current set size %d is greater than maximum size %d\n",
                 size, set->maxsize);
         }
-    }else
+    }else{
         size= set->maxsize;
+    }
     return size;
-}
-
+}//count
 
 }//namespace orgQhull
 

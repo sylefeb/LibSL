@@ -405,6 +405,7 @@ SET_PROPERTY(TARGET LibSL APPEND PROPERTY
 			${CMAKE_CURRENT_SOURCE_DIR}/../libs/src/hashlibpp/src/
 			${CMAKE_CURRENT_SOURCE_DIR}/../libs/src/rply/
 			${CMAKE_CURRENT_SOURCE_DIR}/../libs/src/imgui/
+			${CMAKE_CURRENT_SOURCE_DIR}/../libs/src/qhull/src/libqhull_r/
 			$ENV{DXSDK_DIR}/include
 			$ENV{DXSDK_DIR}/lib/x86
 			$ENV{DXSDK_DIR}/Samples/C++/DXUT/Core)
