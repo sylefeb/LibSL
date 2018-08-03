@@ -371,6 +371,14 @@ static void glfwRefresh(GLFWwindow* window)
 //}
 //#endif
 
+void NAMESPACE::showCursor(bool show) {
+  if (show) {
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL );
+  } else {
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+
+  }
+}
 
 void NAMESPACE::init(uint width,uint height,const char *title,char **argv,int argc,bool frameLess,bool hidden,bool fullscreen)
 {
@@ -761,6 +769,15 @@ void NAMESPACE::glShowWindow(bool hide)
   else
     glutShowWindow();
 }
+
+void NAMESPACE::showCursor(bool show) {
+  if (show) {
+    glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
+  } else {
+    glutSetCursor(GLUT_CURSOR_NONE);
+  }
+}
+
 
 #else
 
