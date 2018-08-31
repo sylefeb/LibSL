@@ -458,6 +458,15 @@ void NAMESPACE::glShowWindow(bool hide)
     glutShowWindow();
 }
 
+bool NAMESPACE::showCursor(bool show)
+{
+  if (show) {
+    glutSetCursor(GLUT_CURSOR_RIGHT_ARROW);
+  } else {
+    glutSetCursor(GLUT_CURSOR_NONE);
+  }
+}
+
 #else
 
 #include <winuser.h>
@@ -1002,6 +1011,15 @@ void  NAMESPACE::glSwapBuffers()
 HWND NAMESPACE::getHWND()
 {
   return s_hWnd;
+}
+
+bool NAMESPACE::showCursor(bool show)
+{
+  if (show) {
+    while (ShowCursor(true) < 0) {}
+  } else {
+    while (ShowCursor(false) >= 0) {}
+  }
 }
 
 #endif
