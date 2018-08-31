@@ -458,7 +458,7 @@ void NAMESPACE::glShowWindow(bool hide)
     glutShowWindow();
 }
 
-bool NAMESPACE::showCursor(bool show)
+void NAMESPACE::showCursor(bool show)
 {
   if (show) {
     glutSetCursor(GLUT_CURSOR_RIGHT_ARROW);
@@ -1013,7 +1013,7 @@ HWND NAMESPACE::getHWND()
   return s_hWnd;
 }
 
-bool NAMESPACE::showCursor(bool show)
+void NAMESPACE::showCursor(bool show)
 {
   if (show) {
     while (ShowCursor(true) < 0) {}

@@ -116,7 +116,7 @@ namespace LibSL {
       LIBSL_DLL uint screenWidth();
       LIBSL_DLL uint screenHeight();
 
-      LIBSL_DLL bool showCursor(bool show);
+      LIBSL_DLL void showCursor(bool show);
       LIBSL_DLL void setAlwaysRefresh(bool r);
       LIBSL_DLL void refresh();
 
