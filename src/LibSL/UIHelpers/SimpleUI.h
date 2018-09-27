@@ -126,6 +126,7 @@ namespace LibSL {
       LIBSL_DLL void showCursor(bool show);
 #endif
 
+      LIBSL_DLL void showCursor(bool show);
       LIBSL_DLL void setAlwaysRefresh(bool r);
       LIBSL_DLL void refresh();
 

@@ -55,6 +55,7 @@ void gluxInit();           // for backward compatibility
 void gluxInit(int flags);  // for backward compatibility
 void gluxShutdown();
 int  gluxIsAvailable(const char *);
+bool gluxIsExtensionAvailable(const char*);
 int  gluxIsDevl(const char *); 
 
 // -------------------------------------------------------- 

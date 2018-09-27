@@ -1325,6 +1325,15 @@ HWND NAMESPACE::getHWND()
   return s_hWnd;
 }
 
+void NAMESPACE::showCursor(bool show)
+{
+  if (show) {
+    while (ShowCursor(true) < 0) {}
+  } else {
+    while (ShowCursor(false) >= 0) {}
+  }
+}
+
 #endif
 
 #else // DIRECT3D or DIRECTX10

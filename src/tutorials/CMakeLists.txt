@@ -4,8 +4,8 @@ PROJECT(LibSL_tutorials)
 # ADD_SUBDIRECTORY(TrackballUI)
 # ADD_SUBDIRECTORY(Mesh)
 # ADD_SUBDIRECTORY(AutoBindShader)
-ADD_SUBDIRECTORY(gl4x)
-ADD_SUBDIRECTORY(gl4xcore)
+# ADD_SUBDIRECTORY(gl4x)
+# ADD_SUBDIRECTORY(gl4xcore)
 
 # ADD_SUBDIRECTORY(Font) # JD: Does not compile on linux
 

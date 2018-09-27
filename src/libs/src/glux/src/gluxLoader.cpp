@@ -301,6 +301,13 @@ int gluxIsAvailable(const char *s)
 
 // --------------------------------------------------------
 
+bool gluxIsExtensionAvailable(const char* s)
+{
+  return g_glux__glExtensions.find(s) != g_glux__glExtensions.end();
+}
+
+// --------------------------------------------------------
+
 int gluxIsDevl(const char *s)
 {
   map<string,gluxPlugin *>::iterator P;
