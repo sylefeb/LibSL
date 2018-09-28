@@ -61,7 +61,11 @@ ERROR_____either_OPENGL_or_DIRECT3D_must_be_defined__not_both _;
 #endif
 
 #define LIBSL_OPENGL_MAJOR_VERSION 4
+#ifdef __APPLE__
+#define LIBSL_OPENGL_MINOR_VERSION 1
+#else
 #define LIBSL_OPENGL_MINOR_VERSION 3
+#endif
 
 #ifndef LIBSL_CORE_INCLUDED
 #include <LibSL/LibSL.h>

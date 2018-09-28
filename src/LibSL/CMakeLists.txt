@@ -17,7 +17,7 @@ SET(LIBSL_CORE_HEADERS
 	DataStructures/GraphAlgorithms.h
 	DataStructures/Hierarchy.h
 	DataStructures/Pod.h
-	DataStructures/Pow2Tree.h
+        DataStructures/Pow2Tree.h
 	Errors/Errors.h
 	Geometry/AAB.h
 	Geometry/Bezier.h
@@ -197,7 +197,7 @@ SET(LIBSL_GL_SOURCE
 	Mesh/AnimatedMeshGLSLRenderer.cpp
 	UIHelpers/Manipulator.cpp
 	UIHelpers/SimpleUI.cpp
-	UIHelpers/TrackballUI.cpp
+        UIHelpers/TrackballUI.cpp
 	UIHelpers/Trackball.cpp
 	UIHelpers/BindAntTweakBar.cpp
  	UIHelpers/BindImGui.cpp
@@ -435,9 +435,11 @@ ADD_DEFINITIONS("-DLIBSL_IDKFK")
 ENDIF (LIBSL_POWER_USER)
 
 IF(WIN32)
-TARGET_LINK_LIBRARIES(LibSL jpeg png 3ds zlib loki qhull shlwapi psapi winmm tinyxml hashlibpp)
+#TARGET_LINK_LIBRARIES(LibSL jpeg png 3ds zlib loki qhull shlwapi psapi winmm tinyxml hashlibpp)
+TARGET_LINK_LIBRARIES(LibSL jpeg png 3ds zlib qhull shlwapi psapi winmm tinyxml hashlibpp)
 ELSE(WIN32)
-TARGET_LINK_LIBRARIES(LibSL jpeg png 3ds zlib loki qhull tinyxml hashlibpp)
+#TARGET_LINK_LIBRARIES(LibSL jpeg png 3ds zlib loki qhull tinyxml hashlibpp)
+TARGET_LINK_LIBRARIES(LibSL jpeg png 3ds zlib qhull tinyxml hashlibpp)
 ENDIF(WIN32)
 
 INSTALL(TARGETS LibSL
@@ -587,11 +589,18 @@ IF (LIBSL_BUILD_GL4CORE)
 		SET_TARGET_PROPERTIES(LibSL_gl4core PROPERTIES COMPILE_DEFINITIONS "OPENGL;OPENGL4;OPENGLCORE;_WIN32_WINNT=0x0400;WINVER=0x500")
 	ELSE(WIN32)
 		FIND_PACKAGE(OpenGL)
-		FIND_PACKAGE(GLUT)
-		SET_TARGET_PROPERTIES(LibSL_gl4core PROPERTIES COMPILE_DEFINITIONS "OPENGL;OPENGL4;OPENGLCORE;USE_GLUT")
-		TARGET_LINK_LIBRARIES(LibSL_gl4core ${OPENGL_LIBRARIES})
-		TARGET_LINK_LIBRARIES(LibSL_gl4core ${GLUT_LIBRARIES})
-		INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/libLibSL_gl4core.a" DESTINATION ${CMAKE_SOURCE_DIR}/lib)
+                IF(LIBSL_USE_GLFW)
+                    FIND_PACKAGE(glfw3 REQUIRED)
+                    SET_TARGET_PROPERTIES(LibSL_gl4core PROPERTIES COMPILE_DEFINITIONS "OPENGL;OPENGL4;OPENGLCORE;USE_GLFW")
+                    TARGET_LINK_LIBRARIES(LibSL_gl4core ${OPENGL_LIBRARIES})
+                    TARGET_LINK_LIBRARIES(LibSL_gl4core glfw) #${GLFW3_LIBRARIES}
+                ELSE(LIBSL_USE_GLFW)
+                    FIND_PACKAGE(GLUT)
+                    SET_TARGET_PROPERTIES(LibSL_gl4core PROPERTIES COMPILE_DEFINITIONS "OPENGL;OPENGL4;OPENGLCORE;USE_GLUT")
+                    TARGET_LINK_LIBRARIES(LibSL_gl4core ${OPENGL_LIBRARIES})
+                    TARGET_LINK_LIBRARIES(LibSL_gl4core ${GLUT_LIBRARIES})
+                ENDIF(LIBSL_USE_GLFW)
+                INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/libLibSL_gl4core.a" DESTINATION ${CMAKE_SOURCE_DIR}/lib)
 	ENDIF(WIN32)
 	IF(APPLE)
 		ADD_DEFINITIONS(-DGL_GLEXT_LEGACY)

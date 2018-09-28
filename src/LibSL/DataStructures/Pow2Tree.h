@@ -58,6 +58,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 
 #include <loki/SmallObj.h>
 
+
 #include <list>
 
 namespace LibSL {

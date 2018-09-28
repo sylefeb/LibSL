@@ -55,8 +55,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #include <LibSL/Math/Tuple.h>
 #include <LibSL/Math/Math.h>
 
-#include <loki/SmallObj.h>
-
 #include <list>
 #include <vector>
 #include <set>
