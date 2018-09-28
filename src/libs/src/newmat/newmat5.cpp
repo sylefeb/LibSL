@@ -522,7 +522,7 @@ MatrixInput::~MatrixInput()
 {
    REPORT
    Tracer et("MatrixInput");
-   if (n!=0) Throw(ProgramException("A list of values was too short"));
+   //if (n!=0) Throw(ProgramException("A list of values was too short"));
 }
 
 MatrixInput BandMatrix::operator<<(Real)

@@ -196,10 +196,11 @@ void NAMESPACE::GLShader::init(
   glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_TEXCOORD1>::value, "mvf_texcoord1");
   glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_TEXCOORD2>::value, "mvf_texcoord2");
   glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_TEXCOORD3>::value, "mvf_texcoord3");
-  glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_TEXCOORD4>::value, "mvf_texcoord4");
-  glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_TEXCOORD5>::value, "mvf_texcoord5");
-  glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_TEXCOORD6>::value, "mvf_texcoord6");
-  glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_TEXCOORD7>::value, "mvf_texcoord7");
+  // SL 2018-09-17 disabled due to some plateform not supporting more than 8 attribs (e.g. raspberry PI)
+  //glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_TEXCOORD4>::value, "mvf_texcoord4");
+  //glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_TEXCOORD5>::value, "mvf_texcoord5");
+  //glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_TEXCOORD6>::value, "mvf_texcoord6");
+  //glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_TEXCOORD7>::value, "mvf_texcoord7");
 #else
   glBindAttribLocationARB(m_Shader, LibSL::GPUMesh::gl::mvf_attrib_location<MVF_BASE_POSITION >::value, "mvf_position");
   glBindAttribLocationARB(m_Shader, LibSL::GPUMesh::gl::mvf_attrib_location<MVF_BASE_POSITION >::value, "mvf_vertex"); // aliasing
