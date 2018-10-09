@@ -572,17 +572,21 @@ static void glutMouse(int glut_btn, int glut_state, int x, int y)
   if      (glut_btn == GLUT_LEFT_BUTTON)   button=LIBSL_LEFT_BUTTON;
   else if (glut_btn == GLUT_MIDDLE_BUTTON) button=LIBSL_MIDDLE_BUTTON;
   else if (glut_btn == GLUT_RIGHT_BUTTON)  button=LIBSL_RIGHT_BUTTON;
-#ifdef EMSCRIPTEN
   else if (glut_btn == 3)  button = LIBSL_WHEEL_UP;
   else if (glut_btn == 4)  button = LIBSL_WHEEL_DOWN;
-#endif
   if (glut_state == GLUT_DOWN) {
     flags |= LIBSL_BUTTON_DOWN;
   } else if (glut_state == GLUT_UP) {
     flags |= LIBSL_BUTTON_UP;
   }
 
-  NAMESPACE::onMouseButtonPressed(x,y,button,flags);
+  if (button == LIBSL_WHEEL_UP) {
+    NAMESPACE::onMouseWheel(1);
+  } else if (button == LIBSL_WHEEL_DOWN) {
+    NAMESPACE::onMouseWheel(-1);
+  } else {
+    NAMESPACE::onMouseButtonPressed(x,y,button,flags);
+  }
 }
 
 
