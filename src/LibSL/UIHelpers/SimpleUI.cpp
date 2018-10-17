@@ -707,7 +707,8 @@ void NAMESPACE::init(uint width,uint height,const char *title,char **argv,int ar
   glutInitWindowSize    (width,height);
   glutCreateWindow      (title);
 #ifndef EMSCRIPTEN
-    glutSetIconTitle      (title);
+  std::cout << "\033]0;" << title << "\007";
+  glutSetIconTitle      (title);
 #endif
   glutDisplayFunc       (glutRender);
   glutIdleFunc          (glutIdle);
@@ -715,7 +716,7 @@ void NAMESPACE::init(uint width,uint height,const char *title,char **argv,int ar
   glutPassiveMotionFunc (glutMotion);
   glutMouseFunc         (glutMouse);
   glutKeyboardFunc      (glutKeyboard);
-  glutKeyboardUpFunc	(glutKeyboardUp);
+  glutKeyboardUpFunc	  (glutKeyboardUp);
   glutSpecialFunc       (glutKeyboardSpecial);
   glutSpecialUpFunc     (glutKeyboardSpecialUp);
   glutReshapeFunc       (glutReshape);
@@ -726,7 +727,7 @@ void NAMESPACE::init(uint width,uint height,const char *title,char **argv,int ar
 #endif
 #endif
 //#ifdef EMSCRIPTEN
-//  glutMouseWheelFunc    (glutMouseWheel);
+//  glutMouseWheelFunc  (glutMouseWheel);
 //#endif
 #ifndef EMSCRIPTEN
 #ifdef USE_GLUX
