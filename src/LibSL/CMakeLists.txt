@@ -80,6 +80,7 @@ SET(LIBSL_CORE_HEADERS
 	Mesh/MeshEditing.h
 	Mesh/MeshFormat_3DS.h
 	Mesh/MeshFormat_map.h
+	Mesh/MeshFormat_msh.h
 	Mesh/MeshFormat_mesh.h
 	Mesh/MeshFormat_OBJ.h
 	Mesh/MeshFormat_wrl.h
@@ -140,6 +141,7 @@ SET(LIBSL_CORE_SOURCE
 	Mesh/MeshFormat_OBJ.cpp
 	Mesh/MeshFormat_wrl.cpp
 	Mesh/MeshFormat_mesh.cpp
+	Mesh/MeshFormat_msh.cpp
 	Mesh/MeshFormat_map.cpp
 	Mesh/MeshFormat_proc.cpp
 	Mesh/MeshFormat_dae.cpp
