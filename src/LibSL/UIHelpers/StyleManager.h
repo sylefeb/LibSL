@@ -1,49 +1,59 @@
 #pragma once
-
 #include <imgui.h>
 #include <map>
 #include <vector>
 #include <string>
 #include <sstream>
 
-using namespace std;
 class styleManager {
-public :
-	map<string, vector<pair<string, ImVec4>>> styleSheetCol;
-	map<string, vector<pair<string, float>>>  styleSheetVar;
-	
-	void load(const char* fname);
+public:
 
-	void push(const string);
 
-	void pop();
+  static styleManager* get() {
+    if (!m_singleton) {
+      m_singleton = new styleManager();
+    }
+    return m_singleton;
+  }
 
-private :
-	vector<int> popCounter;
+  void load(const char* fname);
 
-}; 
+  void push(const std::string);
 
+  void pop();
+
+private:
+  styleManager() = default;
+
+  std::vector<int> popCounter;
+
+  std::map<std::string, std::vector<std::pair<std::string, ImVec4>>> styleSheetCol;
+  std::map<std::string, std::vector<std::pair<std::string, float>>>  styleSheetVar;
+
+  static styleManager* m_singleton;
+
+};
 
 // Search and remove whitespace from both ends of the string
 static std::string TrimEnumString(const std::string &_s)
 {
-	std::string::const_iterator it = _s.begin();
-	while (it != _s.end() && isspace(*it)) { it++; }
-	std::string::const_reverse_iterator rit = _s.rbegin();
-	while (rit.base() != it && isspace(*rit)) { rit++; }
-	return std::string(it, rit.base());
+  std::string::const_iterator it = _s.begin();
+  while (it != _s.end() && isspace(*it)) { it++; }
+  std::string::const_reverse_iterator rit = _s.rbegin();
+  while (rit.base() != it && isspace(*rit)) { rit++; }
+  return std::string(it, rit.base());
 }
 
 static void SplitEnumArgs(const char* _szArgs, std::string _Array[], int _nMax)
 {
-	std::stringstream ss(_szArgs);
-	std::string strSub;
-	int nIdx = 0;
-	while (ss.good() && (nIdx < _nMax)) {
-		getline(ss, strSub, ',');
-		_Array[nIdx] = TrimEnumString(strSub);
-		nIdx++;
-	}
+  std::stringstream ss(_szArgs);
+  std::string strSub;
+  int nIdx = 0;
+  while (ss.good() && (nIdx < _nMax)) {
+    getline(ss, strSub, ',');
+    _Array[nIdx] = TrimEnumString(strSub);
+    nIdx++;
+  }
 };
 // This will to define an enum that is wrapped in a namespace of the same name along with ToString(), FromString(), and COUNT
 #define DECLARE_ENUM(ename, ...) \
@@ -106,4 +116,3 @@ ImGuiCol_ModalWindowDarkening,
 ImGuiCol_DragDropTarget,
 ImGuiCol_COUNT,
 ImGuiCol_ERROR);
-

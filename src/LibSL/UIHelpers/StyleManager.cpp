@@ -1,102 +1,161 @@
 #include "styleManager.h"
 #include <fstream>
 
-void parseWS(ifstream& stream) {
-	char trash = stream.peek();
-	while (trash == ' ' || trash == '\t' || trash == '\n' || trash == '\r' || trash == '\0') {
-		stream.get();
-		trash = stream.peek();
-	}
+#include <iostream>
+#include <regex>
+
+using namespace std;
+
+#define regex_comment   string("((\\/\\/.*?)\\n|\\/\\*(?:.|\\s)*?\\*\\/)")
+
+#define regex_float_0_1 string("\\b(1(?:\\.0*)?|0(?:\\.\\d*)?)\\b")
+#define regex_int_0_255 string("\\b([0-1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])\\b")
+
+#define regex_rgb_float string("rgb[a]?\\(" + regex_float_0_1 + "," + regex_float_0_1  + "," + regex_float_0_1 + "(?:," + regex_float_0_1 + ")?\\)")
+#define regex_rgb_int   string("rgb[a]?\\(" + regex_int_0_255 + "," + regex_int_0_255  + "," + regex_int_0_255 + "(?:," + regex_int_0_255 + ")?\\)")
+#define regex_hex       string("#(?:[0-9a-fA-F]{2}){3,4}")
+
+#define regex_context   string("\\b(\\w*)\\{(.*?)\\}")
+#define regex_rule      string("\\b(\\w*):*(.*?);")
+
+styleManager *styleManager::m_singleton = nullptr;
+
+ImVec4 hexToRGBA(string& hex)
+{
+  for (auto & c : hex) c = toupper(c);
+
+  float rgba[4] = { 0,0,0,0 };
+
+  for (int i = 0; i < 4; i++)
+  {
+    if (i == 3 && hex.size() == 7)
+    {
+      rgba[i] = 1.0f;
+    } else {
+
+      rgba[i] = (hex[i * 2 + 1] >= '0' && hex[i * 2 + 1] <= '9' ? hex[i * 2 + 1] - '0' : 10 + hex[i * 2 + 1] - 'A') * 16.f / 255.f
+              + (hex[i * 2 + 2] >= '0' && hex[i * 2 + 2] <= '9' ? hex[i * 2 + 2] - '0' : 10 + hex[i * 2 + 2] - 'A') * 1.f / 255.f;
+    }
+  }
+
+  return ImVec4(rgba[0], rgba[1], rgba[2], rgba[3]);
 }
 
-ImVec4 hexToRGBA(string& hex) {
-	for (auto & c : hex) c = toupper(c);
+ImVec4 rgbfloatToRGBA(string& rgb)
+{
+  float rgba[4] = { 0.f, 0.f, 0.f, 1.f };
+  int i = 0;
 
-	float rgba[4] = { 0,0,0,0 };
-
-	for (int i = 0; i < 4; i++) {
-		if (i == 3 && hex.size() == 7) {
-			rgba[i] = 1.0f;
-		}
-		else {
-
-			rgba[i] = (hex[i * 2 + 1] >= '0' && hex[i * 2 + 1] <= '9' ? hex[i * 2 + 1] - '0' : hex[i * 2 + 1] - 'A') * 16.f / 255.f
-				    + (hex[i * 2 + 2] >= '0' && hex[i * 2 + 2] <= '9' ? hex[i * 2 + 2] - '0' : hex[i * 2 + 2] - 'A') * 1.f / 255.f;
-		}
-	}
-
-	return ImVec4(rgba[0], rgba[1], rgba[2], rgba[3]);
+  string toParse = rgb;
+  smatch sm_color;
+  while (regex_search(toParse, sm_color, regex(regex_float_0_1))) {
+    std::string col = sm_color[1];
+    rgba[i++] = atof(col.c_str());
+    toParse = sm_color.suffix().str();
+  }
+  return ImVec4(rgba[0], rgba[1], rgba[2], rgba[3]);
 }
 
-void styleManager::load(const char* fname) {
-	// ToDo use regex
-	ifstream stream(fname);
-	string cleaned = "";
+ImVec4 rgbintToRGBA(string& rgb)
+{
+  float rgba[4] = { 0.f, 0.f, 0.f, 1.f};
+  int i = 0;
 
-	char c;
-	while (!stream.eof()) {
-		c = stream.get();
-		if (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
-			continue;
-		}
-		cleaned += c;
-	}
+  string toParse = rgb;
+  smatch sm_color;
+  while (regex_search(toParse, sm_color, regex(regex_int_0_255))) {
+    std::string col = sm_color[1];
+    rgba[i++] = atof( col.c_str() ) / 255.f;
+    toParse = sm_color.suffix().str();
+  }
+  return ImVec4(rgba[0], rgba[1], rgba[2], rgba[3]);
+}
 
-	string context;
-	string rule;
-	string color;
-	vector<pair<string, ImVec4>> contextStyle;
+void styleManager::load(const char* fname)
+{
+  // ToDo use regex
 
-	int i = 0;
-	while(i < cleaned.size()-1) {
-		c = cleaned.at(i);
-		context = "";
-		while (c != '{') {
-			context += c;
-			++i;
-			c = cleaned.at(i);
-		}
-		++i; // ignore {
-		while (c != '}') {
-			rule = "";
-			c = cleaned.at(i);
-			while (c != ':') {
-				rule += c;
-				++i;
-				c = cleaned.at(i);
-			}
-			++i; // ignore :
-			color = "";
-			c = cleaned.at(i);
-			while (c != ';') {
-				color += c;
-				++i;
-				c = cleaned.at(i);
-			}
-			++i; // ignore ;
-			c = cleaned.at(i);
-			ImVec4 col = hexToRGBA(color);
-			contextStyle.push_back(make_pair("ImGuiCol_"+rule, col));
-		}
-		styleSheetCol.emplace(context, contextStyle);
-		
-		++i; // ignore }
-	}
+
+  ifstream stream;
+  stream.open(fname);
+
+  string input( (std::istreambuf_iterator<char>(stream)),
+                (std::istreambuf_iterator<char>()) );
+
+  stream.close();
+  
+
+  if (!input.empty()) {
+    styleSheetCol.clear();
+    styleSheetVar.clear();
+  }
+ 
+  string toParse = "";
+  { // Remove comments and whitespaces
+    string uncommented;
+    regex_replace(back_inserter(uncommented), input.begin(), input.end(), regex(regex_comment), "$2");
+    toParse.clear();
+    regex_replace(back_inserter(toParse), uncommented.begin(), uncommented.end(), regex("(\\s)"), "$2");
+  }
+
+  string context;
+  string rule;
+  ImVec4 color;
+
+  try {
+    smatch sm_context, sm_rule, sm_color;
+    while (regex_search(toParse, sm_context, regex(regex_context))) {
+      vector<pair<string, ImVec4>> colorStyle;
+      vector<pair<string, ImVec4>> varStyle;
+      context = sm_context[1];
+
+      string sm_1 = sm_context[2];
+      while (regex_search(sm_1, sm_rule, regex(regex_rule))) {
+        rule = "ImGuiCol_" + string(sm_rule[1]);
+
+        string sm_2 = sm_rule[2];
+        if (regex_search(sm_2, sm_color, regex(regex_hex))) {
+          color = hexToRGBA(string(sm_rule[2]));
+        }
+
+        if (regex_search(sm_2, sm_color, regex(regex_rgb_float))) {
+          color = rgbfloatToRGBA(string(sm_rule[2]));
+        }
+
+        if (regex_search(sm_2, sm_color, regex(regex_rgb_int))) {
+          color = rgbintToRGBA(string(sm_rule[2]));
+        }
+
+        colorStyle.push_back(make_pair(rule, color));
+        sm_1 = sm_rule.suffix().str();
+      }
+
+      styleSheetCol.emplace(context, colorStyle);
+      toParse = sm_context.suffix().str();
+    }
+  } catch (const std::regex_error& e) {
+    cerr << "ParseInput: regex_error caught: " << e.what() << endl;
+  }
+
 }
 
 void styleManager::push(const string context) {
-	std::vector<pair<string,ImVec4>> style = styleSheetCol.at(context);
-	int pop = 0;
-	for (auto s : style) {
-		ImGuiColor::ImGuiColor type = ImGuiColor::FromString(s.first);
-		ImGui::PushStyleColor(type , s.second);
-		pop++;
-	}
-	popCounter.push_back(pop);
+  if (styleSheetCol.find(context) == styleSheetCol.end()) {
+    popCounter.push_back(0);
+    return;
+  }
+  std::vector<pair<string, ImVec4>> style = styleSheetCol.at(context);
+  int pop = 0;
+  for (auto s : style) {
+    ImGuiColor::ImGuiColor type = ImGuiColor::FromString(s.first);
+    ImGui::PushStyleColor(type, s.second);
+    pop++;
+  }
+  popCounter.push_back(pop);
 }
 
 void styleManager::pop() {
-	int pop = popCounter.back();
-	popCounter.pop_back();
-	ImGui::PopStyleColor(pop);
+  int pop = popCounter.back();
+  popCounter.pop_back();
+  ImGui::PopStyleColor(pop);
 }
