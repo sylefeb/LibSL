@@ -22,6 +22,8 @@ public:
 
   void pop();
 
+  ImVec4 getColor(const std::string, const std::string);
+
 private:
   styleManager() = default;
 

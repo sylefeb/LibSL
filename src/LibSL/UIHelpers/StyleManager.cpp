@@ -6,7 +6,7 @@
 
 using namespace std;
 
-#define regex_comment   string("((\\/\\/.*?)\\n|\\/\\*(?:.|\\s)*?\\*\\/)")
+#define regex_comment   string("((?:\\/\\/.*?)\\n|\\/\\*(?:.|\\s)*?\\*\\/)")
 
 #define regex_float_0_1 string("\\b(1(?:\\.0*)?|0(?:\\.\\d*)?)\\b")
 #define regex_int_0_255 string("\\b([0-1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])\\b")
@@ -95,8 +95,8 @@ ImVec4 parseColor(string& input) {
 
 void styleManager::load(const char* fname)
 {
-  // ToDo use regex
-
+  styleSheetCol.clear();
+  styleSheetVar.clear();
 
   ifstream stream;
   stream.open(fname);
@@ -105,12 +105,6 @@ void styleManager::load(const char* fname)
                 (std::istreambuf_iterator<char>()) );
 
   stream.close();
-  
-
-  if (!input.empty()) {
-    styleSheetCol.clear();
-    styleSheetVar.clear();
-  }
  
   string escaped = "";
   { // Remove comments and whitespaces
@@ -150,7 +144,7 @@ void styleManager::load(const char* fname)
 
       string sm_1 = sm_context[2];
       while (regex_search(sm_1, sm_rule, regex(regex_rule))) {
-        rule = "ImGuiCol_" + string(sm_rule[1]);
+        rule = string(sm_rule[1]);
         string sm_2 = sm_rule[2];
 
         if (regex_search(sm_2, sm_color, regex(regex_color))) {
@@ -182,7 +176,7 @@ void styleManager::push(const string context) {
   std::vector<pair<string, ImVec4>> style = styleSheetCol.at(context);
   int pop = 0;
   for (auto s : style) {
-    ImGuiColor::ImGuiColor type = ImGuiColor::FromString(s.first);
+    ImGuiColor::ImGuiColor type = ImGuiColor::FromString("ImGuiCol_" + s.first);
     ImGui::PushStyleColor(type, s.second);
     pop++;
   }
@@ -193,4 +187,19 @@ void styleManager::pop() {
   int pop = popCounter.back();
   popCounter.pop_back();
   ImGui::PopStyleColor(pop);
+}
+
+ImVec4 styleManager::getColor(const std::string context, const std::string rule) {
+  ImVec4 color;
+  if (styleSheetCol.find(context) != styleSheetCol.end()) {
+    auto list = styleSheetCol.at(context);
+
+    auto it = std::find_if(list.begin(), list.end(),
+      [&rule](const std::pair<std::string, ImVec4>& element) { return element.first == rule; });
+
+    if (it != list.end()) {
+      color = it->second;
+    }
+  }
+  return color;
 }
