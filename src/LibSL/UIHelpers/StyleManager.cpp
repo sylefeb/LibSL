@@ -14,9 +14,13 @@ using namespace std;
 #define regex_rgb_float string("rgb[a]?\\(" + regex_float_0_1 + "," + regex_float_0_1  + "," + regex_float_0_1 + "(?:," + regex_float_0_1 + ")?\\)")
 #define regex_rgb_int   string("rgb[a]?\\(" + regex_int_0_255 + "," + regex_int_0_255  + "," + regex_int_0_255 + "(?:," + regex_int_0_255 + ")?\\)")
 #define regex_hex       string("#(?:[0-9a-fA-F]{2}){3,4}")
+#define regex_color     string("(?:" + regex_rgb_float + "|" + regex_rgb_int + "|" + regex_hex +")")
 
-#define regex_context   string("\\b(\\w*)\\{(.*?)\\}")
-#define regex_rule      string("\\b(\\w*):*(.*?);")
+#define regex_label     string("\\b\\w*\\b")
+
+#define regex_context          string("(" + regex_label + ")" + "\\{(.*?)\\}")
+#define regex_rule             string("(" + regex_label + ")" + ":(.*?);")
+#define regex_color_definition string("(" + regex_label + ")" + "=(.*?);")
 
 styleManager *styleManager::m_singleton = nullptr;
 
@@ -71,6 +75,24 @@ ImVec4 rgbintToRGBA(string& rgb)
   return ImVec4(rgba[0], rgba[1], rgba[2], rgba[3]);
 }
 
+ImVec4 parseColor(string& input) {
+  ImVec4 color;
+  smatch sm_color;
+  if (regex_search(input, sm_color, regex(regex_hex))) {
+    color = hexToRGBA(input);
+  }
+
+  if (regex_search(input, sm_color, regex(regex_rgb_float))) {
+    color = rgbfloatToRGBA(input);
+  }
+
+  if (regex_search(input, sm_color, regex(regex_rgb_int))) {
+    color = rgbintToRGBA(input);
+  }
+
+  return color;
+}
+
 void styleManager::load(const char* fname)
 {
   // ToDo use regex
@@ -90,18 +112,35 @@ void styleManager::load(const char* fname)
     styleSheetVar.clear();
   }
  
-  string toParse = "";
+  string escaped = "";
   { // Remove comments and whitespaces
     string uncommented;
     regex_replace(back_inserter(uncommented), input.begin(), input.end(), regex(regex_comment), "$2");
-    toParse.clear();
-    regex_replace(back_inserter(toParse), uncommented.begin(), uncommented.end(), regex("(\\s)"), "$2");
+    escaped.clear();
+    regex_replace(back_inserter(escaped), uncommented.begin(), uncommented.end(), regex("(\\s)"), "$2");
   }
 
   string context;
   string rule;
   ImVec4 color;
 
+  string toParse = escaped;
+  std::map<string, ImVec4> colors;
+  // Parse color definitions
+  try {
+    smatch sm_def;
+    while (regex_search(toParse, sm_def, regex(regex_color_definition))) {
+      string color_name = sm_def[1], color_def = sm_def[2];
+      color = parseColor(color_def);
+      colors.emplace(color_name, color);
+      toParse = sm_def.suffix().str();
+    }
+  } catch (const std::regex_error& e) {
+    cerr << "ParseInput: regex_error caught: " << e.what() << endl;
+  }
+
+  // parse rules
+  toParse = escaped;
   try {
     smatch sm_context, sm_rule, sm_color;
     while (regex_search(toParse, sm_context, regex(regex_context))) {
@@ -112,19 +151,15 @@ void styleManager::load(const char* fname)
       string sm_1 = sm_context[2];
       while (regex_search(sm_1, sm_rule, regex(regex_rule))) {
         rule = "ImGuiCol_" + string(sm_rule[1]);
-
         string sm_2 = sm_rule[2];
-        if (regex_search(sm_2, sm_color, regex(regex_hex))) {
-          color = hexToRGBA(string(sm_rule[2]));
+
+        if (regex_search(sm_2, sm_color, regex(regex_color))) {
+          color = parseColor(string(sm_rule[2]));
+        } else if (regex_search(sm_2, sm_color, regex(regex_label))) {
+          color = colors[string(sm_rule[2])];
         }
 
-        if (regex_search(sm_2, sm_color, regex(regex_rgb_float))) {
-          color = rgbfloatToRGBA(string(sm_rule[2]));
-        }
-
-        if (regex_search(sm_2, sm_color, regex(regex_rgb_int))) {
-          color = rgbintToRGBA(string(sm_rule[2]));
-        }
+        
 
         colorStyle.push_back(make_pair(rule, color));
         sm_1 = sm_rule.suffix().str();
