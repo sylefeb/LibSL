@@ -1,7 +1,9 @@
 #pragma once
 #include <imgui.h>
-#include <map>
+
 #include <vector>
+#include <map>
+
 #include <string>
 #include <sstream>
 
@@ -18,7 +20,7 @@ public:
 
   void load(const char* fname);
 
-  void push(const std::string);
+  void push(const char*);
 
   void pop();
 

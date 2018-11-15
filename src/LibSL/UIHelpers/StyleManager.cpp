@@ -54,7 +54,7 @@ ImVec4 rgbfloatToRGBA(string& rgb)
   smatch sm_color;
   while (regex_search(toParse, sm_color, regex(regex_float_0_1))) {
     std::string col = sm_color[1];
-    rgba[i++] = atof(col.c_str());
+    rgba[i++] = stof(col.c_str());
     toParse = sm_color.suffix().str();
   }
   return ImVec4(rgba[0], rgba[1], rgba[2], rgba[3]);
@@ -69,7 +69,7 @@ ImVec4 rgbintToRGBA(string& rgb)
   smatch sm_color;
   while (regex_search(toParse, sm_color, regex(regex_int_0_255))) {
     std::string col = sm_color[1];
-    rgba[i++] = atof( col.c_str() ) / 255.f;
+    rgba[i++] = stof( col.c_str() ) / 255.f;
     toParse = sm_color.suffix().str();
   }
   return ImVec4(rgba[0], rgba[1], rgba[2], rgba[3]);
@@ -168,18 +168,18 @@ void styleManager::load(const char* fname)
 
 }
 
-void styleManager::push(const string context) {
-  if (styleSheetCol.find(context) == styleSheetCol.end()) {
-    popCounter.push_back(0);
-    return;
-  }
-  std::vector<pair<string, ImVec4>> style = styleSheetCol.at(context);
+void styleManager::push(const char* context) {
   int pop = 0;
-  for (auto s : style) {
-    ImGuiColor::ImGuiColor type = ImGuiColor::FromString("ImGuiCol_" + s.first);
-    ImGui::PushStyleColor(type, s.second);
-    pop++;
+
+  if (styleSheetCol.find(context) != styleSheetCol.end()) {
+    std::vector<pair<string, ImVec4>> style = styleSheetCol.at(context);
+    for (auto s : style) {
+      ImGuiColor::ImGuiColor type = ImGuiColor::FromString("ImGuiCol_" + s.first);
+      ImGui::PushStyleColor(type, s.second);
+      pop++;
+    }
   }
+
   popCounter.push_back(pop);
 }
 
