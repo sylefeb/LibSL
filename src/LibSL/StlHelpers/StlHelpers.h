@@ -50,9 +50,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 namespace LibSL {
 	namespace StlHelpers {
 
-    template <typename Facet>
-    struct deletable_facet : Facet { using Facet::Facet; };
-
     LIBSL_DLL std::string loadFileIntoString         (const char *);
     LIBSL_DLL std::string extractFileName            (const std::string& path);
     LIBSL_DLL std::string extractExtension           (const std::string& path);

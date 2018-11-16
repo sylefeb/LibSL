@@ -45,7 +45,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <codecvt>
 
 using namespace std;
 
@@ -58,8 +57,7 @@ using namespace std;
 
 string NAMESPACE::loadFileIntoString(const char *file)
 {
-  wstring fname = std::wstring_convert<NAMESPACE::deletable_facet<std::codecvt<wchar_t, char, std::mbstate_t>>>().from_bytes(file);
-	ifstream infile(fname, ios::binary);
+  ifstream infile(file, ios::binary);
   if (!infile.good()) {
     throw LibSL::Errors::Fatal("[loadFileIntoString] - error opening file '%s'",file);
   }
