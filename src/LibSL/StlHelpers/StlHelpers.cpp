@@ -57,6 +57,11 @@ using namespace std;
 
 string NAMESPACE::loadFileIntoString(const char *file)
 {
+  // SP 2018-11-21: Locale might have been changed by user, lua or other.
+  //                This sometimes affects loading files with non-ascii characters.
+  //                We change it to the user preferred (i.e., default locale)
+  //                and then set it back to its past state.
+  char* locale = setlocale(LC_CTYPE, "");
   ifstream infile(file, ios::binary);
   if (!infile.good()) {
     throw LibSL::Errors::Fatal("[loadFileIntoString] - error opening file '%s'",file);
@@ -69,6 +74,7 @@ string NAMESPACE::loadFileIntoString(const char *file)
     else
       break;
   } 
+  setlocale(LC_CTYPE, locale);
   return strstream.str();
 }
 
