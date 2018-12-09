@@ -1,18 +1,20 @@
 /****************************************************************************
 **
-** Copyright (c) 2009-2012 C.B. Barber. All rights reserved.
-** $Id: //main/2011/qhull/src/libqhullcpp/QhullVertexSet.cpp#5 $$Change: 1464 $
-** $DateTime: 2012/01/25 22:58:41 $$Author: bbarber $
+** Copyright (c) 2009-2015 C.B. Barber. All rights reserved.
+** $Id: //main/2015/qhull/src/libqhullcpp/QhullVertexSet.cpp#3 $$Change: 2066 $
+** $DateTime: 2016/01/18 19:29:17 $$Author: bbarber $
 **
 ****************************************************************************/
 
 #//! QhullVertexSet -- Qhull's linked Vertexs, as a C++ class
 
-#include "QhullVertex.h"
-#include "QhullVertexSet.h"
-#include "QhullPoint.h"
-#include "QhullRidge.h"
-#include "QhullVertex.h"
+#include "libqhullcpp/QhullVertexSet.h"
+
+#include "libqhullcpp/QhullVertex.h"
+#include "libqhullcpp/QhullPoint.h"
+#include "libqhullcpp/QhullRidge.h"
+#include "libqhullcpp/QhullVertex.h"
+#include "libqhullcpp/Qhull.h"
 
 using std::string;
 using std::vector;
@@ -25,34 +27,72 @@ using std::vector;
 namespace orgQhull {
 
 QhullVertexSet::
-QhullVertexSet(int qhRunId, facetT *facetlist, setT *facetset, bool allfacets)
-: QhullSet<QhullVertex>(0)
-, qhsettemp_qhull(0)
+QhullVertexSet(const Qhull &q, facetT *facetlist, setT *facetset, bool allfacets)
+: QhullSet<QhullVertex>(q.qh(), 0)
 , qhsettemp_defined(false)
 {
-    UsingLibQhull q(qhRunId);
-    int exitCode = setjmp(qh errexit);
-    if(!exitCode){ // no object creation -- destructors skipped on longjmp()
-        setT *vertices= qh_facetvertices(facetlist, facetset, allfacets);
+    QH_TRY_(q.qh()){ // no object creation -- destructors skipped on longjmp()
+        setT *vertices= qh_facetvertices(q.qh(), facetlist, facetset, allfacets);
         defineAs(vertices);
-        qhsettemp_qhull= s_qhull_output;
         qhsettemp_defined= true;
     }
-    q.maybeThrowQhullMessage(exitCode);
+    q.qh()->NOerrexit= true;
+    q.qh()->maybeThrowQhullMessage(QH_TRY_status);
 }//QhullVertexSet facetlist facetset
+
+//! Return tempory QhullVertexSet of vertices for a list and/or a set of facets
+//! Sets qhsettemp_defined (disallows copy constructor and assignment to prevent double-free)
+QhullVertexSet::
+QhullVertexSet(QhullQh *qqh, facetT *facetlist, setT *facetset, bool allfacets)
+: QhullSet<QhullVertex>(qqh, 0)
+, qhsettemp_defined(false)
+{
+    QH_TRY_(qh()){ // no object creation -- destructors skipped on longjmp()
+        setT *vertices= qh_facetvertices(qh(), facetlist, facetset, allfacets);
+        defineAs(vertices);
+        qhsettemp_defined= true;
+    }
+    qh()->NOerrexit= true;
+    qh()->maybeThrowQhullMessage(QH_TRY_status);
+}//QhullVertexSet facetlist facetset
+
+//! Copy constructor for argument passing and returning a result
+//! Only copies a pointer to the set.
+//! Throws an error if qhsettemp_defined, otherwise have a double-free
+//!\todo Convert QhullVertexSet to a shared pointer with reference counting
+QhullVertexSet::
+QhullVertexSet(const QhullVertexSet &other)
+: QhullSet<QhullVertex>(other)
+, qhsettemp_defined(false)
+{
+    if(other.qhsettemp_defined){
+        throw QhullError(10077, "QhullVertexSet: Cannot use copy constructor since qhsettemp_defined (e.g., QhullVertexSet for a set and/or list of QhFacet).  Contains %d vertices", other.count());
+    }
+}//copy constructor
+
+//! Copy assignment only copies a pointer to the set.
+//! Throws an error if qhsettemp_defined, otherwise have a double-free
+QhullVertexSet & QhullVertexSet::
+operator=(const QhullVertexSet &other)
+{
+    QhullSet<QhullVertex>::operator=(other);
+    qhsettemp_defined= false;
+    if(other.qhsettemp_defined){
+        throw QhullError(10078, "QhullVertexSet: Cannot use copy constructor since qhsettemp_defined (e.g., QhullVertexSet for a set and/or list of QhFacet).  Contains %d vertices", other.count());
+    }
+    return *this;
+}//assignment
 
 void QhullVertexSet::
 freeQhSetTemp()
 {
     if(qhsettemp_defined){
-        UsingLibQhull q(qhsettemp_qhull, QhullError::NOthrow);
-        if(q.defined()){
-            int exitCode = setjmp(qh errexit);
-            if(!exitCode){ // no object creation -- destructors skipped on longjmp()
-                qh_settempfree(referenceSetT()); // errors if not top of tempstack or if qhmem corrupted
-            }
-            q.maybeThrowQhullMessage(exitCode, QhullError::NOthrow);
+        qhsettemp_defined= false;
+        QH_TRY_(qh()){ // no object creation -- destructors skipped on longjmp()
+            qh_settempfree(qh(), referenceSetT()); // errors if not top of tempstack or if qhmem corrupted
         }
+        qh()->NOerrexit= true;
+        qh()->maybeThrowQhullMessage(QH_TRY_status, QhullError::NOthrow);
     }
 }//freeQhSetTemp
 
@@ -62,9 +102,24 @@ QhullVertexSet::
     freeQhSetTemp();
 }//~QhullVertexSet
 
+//FIXUP -- Move conditional, QhullVertexSet code to QhullVertexSet.cpp
+#ifndef QHULL_NO_STL
+std::vector<QhullVertex> QhullVertexSet::
+toStdVector() const
+{
+    QhullSetIterator<QhullVertex> i(*this);
+    std::vector<QhullVertex> vs;
+    while(i.hasNext()){
+        QhullVertex v= i.next();
+        vs.push_back(v);
+    }
+    return vs;
+}//toStdVector
+#endif //QHULL_NO_STL
+
 }//namespace orgQhull
 
-#//Global functions
+#//!\name Global functions
 
 using std::endl;
 using std::ostream;
@@ -72,16 +127,13 @@ using orgQhull::QhullPoint;
 using orgQhull::QhullVertex;
 using orgQhull::QhullVertexSet;
 using orgQhull::QhullVertexSetIterator;
-using orgQhull::UsingLibQhull;
 
-//! Print Vertex identifiers to stream.  Space prefix.  From qh_printVertexheader [io.c]
+//! Print Vertex identifiers to stream.  Space prefix.  From qh_printVertexheader [io_r.c]
 ostream &
 operator<<(ostream &os, const QhullVertexSet::PrintIdentifiers &pr)
 {
-    if(pr.print_message && *pr.print_message){
-        os << pr.print_message;
-    }
-    for(QhullVertexSet::const_iterator i=pr.Vertex_set->begin(); i!=pr.Vertex_set->end(); ++i){
+    os << pr.print_message;
+    for(QhullVertexSet::const_iterator i= pr.vertex_set->begin(); i!=pr.vertex_set->end(); ++i){
         const QhullVertex v= *i;
         os << " v" << v.id();
     }
@@ -89,18 +141,17 @@ operator<<(ostream &os, const QhullVertexSet::PrintIdentifiers &pr)
     return os;
 }//<<QhullVertexSet::PrintIdentifiers
 
-//! Duplicate of printvertices [io.c]
-//! If pr.run_id==UsingLibQhull::NOqhRunId, no access to qh [needed for QhullPoint]
+//! Duplicate of printvertices [io_r.c]
 ostream &
 operator<<(ostream &os, const QhullVertexSet::PrintVertexSet &pr){
 
     os << pr.print_message;
-    const QhullVertexSet *vs= pr.Vertex_set;
+    const QhullVertexSet *vs= pr.vertex_set;
     QhullVertexSetIterator i= *vs;
     while(i.hasNext()){
         const QhullVertex v= i.next();
         const QhullPoint p= v.point();
-        os << " p" << p.id(pr.run_id) << "(v" << v.id() << ")";
+        os << " p" << p.id() << "(v" << v.id() << ")";
     }
     os << endl;
 

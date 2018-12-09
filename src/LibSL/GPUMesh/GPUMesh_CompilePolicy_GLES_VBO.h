@@ -71,15 +71,12 @@ namespace GPUMesh {
     template < > class mvf_attrib_location<MVF_BASE_TEXCOORD1>    { public: enum { value =  5};  };
     template < > class mvf_attrib_location<MVF_BASE_TEXCOORD2>    { public: enum { value =  6};  };
     template < > class mvf_attrib_location<MVF_BASE_TEXCOORD3>    { public: enum { value =  7};  };
+    /* // SL 2018-09-17 disabled due to some plateform not supporting more than 8 attribs (e.g. raspberry PI)
     template < > class mvf_attrib_location<MVF_BASE_TEXCOORD4>    { public: enum { value =  8};  };
     template < > class mvf_attrib_location<MVF_BASE_TEXCOORD5>    { public: enum { value =  9};  };
     template < > class mvf_attrib_location<MVF_BASE_TEXCOORD6>    { public: enum { value = 10};  };
     template < > class mvf_attrib_location<MVF_BASE_TEXCOORD7>    { public: enum { value = 11};  };
-    //template < > class mvf_attrib_location<MVF_BASE_BINORMAL>     { public: enum { value = 12};  };
-    //template < > class mvf_attrib_location<MVF_BASE_TANGENT>      { public: enum { value = 13};  };
-    //template < > class mvf_attrib_location<MVF_BASE_BONE_INDICES> { public: enum { value = 14};  };
-    //template < > class mvf_attrib_location<MVF_BASE_BONE_WEIGHTS> { public: enum { value = 15};  };
-
+    */
   }
 
   /// GL mesh policy for VBO
@@ -200,6 +197,8 @@ namespace GPUMesh {
           false,0,BUFFER_OFFSET(m.offsets[vertex_format_desc::idx_texcoord3]));
         glEnableVertexAttribArray(gles::mvf_attrib_location<MVF_BASE_TEXCOORD3>::value);
       }
+      /*
+      // SL 2018-09-17 disabled due to some plateform not supporting more than 8 attribs (e.g. raspberry PI)
       if (vertex_format_desc::has_texcoord4) {
         glVertexAttribPointer(gles::mvf_attrib_location<MVF_BASE_TEXCOORD4>::value,vertex_format_desc::type_texcoord4::components,GLTypes<typename vertex_format_desc::type_texcoord4::type>::gl_define,
           false,0,BUFFER_OFFSET(m.offsets[vertex_format_desc::idx_texcoord4]));
@@ -220,6 +219,7 @@ namespace GPUMesh {
           false,0,BUFFER_OFFSET(m.offsets[vertex_format_desc::idx_texcoord7]));
         glEnableVertexAttribArray(gles::mvf_attrib_location<MVF_BASE_TEXCOORD7>::value);
       }
+      */
     }
 
 
@@ -249,6 +249,7 @@ namespace GPUMesh {
       if (vertex_format_desc::has_texcoord3) {
         glDisableVertexAttribArray(gles::mvf_attrib_location<MVF_BASE_TEXCOORD3>::value);
       }
+      /* // SL 2018-09-17 disabled due to some plateform not supporting more than 8 attribs (e.g. raspberry PI)
       if (vertex_format_desc::has_texcoord4) {
         glDisableVertexAttribArray(gles::mvf_attrib_location<MVF_BASE_TEXCOORD4>::value);
       }
@@ -261,6 +262,7 @@ namespace GPUMesh {
       if (vertex_format_desc::has_texcoord7) {
         glDisableVertexAttribArray(gles::mvf_attrib_location<MVF_BASE_TEXCOORD7>::value);
       }
+      */
       glBindBuffer(GL_ARRAY_BUFFER,0);
     }
 

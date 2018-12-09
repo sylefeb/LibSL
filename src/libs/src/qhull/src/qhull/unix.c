@@ -7,14 +7,13 @@
 
    see qh-qhull.htm
 
-   Copyright (c) 1993-2012 The Geometry Center.
-   $Id: //main/2011/qhull/src/qhull/unix.c#5 $$Change: 1464 $
-   $DateTime: 2012/01/25 22:58:41 $$Author: bbarber $
+   Copyright (c) 1993-2015 The Geometry Center.
+   $Id: //main/2015/qhull/src/qhull/unix.c#4 $$Change: 2066 $
+   $DateTime: 2016/01/18 19:29:17 $$Author: bbarber $
 */
 
-#include "mem.h"
-#include "qset.h"
-#include "libqhull.h"
+#include "libqhull/libqhull.h"
+#include "libqhull/qset.h"
 
 #include <ctype.h>
 #include <math.h>
@@ -22,13 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#if __MWERKS__ && __POWERPC__
-#include <SIOUX.h>
-#include <Files.h>
-#include <console.h>
-#include <Desk.h>
-
-#elif __cplusplus
+#if __cplusplus
 extern "C" {
   int isatty(int);
 }
@@ -36,7 +29,7 @@ extern "C" {
 #elif _MSC_VER
 #include <io.h>
 #define isatty _isatty
-int _isatty(int);
+/* int _isatty(int); */
 
 #else
 int isatty(int);  /* returns 1 if stdin is a tty
@@ -61,7 +54,7 @@ input (stdin):\n\
     other lines: point coordinates, best if one point per line\n\
     comments:    start with a non-numeric character\n\
     halfspaces:  use dim plus one and put offset after coefficients.\n\
-                 May be preceeded by a single interior point ('H').\n\
+                 May be preceded by a single interior point ('H').\n\
 \n\
 options:\n\
     d    - Delaunay triangulation by lifting points to a paraboloid\n\
@@ -108,6 +101,7 @@ char qh_promptb[]= "\
     Q9   - process furthest of furthest points\n\
     Q10  - no special processing for narrow distributions\n\
     Q11  - copy normals and recompute centrums for tricoplanar facets\n\
+    Q12  - no error on wide merge due to duplicate ridge\n\
 \n\
 ";
 char qh_promptc[]= "\
@@ -211,6 +205,7 @@ Print options:\n\
 \n\
     .    - list of all options\n\
     -    - one line descriptions of all options\n\
+    -V   - version\n\
 ";
 /* for opts, don't assign 'e' or 'E' to a flag (already used for exponent) */
 
@@ -237,6 +232,7 @@ options (qh-quick.htm):\n\
     Tv   - verify result: structure, convexity, and point inclusion\n\
     .    - concise list of all options\n\
     -    - one-line description of each option\n\
+    -V   - version\n\
 \n\
 Output options (subset):\n\
     s    - summary of results (default)\n\
@@ -254,12 +250,12 @@ Output options (subset):\n\
     TO file- output results to file, may be enclosed in single quotes\n\
 \n\
 examples:\n\
-    rbox c d D2 | qhull Qc s f Fx | more      rbox 1000 s | qhull Tv s FA\n\
+    rbox D4 | qhull Tv                        rbox 1000 s | qhull Tv s FA\n\
     rbox 10 D2 | qhull d QJ s i TO result     rbox 10 D2 | qhull v Qbb Qt p\n\
     rbox 10 D2 | qhull d Qu QJ m              rbox 10 D2 | qhull v Qu QJ o\n\
-    rbox c | qhull n                          rbox c | qhull FV n | qhull H Fp\n\
+    rbox c d D2 | qhull Qc s f Fx | more      rbox c | qhull FV n | qhull H Fp\n\
     rbox d D12 | qhull QR0 FA                 rbox c D7 | qhull FA TF1000\n\
-    rbox y 1000 W0 | qhull                    rbox 10 | qhull v QJ o Fv\n\
+    rbox y 1000 W0 | qhull                    rbox c | qhull n\n\
 \n\
 ";
 /* for opts, don't assign 'e' or 'E' to a flag (already used for exponent) */
@@ -298,7 +294,7 @@ Except for 'F.' and 'PG', upper-case options take an argument.\n\
 \n\
  Q0_no_premerge Q1_no_angle    Q2_no_independ Q3_no_redundant Q4_no_old\n\
  Q5_no_check_out Q6_no_concave Q7_depth_first Q8_no_near_in  Q9_pick_furthest\n\
- Q10_no_narrow  Q11_trinormals\n\
+ Q10_no_narrow  Q11_trinormals Q12_no_wide_dup\n\
 \n\
  T4_trace       Tannotate      Tcheck_often   Tstatistics    Tverify\n\
  Tz_stdout      TFacet_log     TInput_file    TPoint_trace   TMerge_trace\n\
@@ -329,17 +325,7 @@ int main(int argc, char *argv[]) {
   coordT *points;
   boolT ismalloc;
 
-#if __MWERKS__ && __POWERPC__
-  char inBuf[BUFSIZ], outBuf[BUFSIZ], errBuf[BUFSIZ];
-  SIOUXSettings.showstatusline= false;
-  SIOUXSettings.tabspaces= 1;
-  SIOUXSettings.rows= 40;
-  if (setvbuf(stdin, inBuf, _IOFBF, sizeof(inBuf)) < 0   /* w/o, SIOUX I/O is slow*/
-  || setvbuf(stdout, outBuf, _IOFBF, sizeof(outBuf)) < 0
-  || (stdout != stderr && setvbuf(stderr, errBuf, _IOFBF, sizeof(errBuf)) < 0))
-    fprintf(stderr, "qhull internal warning (main): could not change stdio to fully buffered.\n");
-  argc= ccommand(&argv);
-#endif
+  QHULL_LIB_CHECK /* Check for compatible library */
 
   if ((argc == 1) && isatty( 0 /*stdin*/)) {
     fprintf(stdout, qh_prompt2, qh_version);
@@ -350,9 +336,13 @@ int main(int argc, char *argv[]) {
                 qh_promptb, qh_promptc, qh_promptd, qh_prompte);
     exit(qh_ERRnone);
   }
-  if (argc >1 && *argv[1] == '.' && !*(argv[1]+1)) {
+  if (argc > 1 && *argv[1] == '.' && !*(argv[1]+1)) {
     fprintf(stdout, qh_prompt3, qh_version);
     exit(qh_ERRnone);
+  }
+  if (argc > 1 && *argv[1] == '-' && *(argv[1]+1)=='V') {
+      fprintf(stdout, "%s\n", qh_version2);
+      exit(qh_ERRnone);
   }
   qh_init_A(stdin, stdout, stderr, argc, argv);  /* sets qh qhull_command */
   exitcode= setjmp(qh errexit); /* simple statement for CRAY J916 */
@@ -369,12 +359,12 @@ int main(int argc, char *argv[]) {
   }
   qh NOerrexit= True;  /* no more setjmp */
 #ifdef qh_NOmem
-  qh_freeqhull( True);
+  qh_freeqhull( qh_ALL);
 #else
-  qh_freeqhull( False);
+  qh_freeqhull( !qh_ALL);
   qh_memfreeshort(&curlong, &totlong);
   if (curlong || totlong)
-    fprintf(stderr, "qhull internal warning (main): did not free %d bytes of long memory(%d pieces)\n",
+    qh_fprintf_stderr(6263, "qhull internal warning (main): did not free %d bytes of long memory(%d pieces)\n",
        totlong, curlong);
 #endif
   return exitcode;

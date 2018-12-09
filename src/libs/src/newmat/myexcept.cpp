@@ -74,11 +74,22 @@ void BaseException::AddMessage(const char* a_what)
 {
    if (a_what)
    {
-      int l = strlen(a_what); int r = LastOne - SoFar;
-      if (l < r) { strcpy(what_error+SoFar, a_what); SoFar += l; }
+      int l = (int)strlen(a_what); int r = LastOne - SoFar;
+      if (l < r) { 
+#ifdef WIN32
+        strcpy_s(what_error+SoFar, l, a_what); 
+#else
+        strcpy(what_error + SoFar, a_what);
+#endif
+        SoFar += l;
+      }
       else if (r > 0)
       {
+#ifdef WIN32
+        strncpy_s(what_error + SoFar, r, a_what, _TRUNCATE);
+#else
          strncpy(what_error+SoFar, a_what, r);
+#endif
          what_error[LastOne] = 0;
          SoFar = LastOne;
       }

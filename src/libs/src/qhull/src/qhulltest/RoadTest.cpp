@@ -1,22 +1,23 @@
 /****************************************************************************
 **
-** Copyright (c) 2008-2012 C.B. Barber. All rights reserved.
-** $Id: //main/2011/qhull/src/qhulltest/RoadTest.cpp#1 $$Change: 1490 $
-** $Date: 2012/02/19 $$Author: bbarber $
+** Copyright (c) 2008-2015 C.B. Barber. All rights reserved.
+** $Id: //main/2015/qhull/src/qhulltest/RoadTest.cpp#2 $$Change: 2062 $
+** $Date: 2016/01/17 $$Author: bbarber $
 **
 ****************************************************************************/
 
 //pre-compiled headers
 #include <iostream>
+#include "RoadTest.h" // QT_VERSION
+
 #include <stdexcept>
-#include "RoadTest.h"
 
 using std::cout;
 using std::endl;
 
 namespace orgQhull {
 
-#//class variable
+#//!\name class variable
 
 QList<RoadTest*> RoadTest::
 s_testcases;
@@ -30,7 +31,7 @@ s_test_fail= 0;
 QStringList RoadTest::
 s_failed_tests;
 
-#//Slot
+#//!\name Slot
 
 //! Executed after each test
 void RoadTest::
@@ -42,7 +43,7 @@ cleanup()
     }
 }//cleanup
 
-#//Helper
+#//!\name Helper
 
 void RoadTest::
 recordFailedTest()
@@ -52,7 +53,16 @@ recordFailedTest()
     s_failed_tests << className + "::" + QTest::currentTestFunction();
 }
 
-#//class function
+#//!\name class function
+
+void RoadTest::
+deleteTests()
+{
+    foreach(RoadTest *testcase, s_testcases){
+        delete testcase;
+    }
+    s_failed_tests.clear();
+}
 
 int RoadTest::
 runTests(QStringList arguments)

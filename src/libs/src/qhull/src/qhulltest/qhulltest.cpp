@@ -1,19 +1,26 @@
 /****************************************************************************
 **
-** Copyright (c) 2008-2012 C.B. Barber. All rights reserved.
-** $Id: //main/2011/qhull/src/qhulltest/qhulltest.cpp#5 $$Change: 1490 $
-** $DateTime: 2012/02/19 20:27:01 $$Author: bbarber $
+** Copyright (c) 2008-2015 C.B. Barber. All rights reserved.
+** $Id: //main/2015/qhull/src/qhulltest/qhulltest.cpp#4 $$Change: 2064 $
+** $DateTime: 2016/01/18 12:36:08 $$Author: bbarber $
 **
 ****************************************************************************/
 
 //pre-compiled headers
+extern "C" {
+    #include "libqhull_r/user_r.h"
+}
 #include <iostream>
-#include <sstream>
-#include <string>
-#include <stdexcept>
-#include "RoadTest.h"
+#include "RoadTest.h" // QT_VERSION
 
-#include "../libqhullcpp/RoadError.h"
+#include "libqhullcpp/RoadError.h"
+extern "C" {
+    #include "libqhull_r/qhull_ra.h"
+}
+
+#include <sstream>
+#include <stdexcept>
+#include <string>
 
 using std::cout;
 using std::endl;
@@ -22,7 +29,7 @@ namespace orgQhull {
 
 void addQhullTests(QStringList &args)
 {
-    TESTadd_(add_QhullVertex_test); //copy
+    TESTadd_(add_Qhull_test);
 
     if(args.contains("--all")){
         args.removeAll("--all");
@@ -40,9 +47,8 @@ void addQhullTests(QStringList &args)
         TESTadd_(add_QhullRidge_test);
         TESTadd_(add_QhullSet_test);
         TESTadd_(add_QhullVertex_test);
+        TESTadd_(add_QhullVertexSet_test);
         TESTadd_(add_RboxPoints_test);
-        TESTadd_(add_UsingLibQhull_test);
-        // needs review
         // qhullStat
         TESTadd_(add_Qhull_test);
     }//--all
@@ -50,9 +56,13 @@ void addQhullTests(QStringList &args)
 
 int main(int argc, char *argv[])
 {
+
     QCoreApplication app(argc, argv);
     QStringList args= app.arguments();
     bool isAll= args.contains("--all");
+
+    QHULL_LIB_CHECK /* Check for compatible library */
+
     addQhullTests(args);
     int status=1010;
     try{
@@ -70,10 +80,11 @@ int main(int argc, char *argv[])
         RoadError::clearGlobalLog();
     }
     if(isAll){
-        cout << "Finished test of libqhullcpp.  Test libqhull with eg/q_test" << endl;
+        cout << "Finished test of libqhullcpp.  Test libqhull_r with eg/q_test after building libqhull_r/Makefile" << endl;
     }else{
         cout << "Finished test of one class.  Test all classes with 'qhulltest --all'" << endl;
     }
+    RoadTest::deleteTests();
     return status;
 }
 

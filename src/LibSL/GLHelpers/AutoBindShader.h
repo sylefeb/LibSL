@@ -57,8 +57,7 @@ namespace AutoBindShader {
       m_Shader.init(
         vp_code.length() > 0 ? vp_code.c_str() : NULL,
         fp_code.length() > 0 ? fp_code.c_str() : NULL,
-        gs.code.length() > 0 ? &gs : NULL,
-        T_Precompiled::name().c_str());
+        gs.code.length() > 0 ? &gs : NULL);
       m_Shader.setStrict(false);
       if (m_FirstInit) {
         T_Precompiled::initTweaks();
@@ -119,7 +118,7 @@ namespace AutoBindShader {
         file_cs << cs_code.c_str();
         file_cs.close();
       }
-      m_Shader.init(this->csCode().c_str(), T_Precompiled::name().c_str());
+      m_Shader.init(this->csCode().c_str());
       m_Shader.setStrict( false );
       T_Precompiled::initParameters(m_Shader, m_FirstInit);
       if ( m_FirstInit ) {

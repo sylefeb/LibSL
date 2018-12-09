@@ -133,7 +133,7 @@ void NAMESPACE::BatchPCA::computeTransformation()
 	for(uint s = 0 ; s < m_Samples.size(); s++) {
 		m_Mean += m_Samples[s];
 	}
-	m_Mean /= m_Samples.size();
+	m_Mean /= (RBD_COMMON::Real)m_Samples.size();
 
 	//compute the covariance matrix
 	Matrix temp(m_SampleDimensions, m_SampleDimensions);
@@ -143,7 +143,7 @@ void NAMESPACE::BatchPCA::computeTransformation()
 		temp += sample * sample.t();
 	}
 	SymmetricMatrix covariance;
-	covariance << (temp / m_Samples.size());
+	covariance << (temp / (RBD_COMMON::Real)m_Samples.size());
 
 
 	// ****************************

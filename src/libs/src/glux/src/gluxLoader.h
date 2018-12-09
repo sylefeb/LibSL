@@ -17,6 +17,7 @@
 #include <string>
 #include <map>
 #include <set>
+#include <vector>
 
 // --------------------------------------------------------
 
@@ -32,20 +33,19 @@
 
 // -------------------------------------------------------- 
 
-extern const char *g_glux__wglExtensions;
+extern const char            *g_glux__wglExtensions;
+extern std::set<std::string>  g_glux__glExtensions;
 
 // --------------------------------------------------------
 
 namespace glux
 {
-
   class gluxPlugin;
 
   void init(int flags,const char *profile);
   void shutdown();
   void registerPlugin(gluxPlugin *pl); 
   bool validateExtension(const std::pair<std::string,gluxPlugin*>& ext,int flags,bool use_profile,const char *profile,const std::set<std::string>& ext_profile,std::stringstream& strout);
-
 } 
 
 // -------------------------------------------------------- 
@@ -55,6 +55,7 @@ void gluxInit();           // for backward compatibility
 void gluxInit(int flags);  // for backward compatibility
 void gluxShutdown();
 int  gluxIsAvailable(const char *);
+bool gluxIsExtensionAvailable(const char*);
 int  gluxIsDevl(const char *); 
 
 // -------------------------------------------------------- 

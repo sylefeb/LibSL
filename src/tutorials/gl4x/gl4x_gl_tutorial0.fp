@@ -12,7 +12,7 @@ void main()
 {
   // write to buffer
   int i = int(u_Color.x * 256.0) & 255;
-  u_Buffer[ i ] = uint8_t(128) - uint8_t(i);
+  u_Buffer[ i ] = uint8_t(255) - uint8_t(i);
   // output color
-	o_PixColor = u_Color;
+  o_PixColor = u_Color;
 }

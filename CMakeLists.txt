@@ -9,9 +9,6 @@ PROJECT(LibSL)
 
 # MESSAGE(STATUS "[in LibSL/]")
 
-set (LIBSL_VERSION_MAJOR 1)
-set (LIBSL_VERSION_MINOR 2)
-
 SET(LibSL_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 #############################################################################
@@ -41,9 +38,10 @@ if(EMSCRIPTEN)
 
 OPTION(LIBSL_BUILD_GL              "Build LibSL_gl" ON)
 OPTION(LIBSL_BUILD_GL4             "Build LibSL_gl for OpenGL 4.x" OFF)
+OPTION(LIBSL_BUILD_GL4CORE         "Build LibSL_gl for OpenGL 4.x core profile" OFF)
 OPTION(LIBSL_BUILD_DX9             "Build LibSL_d3d" OFF)
 OPTION(LIBSL_BUILD_DX10            "Build LibSL_dx10" OFF)
-OPTION(LIBSL_BUILD_LINALG          "Build LibSL_linalg" OFF)
+OPTION(LIBSL_BUILD_LINALG          "Build LibSL_linalg" ON)
 OPTION(LIBSL_BUILD_MAX_PERFORMANCE "Build LibSL for performance rather than safety" ON)
 OPTION(LIBSL_BUILD_SHARP           "Build LibSL_sharp" OFF)
 OPTION(LIBSL_BUILD_TOOLS           "Build LibSL tools" OFF)
@@ -58,11 +56,12 @@ else(EMSCRIPTEN)
 
 OPTION(LIBSL_BUILD_GL              "Build LibSL_gl" ON)
 OPTION(LIBSL_BUILD_GL4             "Build LibSL_gl for OpenGL 4.x" ON)
+OPTION(LIBSL_BUILD_GL4CORE         "Build LibSL_gl for OpenGL 4.x core profile" ON)
 OPTION(LIBSL_BUILD_DX9             "Build LibSL_d3d" OFF)
 OPTION(LIBSL_BUILD_DX10            "Build LibSL_dx10" OFF)
-OPTION(LIBSL_BUILD_LINALG          "Build LibSL_linalg" OFF)
+OPTION(LIBSL_BUILD_LINALG          "Build LibSL_linalg" ON)
 OPTION(LIBSL_BUILD_MAX_PERFORMANCE "Build LibSL for performance rather than safety" ON)
-OPTION(LIBSL_BUILD_SHARP           "Build LibSL_sharp" OFF)
+OPTION(LIBSL_BUILD_SHARP           "Build LibSL_sharp" ON)
 OPTION(LIBSL_BUILD_TOOLS           "Build LibSL tools" OFF)
 OPTION(LIBSL_BUILD_TUTORIALS       "Build LibSL tutorials" OFF)
 OPTION(LIBSL_MULTITHREADED_STATIC  "Build LibSL with /MT flag in Visual C++" OFF)
@@ -125,7 +124,7 @@ INCLUDE_DIRECTORIES(
 			${CMAKE_CURRENT_SOURCE_DIR}/src/libs/src/OpenNL/src
 			${CMAKE_CURRENT_SOURCE_DIR}/src/libs/src/anttweakbar/include
 			${CMAKE_CURRENT_SOURCE_DIR}/src/libs/src/SQLite
-			${CMAKE_CURRENT_SOURCE_DIR}/src/libs/src/qhull/src/libqhull
+			${CMAKE_CURRENT_SOURCE_DIR}/src/libs/src/qhull/src/libqhull_r
 			${CMAKE_CURRENT_SOURCE_DIR}/src/libs/src/rply
 			)
 
@@ -176,7 +175,7 @@ endif(EMSCRIPTEN)
 ###############################################################################
 
 # Add C++11 to LibSL target
-#Include(UseCXX11)
+#Include(UseCXX17)
 #AddGlobalCXX11()
 
 ADD_SUBDIRECTORY(src)

@@ -139,7 +139,6 @@ using namespace LibSL::System::Types;
 //#define GL_OBJECT_INFO_LOG_LENGTH_ARB GL_INFO_LOG_LENGTH
 //#define GL_OBJECT_LINK_STATUS_ARB GL_LINK_STATUS
 // #define glGetObjectParameterivARB glGetProgramiv
-#define glGetInfoLogARB glGetProgramInfoLog
 //#define GL_GEOMETRY_SHADER_ARB GL_GEOMETRY_SHADER
 #define glUseProgramObjectARB glUseProgram
 //#define glDeleteObjectARB glDeleteProgram
@@ -167,7 +166,7 @@ using namespace LibSL::System::Types;
 
 // ------------------------------------------------------
 
-#define LIBSL_GL_CHECK_ERROR {GLenum err; err=glGetError(); if (err) throw LibSL::GLHelpers::GLException("LibSL::GLHelpers - OpenGL error (%d), line %d, file %s",err,__LINE__,__FILE__); }
+#define LIBSL_GL_CHECK_ERROR {GLenum err; err=glGetError(); if (err) { std::cerr << "LIBSL_GL_CHECK_ERROR failed" << std::endl; throw LibSL::GLHelpers::GLException("LibSL::GLHelpers - OpenGL error (%d), line %d, file %s",err,__LINE__,__FILE__); } }
 
 // ------------------------------------------------------
 
@@ -210,7 +209,6 @@ namespace LibSL {
 
 		private:
 
-			std::string            m_Name;
 			GLhandleARB            m_Shader;
 
 			// error or warnings ?
@@ -225,9 +223,9 @@ namespace LibSL {
 
 		public:
 
-			GLShader() : m_Shader(0), m_Strict(true), m_Active(false), m_gsMaxVerticesOut(0) { m_Name="[null]"; }
+			GLShader() : m_Shader(0), m_Strict(true), m_Active(false), m_gsMaxVerticesOut(0) { }
 
-			void init(const char *vp_code,const char *fp_code,const t_GeometryShaderNfo *gs_code = NULL,const char *name="[noname]");
+			void init(const char *vp_code,const char *fp_code,const t_GeometryShaderNfo *gs_code = NULL);
 
 			void init(GLhandleARB shader);
 
@@ -236,8 +234,8 @@ namespace LibSL {
 			void begin();
 			void end();
 
-			GLhandleARB                        handle()     const {return (m_Shader);}
-			const char *                  name()       const {return (m_Name.c_str());}
+			GLhandleARB handle() const {return (m_Shader);}
+      const char *name()   const { return "[runtime]"; }
 
 			bool  isReady()  const {return (m_Shader!=0);}
 			bool  isActive() const {return (m_Active);}
@@ -258,9 +256,6 @@ namespace LibSL {
 			// handle to parameter
 			GLint            m_Handle;
 
-			// parameter name
-			std::string      m_Name;
-
 			// check everything is properly loaded
 			void authorize() const;
 
@@ -269,7 +264,7 @@ namespace LibSL {
 
 		public:
 
-			GLParameter() : m_Shader(NULL), m_Handle(-1), m_Strict(true)  { m_Name = "[null]"; }
+			GLParameter() : m_Shader(NULL), m_Handle(-1), m_Strict(true)  { }
 
 			// init
 			void init(GLBaseShader& shader,const char *name);
@@ -430,7 +425,6 @@ namespace LibSL {
 		protected:
 
       GLuint   m_glId;
-			GLuint64 m_gpuPtr;
 			uint     m_Sz;
 
       static const GLuint c_buf_type = GL_TEXTURE_BUFFER;
@@ -446,6 +440,7 @@ namespace LibSL {
       void forget();
 
 			GLuint glId() const { return m_glId; }
+      GLuint type() const { return c_buf_type; }
 			uint size() const { return m_Sz; }
 			void copy(GLBuffer const& buffer);
 
@@ -485,10 +480,8 @@ namespace LibSL {
 			{
 				sl_assert( m_glId != 0 );
 				sl_assert( nBytes <= m_Sz );
-//				LIBSL_GL_CHECK_ERROR;
 				glBindBufferARB(c_buf_type, m_glId);
 				glGetBufferSubDataARB(c_buf_type,0,nBytes,raw);
-//				LIBSL_GL_CHECK_ERROR;
         glBindBufferARB(c_buf_type, 0);
 			}
 
@@ -510,8 +503,6 @@ namespace LibSL {
 				glGetBufferSubDataARB(c_buf_type,offset,nBytes,raw);
         glBindBufferARB(c_buf_type, 0);
 			}
-
-      GLuint64 ptr() const { sl_assert( m_glId != 0 ); return m_gpuPtr; }
 		};
 
 		class GLTexBuffer : public GLBuffer
@@ -547,7 +538,6 @@ namespace LibSL {
 		{
 		private:
 
-			std::string            m_Name;
 			GLuint                 m_Shader;
 
 			// error or warnings ?
@@ -559,9 +549,9 @@ namespace LibSL {
 
 		public:
 
-			GLCompute() : m_Shader(0), m_Strict(true), m_Active(false) { m_Name="[null]"; }
+			GLCompute() : m_Shader(0), m_Strict(true), m_Active(false) { }
 
-			void init(const char *cp_code,const char *name="[noname]");
+			void init(const char *cp_code);
 			void init(GLuint shader);
 
 			void run(const LibSL::Math::v3i& numGroups);
@@ -571,8 +561,8 @@ namespace LibSL {
 			void begin();
 			void end();
 
-			GLuint                        handle()     const {return (m_Shader);}
-			const char *                  name()       const {return (m_Name.c_str());}
+      const char *name()   const { return "[runtime]"; }
+			GLuint      handle() const {return (m_Shader);}
 
 			bool  isReady()  const {return (m_Shader!=0);}
 			bool  isActive() const {return (m_Active);}

@@ -2,7 +2,7 @@
 // Author: Sylvain.Lefebvre@sophia.inria.fr
 // -------------------------------------------------------- 
 #include "gluxLoader.h"
-#include "gluxPlugin.h" 
+#include "gluxPlugin.h"
 
 #include <cstdlib>
 #include <cstdio>
@@ -17,6 +17,9 @@ using namespace std;
 // string of wgl extensions
 const char *g_glux__wglExtensions = NULL;
 
+// core profile extensions
+std::set<std::string>  g_glux__glExtensions;
+
 // -------------------------------------------------------- 
 
 #ifdef WIN32
@@ -30,6 +33,13 @@ typedef const char * (APIENTRYP t_wglGetExtensionsStringARB) (HDC hdc);
 #else
 #include <GL/gl.h>
 #endif
+
+// -------------------------------------------------------- 
+
+// for core profile compatibility
+#define GL_NUM_EXTENSIONS                 0x821D // how to avoid this?
+#define GL_EXTENSIONS                     0x1F03 // how to avoid this?
+typedef const GLubyte *(APIENTRYP t_glGetStringi) (GLenum name, GLuint index);
 
 // -------------------------------------------------------- 
 
@@ -73,11 +83,11 @@ void glux::init(int flags,const char *profile)
   // MessageBoxA(NULL,(const char *)glGetString(GL_EXTENSIONS), "", MB_OK);
 
   strout << "-=-=-=-=-=-=-=-=-=-=-=-=-" << endl;
-  strout << "      glux v1.95"           << endl;
-  strout << "-=-=-=-=-=-=-=-=-=-=-=-=-" << endl;   
+  strout << "      glux v1.96"          << endl;
+  strout << "-=-=-=-=-=-=-=-=-=-=-=-=-" << endl;
 
   // check if OpenGL is initialized
-  if (glGetString(GL_EXTENSIONS) == NULL) {
+  if (glGetString(GL_VENDOR) == NULL) {
     strout << "OpenGL should be initialized before calling gluxInit() !" << endl;
 #ifndef GLUX_NO_OUTPUT  
     cerr << strout.str() << endl;
@@ -88,9 +98,11 @@ void glux::init(int flags,const char *profile)
     exit (-1);
   }
 
-	// output rendered
+	// output strings
+  strout << "Vendor   string: " << glGetString(GL_VENDOR)   << std::endl;
 	strout << "Renderer string: " << glGetString(GL_RENDERER) << std::endl;
-
+  strout << "Version  string: " << glGetString(GL_VERSION)  << std::endl;
+  
   // read profile
   if (profile != NULL) {
     ifstream fprof(profile);     
@@ -120,6 +132,17 @@ void glux::init(int flags,const char *profile)
   if (__wglGetExtensionsStringARB != NULL)
     g_glux__wglExtensions = __wglGetExtensionsStringARB(wglGetCurrentDC());
 #endif
+
+  // attempt to load extension list with getStringi
+  t_glGetStringi __glGetStringi = NULL;
+  __glGetStringi = (t_glGetStringi)GLUX_LOAD_PROC("glGetStringi");
+  if (__glGetStringi != NULL) {
+    int num_extensions = 0;
+    glGetIntegerv(GL_NUM_EXTENSIONS, &num_extensions);
+    for (int i = 0; i < num_extensions; i++) {
+      g_glux__glExtensions.insert(std::string((const char*)__glGetStringi(GL_EXTENSIONS, i)));
+    }
+  }
 
   // check if plugins are available
   if (s_Plugins != NULL) {
@@ -274,6 +297,13 @@ int gluxIsAvailable(const char *s)
       return (GLUX_NOT_AVAILABLE);
     }
   }
+}
+
+// --------------------------------------------------------
+
+bool gluxIsExtensionAvailable(const char* s)
+{
+  return g_glux__glExtensions.find(s) != g_glux__glExtensions.end();
 }
 
 // --------------------------------------------------------

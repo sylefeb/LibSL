@@ -1,15 +1,15 @@
 /****************************************************************************
 **
-** Copyright (c) 2008-2012 C.B. Barber. All rights reserved.
-** $Id: //main/2011/qhull/src/libqhullcpp/RoadError.cpp#1 $$Change: 1490 $
-** $DateTime: 2012/02/19 20:27:01 $$Author: bbarber $
+** Copyright (c) 2008-2015 C.B. Barber. All rights reserved.
+** $Id: //main/2015/qhull/src/libqhullcpp/RoadError.cpp#2 $$Change: 2066 $
+** $DateTime: 2016/01/18 19:29:17 $$Author: bbarber $
 **
 ****************************************************************************/
 
 #//! RoadError -- All exceptions thrown by Qhull are RoadErrors
 #//! Do not throw RoadError's from destructors.  Use e.logError() instead.
 
-#include "RoadError.h"
+#include "libqhullcpp/RoadError.h"
 
 #include <string>
 #include <sstream>
@@ -24,7 +24,7 @@ using std::string;
 
 namespace orgQhull {
 
-#//Class fields
+#//!\name Class fields
 
 //! Identifies error messages from Qhull and Road for web searches.
 //! See QhullError.h#QHULLlastError and user.h#MSG_ERROR
@@ -34,7 +34,7 @@ ROADtag= "QH";
 std::ostringstream RoadError::
 global_log;
 
-#//Constructor
+#//!\name Constructor
 
 RoadError::
 RoadError()
@@ -132,7 +132,7 @@ operator=(const RoadError &other)
     return *this;
 }//operator=
 
-#//Virtual
+#//!\name Virtual
 const char * RoadError::
 what() const throw()
 {
@@ -142,11 +142,13 @@ what() const throw()
     return error_message.c_str();
 }//what
 
-#//Updates
+#//!\name Updates
 
 //! Log error instead of throwing it.
+//! Not reentrant, so avoid using it if possible
+//!\todo Redesign with a thread-local stream or a reentrant ostringstream
 void RoadError::
-logError() const
+logErrorLastResort() const
 {
     global_log << what() << endl;
 }//logError

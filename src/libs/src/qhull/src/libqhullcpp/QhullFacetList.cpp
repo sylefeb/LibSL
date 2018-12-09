@@ -1,18 +1,19 @@
 /****************************************************************************
 **
-** Copyright (c) 2008-2012 C.B. Barber. All rights reserved.
-** $Id: //main/2011/qhull/src/libqhullcpp/QhullFacetList.cpp#3 $$Change: 1464 $
-** $DateTime: 2012/01/25 22:58:41 $$Author: bbarber $
+** Copyright (c) 2008-2015 C.B. Barber. All rights reserved.
+** $Id: //main/2015/qhull/src/libqhullcpp/QhullFacetList.cpp#3 $$Change: 2066 $
+** $DateTime: 2016/01/18 19:29:17 $$Author: bbarber $
 **
 ****************************************************************************/
 
 #//! QhullFacetList -- Qhull's linked facets, as a C++ class
 
-#include "QhullFacet.h"
-#include "QhullFacetList.h"
-#include "QhullPoint.h"
-#include "QhullRidge.h"
-#include "QhullVertex.h"
+#include "libqhullcpp/QhullFacetList.h"
+
+#include "libqhullcpp/QhullFacet.h"
+#include "libqhullcpp/QhullPoint.h"
+#include "libqhullcpp/QhullRidge.h"
+#include "libqhullcpp/QhullVertex.h"
 
 using std::string;
 using std::vector;
@@ -24,7 +25,16 @@ using std::vector;
 
 namespace orgQhull {
 
-#//Conversion
+#//!\name Constructors
+
+QhullFacetList::
+QhullFacetList(const Qhull &q, facetT *b, facetT *e ) 
+: QhullLinkedList<QhullFacet>(QhullFacet(q, b), QhullFacet(q, e))
+, select_all(false)
+{
+}
+
+#//!\name Conversions
 
 // See qt_qhull.cpp for QList conversions
 
@@ -47,10 +57,10 @@ toStdVector() const
 #ifndef QHULL_NO_STL
 //! Same as PrintVertices
 std::vector<QhullVertex> QhullFacetList::
-vertices_toStdVector(int qhRunId) const
+vertices_toStdVector() const
 {
     std::vector<QhullVertex> vs;
-    QhullVertexSet qvs(qhRunId, first().getFacetT(), NULL, isSelectAll());
+    QhullVertexSet qvs(qh(), first().getFacetT(), 0, isSelectAll());
 
     for(QhullVertexSet::iterator i=qvs.begin(); i!=qvs.end(); ++i){
         vs.push_back(*i);
@@ -59,7 +69,7 @@ vertices_toStdVector(int qhRunId) const
 }//vertices_toStdVector
 #endif //QHULL_NO_STL
 
-#//Read-only
+#//!\name GetSet
 
 bool QhullFacetList::
 contains(const QhullFacet &facet) const
@@ -109,7 +119,7 @@ count(const QhullFacet &facet) const
 
 }//namespace orgQhull
 
-#//Global functions
+#//!\name Global functions
 
 using std::endl;
 using std::ostream;
@@ -117,40 +127,40 @@ using orgQhull::QhullFacet;
 using orgQhull::QhullFacetList;
 using orgQhull::QhullVertex;
 using orgQhull::QhullVertexSet;
-using orgQhull::UsingLibQhull;
 
 ostream &
 operator<<(ostream &os, const QhullFacetList::PrintFacetList &pr)
 {
+    os << pr.print_message;
     QhullFacetList fs= *pr.facet_list;
     os << "Vertices for " << fs.count() << " facets" << endl;
-    os << fs.printVertices(pr.run_id);
-    os << fs.printFacets(pr.run_id);
+    os << fs.printVertices();
+    os << fs.printFacets();
     return os;
 }//operator<<
 
-//! Print facet list to stream.  From qh_printafacet [io.c]
+//! Print facet list to stream.  From qh_printafacet [io_r.c]
 ostream &
 operator<<(ostream &os, const QhullFacetList::PrintFacets &pr)
 {
     for(QhullFacetList::const_iterator i= pr.facet_list->begin(); i != pr.facet_list->end(); ++i){
         QhullFacet f= *i;
         if(pr.facet_list->isSelectAll() || f.isGood()){
-            os << f.print(pr.run_id);
+            os << f.print("");
         }
     }
     return os;
 }//printFacets
 
-//! Print vertices of good faces in facet list to stream.  From qh_printvertexlist [io.c]
+//! Print vertices of good faces in facet list to stream.  From qh_printvertexlist [io_r.c]
 //! Same as vertices_toStdVector
 ostream &
 operator<<(ostream &os, const QhullFacetList::PrintVertices &pr)
 {
-    QhullVertexSet vs(pr.run_id, pr.facet_list->first().getFacetT(), NULL, pr.facet_list->isSelectAll());
+    QhullVertexSet vs(pr.facet_list->qh(), pr.facet_list->first().getFacetT(), NULL, pr.facet_list->isSelectAll());
     for(QhullVertexSet::iterator i=vs.begin(); i!=vs.end(); ++i){
         QhullVertex v= *i;
-        os << v.print(pr.run_id);
+        os << v.print("");
     }
     return os;
 }//printVertices
@@ -158,7 +168,7 @@ operator<<(ostream &os, const QhullFacetList::PrintVertices &pr)
 std::ostream &
 operator<<(ostream &os, const QhullFacetList &fs)
 {
-    os << fs.printFacets(UsingLibQhull::NOqhRunId);
+    os << fs.printFacets();
     return os;
 }//QhullFacetList
 

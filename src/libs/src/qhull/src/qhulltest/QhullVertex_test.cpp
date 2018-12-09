@@ -1,22 +1,23 @@
 /****************************************************************************
 **
-** Copyright (c) 2008-2012 C.B. Barber. All rights reserved.
-** $Id: //main/2011/qhull/src/qhulltest/QhullVertex_test.cpp#6 $$Change: 1490 $
-** $DateTime: 2012/02/19 20:27:01 $$Author: bbarber $
+** Copyright (c) 2008-2015 C.B. Barber. All rights reserved.
+** $Id: //main/2015/qhull/src/qhulltest/QhullVertex_test.cpp#3 $$Change: 2062 $
+** $DateTime: 2016/01/17 13:13:18 $$Author: bbarber $
 **
 ****************************************************************************/
+
 //pre-compiled headers
 #include <iostream>
-#include "RoadTest.h"
+#include "RoadTest.h" // QT_VERSION
 
-#include "QhullVertex.h"
-#include "Coordinates.h"
-#include "QhullError.h"
-#include "RboxPoints.h"
-#include "QhullFacet.h"
-#include "QhullFacetSet.h"
-#include "QhullVertexSet.h"
-#include "Qhull.h"
+#include "libqhullcpp/QhullVertex.h"
+#include "libqhullcpp/Coordinates.h"
+#include "libqhullcpp/QhullError.h"
+#include "libqhullcpp/RboxPoints.h"
+#include "libqhullcpp/QhullFacet.h"
+#include "libqhullcpp/QhullFacetSet.h"
+#include "libqhullcpp/QhullVertexSet.h"
+#include "libqhullcpp/Qhull.h"
 
 using std::cout;
 using std::endl;
@@ -30,7 +31,7 @@ class QhullVertex_test : public RoadTest
 {
     Q_OBJECT
 
-#//Test slots
+#//!\name Test slots
 private slots:
     void cleanup();
     void t_constructConvert();
@@ -42,37 +43,39 @@ private slots:
 void
 add_QhullVertex_test()
 {
-    new QhullVertex_test();
+    new QhullVertex_test();  // RoadTest::s_testcases
 }
 
 //Executed after each testcase
 void QhullVertex_test::
 cleanup()
 {
-    UsingLibQhull::checkQhullMemoryEmpty();
     RoadTest::cleanup();
 }
 
 void QhullVertex_test::
 t_constructConvert()
 {
+    QhullVertex v6;
+    QVERIFY(!v6.isValid());
+    QCOMPARE(v6.dimension(),0);
     // Qhull.runQhull() constructs QhullFacets as facetT
-    QhullVertex v;
-    QVERIFY(!v.isDefined());
-    QCOMPARE(v.dimension(),0);
     RboxPoints rcube("c");
     Qhull q(rcube,"Qt QR0");  // triangulation of rotated unit cube
+    QhullVertex v(q);
+    QVERIFY(!v.isValid());
+    QCOMPARE(v.dimension(),3);
     QhullVertex v2(q.beginVertex());
     QCOMPARE(v2.dimension(),3);
     v= v2;  // copy assignment
-    QVERIFY(v.isDefined());
+    QVERIFY(v.isValid());
     QCOMPARE(v.dimension(),3);
     QhullVertex v5= v2; // copy constructor
     QVERIFY(v5==v2);
     QVERIFY(v5==v);
-    QhullVertex v3= v2.getVertexT();
+    QhullVertex v3(q, v2.getVertexT());
     QCOMPARE(v,v3);
-    QhullVertex v4= v2.getBaseT();
+    QhullVertex v4(q, v2.getBaseT());
     QCOMPARE(v,v4);
 }//t_constructConvert
 
@@ -93,7 +96,7 @@ t_getSet()
             cout << v.id() << endl;
             QCOMPARE(v.dimension(),3);
             QVERIFY(v.id()>=0 && v.id()<9);
-            QVERIFY(v.isDefined());
+            QVERIFY(v.isValid());
             if(i.hasNext()){
                 QCOMPARE(v.next(), i.peekNext());
                 QVERIFY(v.next()!=v);
@@ -102,15 +105,12 @@ t_getSet()
             QVERIFY(i.hasPrevious());
             QCOMPARE(v, i.peekPrevious());
         }
-        QhullVertexListIterator i2(i);
-        QEXPECT_FAIL("", "ListIterator copy constructor not reset to BOT", Continue);
-        QVERIFY(!i2.hasPrevious());
 
         // test point()
         foreach (QhullVertex v, q.vertexList()){  // Qt only
             QhullPoint p= v.point();
-            int j= p.id(q.runId());
-            cout << "Point " << j << ":\n" << p.print(q.runId()) << endl;
+            int j= p.id();
+            cout << "Point " << j << ":\n" << p << endl;
             QVERIFY(j>=0 && j<8);
         }
     }
@@ -140,13 +140,13 @@ t_io()
         Qhull q(rcube, "");
         QhullVertex v= q.beginVertex();
         ostringstream os;
-        os << "Vertex and vertices w/o runId:\n";
+        os << "Vertex and vertices:\n";
         os << v;
         QhullVertexSet vs= q.firstFacet().vertices();
         os << vs;
-        os << "Vertex and vertices w/ runId:\n";
-        os << v.print(q.runId());
-        os << vs.print(q.runId(), "vertices:");
+        os << "\nVertex and vertices with message:\n";
+        os << v.print("Vertex");
+        os << vs.print("\nVertices:");
         cout << os.str();
         QString s= QString::fromStdString(os.str());
         QCOMPARE(s.count("(v"), 10);
@@ -158,7 +158,7 @@ t_io()
         QhullVertex v= q.beginVertex();
         ostringstream os;
         os << "\nTry again with simplicial facets.  No neighboring facets listed for vertices.\n";
-        os << "Vertex and vertices w/o runId:\n";
+        os << "Vertex and vertices:\n";
         os << v;
         q.defineVertexNeighborFacets();
         os << "This time with neighborFacets() defined for all vertices:\n";
@@ -171,7 +171,7 @@ t_io()
         QhullVertex v2= q2.beginVertex();
         ostringstream os2;
         os2 << "\nTry again with Voronoi diagram of simplicial facets.  Neighboring facets automatically defined for vertices.\n";
-        os2 << "Vertex and vertices w/o runId:\n";
+        os2 << "Vertex and vertices:\n";
         os2 << v2;
         cout << os2.str();
         QString s2= QString::fromStdString(os2.str());

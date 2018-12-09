@@ -1,13 +1,14 @@
 /****************************************************************************
 **
-** Copyright (c) 2008-2012 C.B. Barber. All rights reserved.
-** $Id: //main/2011/qhull/src/libqhullcpp/RboxPoints.cpp#4 $$Change: 1464 $
-** $DateTime: 2012/01/25 22:58:41 $$Author: bbarber $
+** Copyright (c) 2008-2015 C.B. Barber. All rights reserved.
+** $Id: //main/2015/qhull/src/libqhullcpp/RboxPoints.cpp#3 $$Change: 2066 $
+** $DateTime: 2016/01/18 19:29:17 $$Author: bbarber $
 **
 ****************************************************************************/
 
-#include "QhullError.h"
-#include "RboxPoints.h"
+#include "libqhullcpp/RboxPoints.h"
+
+#include "libqhullcpp/QhullError.h"
 
 #include <iostream>
 
@@ -28,20 +29,21 @@ namespace orgQhull {
 
 #//! RboxPoints -- generate random PointCoordinates for qhull (rbox)
 
-#//Global
 
-//! pointer to RboxPoints for qh_fprintf callback
-RboxPoints *rbox_output= 0;
-
-#//Construct
+#//!\name Constructors
 RboxPoints::
 RboxPoints()
 : PointCoordinates("rbox")
 , rbox_new_count(0)
 , rbox_status(qh_ERRnone)
 , rbox_message()
-{}
+{
+    allocateQhullQh();
+}
 
+//! Allocate and generate points according to rboxCommand
+//! For rbox commands, see http://www.qhull.org/html/rbox.htm or html/rbox.htm
+//! Same as appendPoints()
 RboxPoints::
 RboxPoints(const char *rboxCommand)
 : PointCoordinates("rbox")
@@ -49,33 +51,29 @@ RboxPoints(const char *rboxCommand)
 , rbox_status(qh_ERRnone)
 , rbox_message()
 {
+    allocateQhullQh();
+    // rbox arguments added to comment() via qh_rboxpoints > qh_fprintf_rbox
     appendPoints(rboxCommand);
 }
 
 RboxPoints::
-RboxPoints(const RboxPoints &other)
-: PointCoordinates(other)
-, rbox_new_count(0)
-, rbox_status(other.rbox_status)
-, rbox_message(other.rbox_message)
-{}
-
-RboxPoints & RboxPoints::
-operator=(const RboxPoints &other)
-{
-    PointCoordinates::operator=(other);
-    rbox_new_count= other.rbox_new_count;
-    rbox_status= other.rbox_status;
-    rbox_message= other.rbox_message;
-    return *this;
-}//operator=
-
-
-RboxPoints::
 ~RboxPoints()
-{}
+{
+    delete qh();
+    resetQhullQh(0);
+}
 
-#//Error
+// RboxPoints and qh_rboxpoints has several fields in qhT (rbox_errexit..cpp_object)
+// It shares last_random with qh_rand and qh_srand
+// The other fields are unused
+void RboxPoints::
+allocateQhullQh()
+{
+    QHULL_LIB_CHECK /* Check for compatible library */
+    resetQhullQh(new QhullQh);
+}//allocateQhullQh
+
+#//!\name Messaging
 
 void RboxPoints::
 clearRboxMessage()
@@ -108,24 +106,27 @@ hasRboxMessage() const
     return (rbox_status!=qh_ERRnone);
 }
 
-#//Modify
+#//!\name Methods
 
+//! Appends points as defined by rboxCommand
+//! Appends rboxCommand to comment
+//! For rbox commands, see http://www.qhull.org/html/rbox.htm or html/rbox.htm
 void RboxPoints::
 appendPoints(const char *rboxCommand)
 {
     string s("rbox ");
     s += rboxCommand;
     char *command= const_cast<char*>(s.c_str());
-    if(rbox_output){
-        throw QhullError(10001, "Qhull error: Two simultaneous calls to RboxPoints::appendPoints().  Prevent two processes calling appendPoints() at the same time.  Other RboxPoints '%s'", 0, 0, 0, rbox_output->comment().c_str());
+    if(qh()->cpp_object){
+        throw QhullError(10001, "Qhull error: conflicting user of cpp_object for RboxPoints::appendPoints() or corrupted qh_qh");
     }
     if(extraCoordinatesCount()!=0){
         throw QhullError(10067, "Qhull error: Extra coordinates (%d) prior to calling RboxPoints::appendPoints.  Was %s", extraCoordinatesCount(), 0, 0.0, comment().c_str());
     }
-    int previousCount= count();
-    rbox_output= this;              // set rbox_output for qh_fprintf()
-    int status= ::qh_rboxpoints(0, 0, command);
-    rbox_output= 0;
+    countT previousCount= count();
+    qh()->cpp_object= this;           // for qh_fprintf_rbox()
+    int status= qh_rboxpoints(qh(), command);
+    qh()->cpp_object= 0;
     if(rbox_status==qh_ERRnone){
         rbox_status= status;
     }
@@ -142,28 +143,32 @@ appendPoints(const char *rboxCommand)
 
 }//namespace orgQhull
 
-#//Global functions
+#//!\name Global functions
 
 /*-<a                             href="qh-user.htm#TOC"
 >-------------------------------</a><a name="qh_fprintf_rbox">-</a>
 
-  qh_fprintf_rbox(fp, msgcode, format, list of args )
+  qh_fprintf_rbox(qh, fp, msgcode, format, list of args )
     fp is ignored (replaces qh_fprintf_rbox() in userprintf_rbox.c)
-    rbox_output == RboxPoints
+    cpp_object == RboxPoints
 
 notes:
     only called from qh_rboxpoints()
-    same as fprintf() and Qhull::qh_fprintf()
+    same as fprintf() and Qhull.qh_fprintf()
     fgets() is not trapped like fprintf()
     Do not throw errors from here.  Use qh_errexit_rbox;
+    A similar technique can be used for qh_fprintf to capture all of its output
 */
 extern "C"
-void qh_fprintf_rbox(FILE*, int msgcode, const char *fmt, ... ) {
+void qh_fprintf_rbox(qhT *qh, FILE*, int msgcode, const char *fmt, ... ) {
     va_list args;
 
     using namespace orgQhull;
 
-    RboxPoints *out= rbox_output;
+    if(!qh->cpp_object){
+        qh_errexit_rbox(qh, 10072);
+    }
+    RboxPoints *out= reinterpret_cast<RboxPoints *>(qh->cpp_object);
     va_start(args, fmt);
     if(msgcode<MSG_OUTPUT){
         char newMessage[MSG_MAXLEN];
@@ -180,13 +185,13 @@ void qh_fprintf_rbox(FILE*, int msgcode, const char *fmt, ... ) {
     case 9391:
     case 9392:
         out->rbox_message += "RboxPoints error: options 'h', 'n' not supported.\n";
-        qh_errexit_rbox(10010);
+        qh_errexit_rbox(qh, 10010);
         /* never returns */
-    case 9393:
+    case 9393:  // FIXUP QH11026 countT vs. int
         {
             int dimension= va_arg(args, int);
             string command(va_arg(args, char*));
-            int count= va_arg(args, int);
+            countT count= va_arg(args, countT);
             out->setDimension(dimension);
             out->appendComment(" \"");
             out->appendComment(command.substr(command.find(' ')+1));

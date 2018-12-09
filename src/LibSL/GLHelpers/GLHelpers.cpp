@@ -94,7 +94,7 @@ GLhandleARB NAMESPACE::loadGLSLProgram(const char *prg,GLuint type)
   glGetObjectParameterivARB(id,GL_OBJECT_COMPILE_STATUS_ARB, &compiled);
   #endif
   if (!compiled) {
-    cout << "**** GLSL shader failed to compile (" << (type == GL_VERTEX_SHADER ? "vertex" : (type == GL_FRAGMENT_SHADER ? "fragment" : "geometry")) << ") ****" << endl;
+    cerr << "**** GLSL shader failed to compile (" << (type == GL_VERTEX_SHADER ? "vertex" : (type == GL_FRAGMENT_SHADER ? "fragment" : "geometry")) << ") ****" << endl;
     GLint maxLength;
     #ifdef EMSCRIPTEN
     glGetShaderiv(id,GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
@@ -103,8 +103,12 @@ GLhandleARB NAMESPACE::loadGLSLProgram(const char *prg,GLuint type)
     #endif
     Array<GLcharARB> infoLog(maxLength+1);
     GLint len = 0;
+#ifdef EMSCRIPTEN
+    glGetShaderInfoLog(id, maxLength, &len, infoLog.raw());    
+#else
     glGetInfoLogARB(id, maxLength, &len, infoLog.raw());
-    cout << Console::yellow << infoLog.raw() << Console::gray << endl;
+#endif
+    cerr << Console::yellow << infoLog.raw() << Console::gray << endl;
     if (0) {
       ofstream out("lasterror.glsl.txt");
       out << prg;
@@ -126,10 +130,8 @@ GLhandleARB NAMESPACE::loadGLSLProgram(const char *prg,GLuint type)
 void NAMESPACE::GLShader::init(
 	const char				  *vp_code,
 	const char			    *fp_code,
-	const t_GeometryShaderNfo *gs_code,
-	const char				  *name)
+	const t_GeometryShaderNfo *gs_code)
 {
-  m_Name   = string(name);
   m_Shader = glCreateProgramObjectARB();
 
   GLhandleARB vp,fp,gs;
@@ -153,7 +155,6 @@ void NAMESPACE::GLShader::init(
     gs = loadGLSLProgram(gs_code->code.c_str(),GL_GEOMETRY_SHADER_ARB);
 #endif
     glAttachObjectARB(m_Shader,gs);
-    LIBSL_GL_CHECK_ERROR;
     /*
     // set default values as linking may fail otherwise
     glProgramParameteriEXT( m_Shader, GL_GEOMETRY_INPUT_TYPE_EXT,   gs_code->typeIn );
@@ -185,7 +186,6 @@ void NAMESPACE::GLShader::init(
   LIBSL_GL_CHECK_ERROR;
 #else
 #ifdef EMSCRIPTEN
-  LIBSL_GL_CHECK_ERROR;
   // set default bindings
   glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_POSITION >::value, "mvf_position");
   glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_POSITION >::value, "mvf_vertex"); // aliasing
@@ -196,11 +196,11 @@ void NAMESPACE::GLShader::init(
   glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_TEXCOORD1>::value, "mvf_texcoord1");
   glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_TEXCOORD2>::value, "mvf_texcoord2");
   glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_TEXCOORD3>::value, "mvf_texcoord3");
-  glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_TEXCOORD4>::value, "mvf_texcoord4");
-  glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_TEXCOORD5>::value, "mvf_texcoord5");
-  glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_TEXCOORD6>::value, "mvf_texcoord6");
-  glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_TEXCOORD7>::value, "mvf_texcoord7");
-  LIBSL_GL_CHECK_ERROR;
+  // SL 2018-09-17 disabled due to some plateform not supporting more than 8 attribs (e.g. raspberry PI)
+  //glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_TEXCOORD4>::value, "mvf_texcoord4");
+  //glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_TEXCOORD5>::value, "mvf_texcoord5");
+  //glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_TEXCOORD6>::value, "mvf_texcoord6");
+  //glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_TEXCOORD7>::value, "mvf_texcoord7");
 #else
   glBindAttribLocationARB(m_Shader, LibSL::GPUMesh::gl::mvf_attrib_location<MVF_BASE_POSITION >::value, "mvf_position");
   glBindAttribLocationARB(m_Shader, LibSL::GPUMesh::gl::mvf_attrib_location<MVF_BASE_POSITION >::value, "mvf_vertex"); // aliasing
@@ -235,7 +235,11 @@ void NAMESPACE::GLShader::init(
     glGetObjectParameterivARB(m_Shader,GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
     #endif
     Array<GLcharARB> infoLog(maxLength);
+#ifdef EMSCRIPTEN
+    glGetProgramInfoLog(m_Shader, maxLength, NULL, infoLog.raw());
+#else
     glGetInfoLogARB(m_Shader, maxLength, NULL, infoLog.raw());
+#endif
     if (0) {
       ofstream out("lasterror.glsl.txt");
       out << "// ========== VP ===========\n";
@@ -244,10 +248,8 @@ void NAMESPACE::GLShader::init(
       if (fp_code) out << fp_code;
       out.close();
     }
-    throw GLException("\n\n**** GLSL program failed to link (%s) ****\n%s",m_Name.c_str(),infoLog.raw());
+    throw GLException("\n\n**** GLSL program failed to link (%s) ****\n%s",name(),infoLog.raw());
   }
-
-  LIBSL_GL_CHECK_ERROR;
 
   if (vp_code) {
     #ifdef EMSCRIPTEN
@@ -256,7 +258,6 @@ void NAMESPACE::GLShader::init(
     glDeleteObjectARB(vp);
     #endif
   }
-  LIBSL_GL_CHECK_ERROR;
   if (fp_code) {
     #ifdef EMSCRIPTEN
     glDeleteShader(fp);
@@ -264,7 +265,6 @@ void NAMESPACE::GLShader::init(
     glDeleteObjectARB(fp);
     #endif
   }
-  LIBSL_GL_CHECK_ERROR;
   if (gs_code) {
     // default values for geometry shader inputs / outputs
     #ifdef EMSCRIPTEN
@@ -273,9 +273,7 @@ void NAMESPACE::GLShader::init(
     glDeleteObjectARB(gs);
     #endif
   }
-  LIBSL_GL_CHECK_ERROR;
   glUseProgramObjectARB(0);
-  LIBSL_GL_CHECK_ERROR;
 }
 
 // -----------------------------------------------------
@@ -283,7 +281,6 @@ void NAMESPACE::GLShader::init(
 void NAMESPACE::GLShader::init(GLhandleARB shader)
 {
   m_Shader = shader;
-  m_Name   = string("[runtime]");
 }
 
 // -----------------------------------------------------
@@ -350,7 +347,6 @@ void NAMESPACE::GLParameter::init(GLBaseShader& shader,const char *name)
       // cerr << sprint("GLParameter - WARNING: shader '%s' - parameter '%s' was not found\n",shader.name(),name);
     }
   }
-  m_Name = string(name);
 }
 
 // -----------------------------------------------------
@@ -566,26 +562,15 @@ void NAMESPACE::GLParameter::setArray(const v4u *pv,int size)
 
 #ifdef OPENGL4
 
-#if 1
-void NAMESPACE::GLParameter::set(const GLBuffer& buf)
-{
-  authorize();
-  if (!m_Strict && m_Handle == -1) return;
-  glUniformui64NV( m_Handle, buf.ptr() );
-}
-#endif
-
 NAMESPACE::GLBuffer::GLBuffer()
 {
   m_glId   = 0;
-  m_gpuPtr = 0;
   m_Sz     = 0;
 }
 
 NAMESPACE::GLBuffer::GLBuffer(uint sz)
 {
   m_glId   = 0;
-  m_gpuPtr = 0;
   m_Sz     = 0;
   init( sz );
 }
@@ -599,14 +584,12 @@ NAMESPACE::GLBuffer::GLBuffer(GLBuffer const& buffer)
 void NAMESPACE::GLBuffer::adopt(GLBuffer const& buffer)
 {
   m_glId   = buffer.m_glId;
-  m_gpuPtr = buffer.m_gpuPtr;
   m_Sz     = buffer.m_Sz;
 }
 
 void NAMESPACE::GLBuffer::forget()
 {
   m_glId   = 0;
-  m_gpuPtr = 0;
   m_Sz     = 0;
 }
 
@@ -635,12 +618,6 @@ void NAMESPACE::GLBuffer::init(uint sz)
 	glGenBuffersARB(1, &m_glId);
   glBindBufferARB(c_buf_type, m_glId);
   glBufferDataARB(c_buf_type, sz, NULL, GL_DYNAMIC_DRAW);
-#if 0
-  if (GLUX_IS_AVAILABLE(GL_NV_shader_buffer_load)) {
-    glGetBufferParameterui64vNV(c_buf_type, GL_BUFFER_GPU_ADDRESS_NV, &m_gpuPtr );
-    glMakeBufferResidentNV(c_buf_type, GL_READ_WRITE);
-  }
-#endif
   glBindBufferARB(c_buf_type, 0);
   LIBSL_GL_CHECK_ERROR;
 }
@@ -651,34 +628,24 @@ void NAMESPACE::GLBuffer::resize(uint sz)
   m_Sz     = sz;
   glBindBufferARB(c_buf_type, m_glId);
   glBufferDataARB(c_buf_type, sz, NULL, GL_DYNAMIC_DRAW);
-#if 0
-  if (GLUX_IS_AVAILABLE(GL_NV_shader_buffer_load)) {
-    glGetBufferParameterui64vNV(c_buf_type, GL_BUFFER_GPU_ADDRESS_NV, &m_gpuPtr );
-    glMakeBufferResidentNV(c_buf_type, GL_READ_WRITE);
-  }
-#endif
   glBindBufferARB(c_buf_type, 0);
   LIBSL_GL_CHECK_ERROR;
 }
 
 void NAMESPACE::GLBuffer::terminate()
 {
-  // TODO/FIXME is that enough to cleanup?
   if (m_glId != 0) {
     LIBSL_GL_CHECK_ERROR;
     glBindBufferARB(c_buf_type, 0);
-    LIBSL_GL_CHECK_ERROR;
     glDeleteBuffersARB(1,&m_glId);
     LIBSL_GL_CHECK_ERROR;
     m_glId   = 0;
-    m_gpuPtr = 0;
     m_Sz     = 0;
   }
 }
 
 NAMESPACE::GLBuffer::~GLBuffer()
 {
-  // NOTE: do not call check error from here as GL may no longer be initialized
   terminate();
 }
 
@@ -763,23 +730,20 @@ void NAMESPACE::GLTexBuffer::createTexture()
 
 void NAMESPACE::GLTexBuffer::deleteTexture()
 {
-  LIBSL_GL_CHECK_ERROR;
   if ( m_glTexId != 0 ) {
+    LIBSL_GL_CHECK_ERROR;
     glDeleteTextures  (1, &m_glTexId);
     m_glTexId = 0;
+    LIBSL_GL_CHECK_ERROR;
   }
-  LIBSL_GL_CHECK_ERROR;
 }
 
 // -----------------------------------------------------
 // -----------------------------------------------------
 // -----------------------------------------------------
 
-void NAMESPACE::GLCompute::init(
-	const char				  *cs_code,
-	const char				  *name)
+void NAMESPACE::GLCompute::init(const char *cs_code)
 {
-  m_Name   = string(name);
   m_Shader = glCreateProgramObjectARB();
 
   GLuint cs;
@@ -799,7 +763,7 @@ void NAMESPACE::GLCompute::init(
 			     GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
     Array<GLcharARB> infoLog(maxLength);
     glGetInfoLogARB(m_Shader, maxLength, NULL, infoLog.raw());
-    throw GLException("\n\n**** GLSL compute shader failed to link (%s) ****\n%s",m_Name.c_str(),infoLog.raw());
+    throw GLException("\n\n**** GLSL compute shader failed to link (%s) ****\n%s",name(),infoLog.raw());
   }
 
   glDeleteObjectARB(cs);
@@ -814,7 +778,6 @@ void NAMESPACE::GLCompute::init(
 void NAMESPACE::GLCompute::init(GLuint shader)
 {
   m_Shader = shader;
-  m_Name   = string("[runtime]");
 }
 
 // -----------------------------------------------------

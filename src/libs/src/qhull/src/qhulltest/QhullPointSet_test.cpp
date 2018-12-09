@@ -1,8 +1,8 @@
 /****************************************************************************
 **
-** Copyright (p) 2009-2012 C.B. Barber. All rights reserved.
-** $Id: //main/2011/qhull/src/qhulltest/QhullPointSet_test.cpp#6 $$Change: 1490 $
-** $DateTime: 2012/02/19 20:27:01 $$Author: bbarber $
+** Copyright (p) 2009-2015 C.B. Barber. All rights reserved.
+** $Id: //main/2015/qhull/src/qhulltest/QhullPointSet_test.cpp#3 $$Change: 2062 $
+** $DateTime: 2016/01/17 13:13:18 $$Author: bbarber $
 **
 ****************************************************************************/
 
@@ -10,12 +10,12 @@
 #include <iostream>
 #include "RoadTest.h" // QT_VERSION
 
-#include "QhullPointSet.h"
-#include "RboxPoints.h"
-#include "QhullPoint.h"
-#include "QhullFacet.h"
-#include "QhullFacetList.h"
-#include "Qhull.h"
+#include "libqhullcpp/QhullPointSet.h"
+#include "libqhullcpp/RboxPoints.h"
+#include "libqhullcpp/QhullPoint.h"
+#include "libqhullcpp/QhullFacet.h"
+#include "libqhullcpp/QhullFacetList.h"
+#include "libqhullcpp/Qhull.h"
 
 using std::cout;
 using std::endl;
@@ -27,7 +27,7 @@ class QhullPointSet_test : public RoadTest
 {
     Q_OBJECT
 
-#//Test slots
+#//!\name Test slots
 private slots:
     void cleanup();
     void t_construct();
@@ -43,43 +43,39 @@ private slots:
 void
 add_QhullPointSet_test()
 {
-    new QhullPointSet_test();
+    new QhullPointSet_test();  // RoadTest::s_testcases
 }
 
 //Executed after each testcase
 void QhullPointSet_test::
 cleanup()
 {
-    UsingLibQhull::checkQhullMemoryEmpty();
     RoadTest::cleanup();
 }
 
 void QhullPointSet_test::
 t_construct()
 {
+    // Default constructor is disallowed (i.e., private)
     RboxPoints rcube("c W0 1000");
     Qhull q(rcube,"Qc");  // cube with 1000 coplanar points
     int coplanarCount= 0;
     foreach(QhullFacet f, q.facetList()){
-        QhullPointSet ps(q.dimension(), f.getFacetT()->outsideset);
-        QCOMPARE(ps.dimension(), 3);
+        QhullPointSet ps(q, f.getFacetT()->outsideset);
         QVERIFY(ps.isEmpty());
-        QVERIFY(ps.empty());
         QCOMPARE(ps.count(), 0);
         QCOMPARE(ps.size(), 0u);
-        QhullPointSet ps2(q.dimension(), f.getFacetT()->coplanarset);
-        QCOMPARE(ps2.dimension(), 3);
+        QhullPointSet ps2(q.qh(), f.getFacetT()->coplanarset);
         QVERIFY(!ps2.isEmpty());
-        QVERIFY(!ps2.empty());
         coplanarCount += ps2.count();
         QCOMPARE(ps2.count(), (int)ps2.size());
         QhullPointSet ps3(ps2);
-        QCOMPARE(ps3.dimension(), 3);
         QVERIFY(!ps3.isEmpty());
         QCOMPARE(ps3.count(), ps2.count());
         QVERIFY(ps3==ps2);
         QVERIFY(ps3!=ps);
-        // ps4= ps3; //compiler error
+        QhullPointSet ps4= ps3;
+        QVERIFY(ps4==ps2);
     }
     QCOMPARE(coplanarCount, 1000);
 }//t_construct
@@ -91,7 +87,6 @@ t_convert()
     Qhull q(rcube,"Qc");  // cube with 1000 coplanar points
     QhullFacet f= q.firstFacet();
     QhullPointSet ps= f.coplanarPoints();
-    QCOMPARE(ps.dimension(), 3);
     QVERIFY(ps.count()>=1);   // Sometimes no coplanar points
     std::vector<QhullPoint> vs= ps.toStdVector();
     QCOMPARE(vs.size(), ps.size());
@@ -105,7 +100,7 @@ t_convert()
 }//t_convert
 
 // readonly tested in t_construct
-//   dimension, empty, isEmpty, ==, !=, size
+//   empty, isEmpty, ==, !=, size
 
 void QhullPointSet_test::
 t_element()
@@ -119,11 +114,12 @@ t_element()
     QCOMPARE(p, ps[0]);
     QhullPoint p2= ps[ps.count()-1];
     QCOMPARE(ps.at(1), ps[1]);
+    QCOMPARE(ps.second(), ps[1]);
     QCOMPARE(ps.first(), p);
     QCOMPARE(ps.front(), ps.first());
     QCOMPARE(ps.last(), p2);
     QCOMPARE(ps.back(), ps.last());
-    QhullPoint p8;
+    QhullPoint p8(q);
     QCOMPARE(ps.value(2), ps[2]);
     QCOMPARE(ps.value(-1), p8);
     QCOMPARE(ps.value(ps.count()), p8);
@@ -155,11 +151,11 @@ t_iterator()
     i2= ps.end();
     QVERIFY(i!=i2);
     QhullPoint p= *i;
-    QCOMPARE(p.dimension(), ps.dimension());
+    QCOMPARE(p.dimension(), q.dimension());
     QCOMPARE(p, ps[0]);
     i2--;
     QhullPoint p2= *i2;
-    QCOMPARE(p2.dimension(), ps.dimension());
+    QCOMPARE(p2.dimension(), q.dimension());
     QCOMPARE(p2, ps.last());
     QhullPointSet::Iterator i5(i2);
     QCOMPARE(*i2, *i5);
@@ -193,10 +189,14 @@ t_iterator()
     QVERIFY(i4<i2);
     QVERIFY(i4<=i2);
     ++i4;
+    QVERIFY(i!=i4); // iterator COMP const_iterator
     QVERIFY(i<i4);
     QVERIFY(i<=i4);
     QVERIFY(i4>i);
     QVERIFY(i4>=i);
+    i4= ps.constBegin();
+    QVERIFY(i==i4); // iterator COMP const_iterator
+    QCOMPARE(i4+ps.count(), ps.constEnd());
 
     i= ps.begin();
     i2= ps.begin();
@@ -243,11 +243,11 @@ t_const_iterator()
     i2= ps.end();
     QVERIFY(i!=i2);
     QhullPoint p= *i; // QhullPoint is the base class for QhullPointSet::iterator
-    QCOMPARE(p.dimension(), ps.dimension());
+    QCOMPARE(p.dimension(), q.dimension());
     QCOMPARE(p, ps[0]);
     i2--;
     QhullPoint p2= *i2;
-    QCOMPARE(p2.dimension(), ps.dimension());
+    QCOMPARE(p2.dimension(), q.dimension());
     QCOMPARE(p2, ps.last());
     QhullPointSet::ConstIterator i5(i2);
     QCOMPARE(*i2, *i5);
@@ -284,10 +284,10 @@ t_search()
     QhullPoint p3= ps[2];
     QVERIFY(ps.contains(p3));
     QVERIFY(p!=p3);
-    QhullPoint p4;
     QCOMPARE(ps.indexOf(p), 0);
     QCOMPARE(ps.indexOf(p2), ps.count()-1);
     QCOMPARE(ps.indexOf(p3), 2);
+    QhullPoint p4(q);
     QCOMPARE(ps.indexOf(p4), -1);
     QCOMPARE(ps.lastIndexOf(p), 0);
     QCOMPARE(ps.lastIndexOf(p2), ps.count()-1);
@@ -304,6 +304,7 @@ t_pointset_iterator()
     QhullPointSet ps2= f.outsidePoints();
     QVERIFY(ps2.count()==0); // No outside points after constructing the convex hull
     QhullPointSetIterator i2= ps2;
+    QCOMPARE(i2.countRemaining(), 0);
     QVERIFY(!i2.hasNext());
     QVERIFY(!i2.hasPrevious());
     i2.toBack();
@@ -314,12 +315,16 @@ t_pointset_iterator()
     QVERIFY(ps.count()>=3);  // Sometimes no coplanar points
     QhullPointSetIterator i(ps);
     i2= ps;
+    QCOMPARE(i2.countRemaining(), ps.count());
     QVERIFY(i2.hasNext());
     QVERIFY(!i2.hasPrevious());
     QVERIFY(i.hasNext());
     QVERIFY(!i.hasPrevious());
     i2.toBack();
+    QCOMPARE(i2.countRemaining(), 0);
     i.toFront();
+    QCOMPARE(i.countRemaining(), ps.count());
+    QCOMPARE(i2.countRemaining(), 0);
     QVERIFY(!i2.hasNext());
     QVERIFY(i2.hasPrevious());
     QVERIFY(i.hasNext());
@@ -339,6 +344,7 @@ t_pointset_iterator()
     QCOMPARE(i.peekNext(), p);
     // i.peekNext()= 1.0; // compiler error
     QCOMPARE(i.next(), p);
+    QCOMPARE(i.countRemaining(), ps.count()-1);
     QhullPoint p4= i.peekNext();
     QVERIFY(p4!=p3);
     QCOMPARE(i.next(), p4);
@@ -357,12 +363,14 @@ t_io()
     QhullPointSet ps= f.coplanarPoints();
     QVERIFY(ps.count()>=3);  // Sometimes no coplanar points
     os << "QhullPointSet from coplanarPoints\n" << ps << endl;
-    os << "\nRunId\n" << ps.print(q.runId());
-    os << ps.print(q.runId(), "\nRunId w/ message\n");
+    os << ps.print("\nWith message\n");
+    os << ps.printIdentifiers("\nCoplanar points: ");
+    os << "\nAs a point set:\n";
+    os << ps;
     cout << os.str();
     QString s= QString::fromStdString(os.str());
-    QCOMPARE(s.count("p"), 3*ps.count()+1);
-    // QCOMPARE(s.count(QRegExp("f\\d")), 3*7 + 13*3*2);
+    QCOMPARE(s.count(" 0.5\n"), 3*ps.count());
+    QCOMPARE(s.count("p"), ps.count()+4);
 }//t_io
 
 }//orgQhull

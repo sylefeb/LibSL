@@ -336,7 +336,7 @@ int main()
    Real* s2; { ColumnVector A(8000); s2 = A.Store(); }
    cout << "\n\nThe following test does not work with all compilers - see documentation\n";
    cout << "Checking for lost memory: "
-      << (unsigned long)s1 << " " << (unsigned long)s2 << " ";
+      << /*(unsigned long)*/s1 << " " << /*(unsigned long)*/s2 << " ";
    if (s1 != s2) cout << " - error\n"; else cout << " - ok\n";
 
    return 0;

@@ -25,7 +25,7 @@
 #endif
 
 extern "C" {
-#include <qhull_a.h>
+#include <qhull_ra.h>
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -79,7 +79,13 @@ void ConvexHullEngine<Dim>::run(
 #ifdef USE_CXX11
   g_QhullLock.lock();
 #endif
-  int err = qh_new_qhull((int)dim, (int)num_points, data, false, flags, NULL, stderr);
+
+  qhT qh;
+  qh_zero(&qh,stderr);
+
+  m_Context = (void*)&qh;
+
+  int err = qh_new_qhull(&qh,(int)dim, (int)num_points, data, false, flags, NULL, stderr);
 
   if (!err) {
       extractHull(points);
@@ -87,7 +93,10 @@ void ConvexHullEngine<Dim>::run(
       throw LibSL::Errors::Fatal("Qhull error: ");
   }
 
-  qh_freeqhull(!qh_ALL);
+  qh_freeqhull(&qh,!qh_ALL);
+
+  m_Context = NULL;
+
 #ifdef USE_CXX11
   g_QhullLock.unlock();
 #endif
@@ -100,10 +109,11 @@ template<int Dim>
 void ConvexHullEngine<Dim>::extractHull(
     const std::vector<VectorXd>& points)
 {
+  qhT *qh = (qhT*)m_Context;
   const size_t dim = Dim;
   const size_t num_input_points = points.size();
-  const size_t num_faces = qh num_facets;
-  const size_t num_vertices = qh num_vertices;
+  const size_t num_faces = qh->num_facets;
+  const size_t num_vertices = qh->num_vertices;
 
   size_t index = 0;
   m_Vertices.resize(num_vertices);
@@ -111,7 +121,7 @@ void ConvexHullEngine<Dim>::extractHull(
   std::vector<int> inverse_map(num_input_points, -1);
   vertexT* vertex, **vertexp;
   FORALLvertices {
-      size_t i = qh_pointid(vertex->point);
+      size_t i = qh_pointid(qh,vertex->point);
 #ifdef _MSC_VER
 	std::copy(vertex->point, vertex->point + dim, stdext::checked_array_iterator<pointT*>(&m_Vertices[index][0], dim));
 #else
@@ -128,8 +138,8 @@ void ConvexHullEngine<Dim>::extractHull(
   FORALLfacets {
 		size_t i = 0;
     FOREACHvertex_( facet->vertices ) {
-      sl_assert(inverse_map[qh_pointid(vertex->point)] != -1);
-      m_Faces[index][(int)i] = inverse_map[qh_pointid(vertex->point)];
+      sl_assert(inverse_map[qh_pointid(qh,vertex->point)] != -1);
+      m_Faces[index][(int)i] = inverse_map[qh_pointid(qh,vertex->point)];
       i++;
     }
     index++;

@@ -1,17 +1,19 @@
 /****************************************************************************
 **
-** Copyright (c) 2009-2012 C.B. Barber. All rights reserved.
-** $Id: //main/2011/qhull/src/qhulltest/QhullLinkedList_test.cpp#4 $$Change: 1490 $
-** $DateTime: 2012/02/19 20:27:01 $$Author: bbarber $
+** Copyright (c) 2009-2015 C.B. Barber. All rights reserved.
+** $Id: //main/2015/qhull/src/qhulltest/QhullLinkedList_test.cpp#3 $$Change: 2062 $
+** $DateTime: 2016/01/17 13:13:18 $$Author: bbarber $
 **
 ****************************************************************************/
 
 //pre-compiled headers
 #include <QtCore/QList>
-#include "RoadTest.h"
+#include "qhulltest/RoadTest.h"
 
-#include "QhullLinkedList.h"
-#include "Qhull.h"
+#include "libqhullcpp/QhullLinkedList.h"
+#include "libqhullcpp/Qhull.h"
+#include "libqhullcpp/QhullVertex.h"
+#include "libqhullcpp/RboxPoints.h"
 
 namespace orgQhull {
 
@@ -19,7 +21,7 @@ class QhullLinkedList_test : public RoadTest
 {
     Q_OBJECT
 
-#//Test slots
+#//!\name Test slots
 private slots:
     void cleanup();
     void t_construct();
@@ -35,14 +37,13 @@ private slots:
 void
 add_QhullLinkedList_test()
 {
-    new QhullLinkedList_test();
+    new QhullLinkedList_test();  // RoadTest::s_testcases
 }
 
 //Executed after each testcase
 void QhullLinkedList_test::
 cleanup()
 {
-    UsingLibQhull::checkQhullMemoryEmpty();
     RoadTest::cleanup();
 }
 
@@ -62,7 +63,6 @@ t_construct()
         QCOMPARE(vs2.count(), 8);
         QCOMPARE(vs2.size(),8u);
         QVERIFY(!vs2.isEmpty());
-        QVERIFY(!vs2.empty());
         QVERIFY(vs==vs2);
         // vs= vs2; // disabled.  Would not copy the vertices
         QhullVertexList vs3= vs2; // copy constructor
@@ -80,7 +80,6 @@ t_convert()
         QhullVertexList vs = q.vertexList();
         QCOMPARE(vs.size(), 8u);
         QVERIFY(!vs.isEmpty());
-        QVERIFY(!vs.empty());
         std::vector<QhullVertex> vs2= vs.toStdVector();
         QCOMPARE(vs2.size(), vs.size());
         QhullVertexList::Iterator i= vs.begin();
@@ -114,6 +113,7 @@ t_element()
     QCOMPARE(vs.front(), vs.first());
     QhullVertex v2= vs.last();
     QCOMPARE(v2.next().next(), QhullVertex(NULL)); // sentinel has NULL next
+    QCOMPARE(vs.back(), v2);
     QCOMPARE(vs.back(), vs.last());
 }//t_element
 
@@ -123,7 +123,7 @@ t_search()
     RboxPoints rcube("c");
     Qhull q(rcube,"QR0");  // rotated unit cube
     QhullVertexList vs = q.vertexList();
-    QhullVertex v;
+    QhullVertex v(q);
     QVERIFY(!vs.contains(v));
     QCOMPARE(vs.count(v), 0);
     QhullVertex v2= *vs.begin();

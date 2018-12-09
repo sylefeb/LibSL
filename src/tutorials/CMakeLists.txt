@@ -5,7 +5,9 @@ PROJECT(LibSL_tutorials)
 # ADD_SUBDIRECTORY(Mesh)
 # ADD_SUBDIRECTORY(AutoBindShader)
 # ADD_SUBDIRECTORY(gl4x)
+# ADD_SUBDIRECTORY(gl4xcore)
 
 # ADD_SUBDIRECTORY(Font) # JD: Does not compile on linux
-ADD_SUBDIRECTORY(imgui)
-ADD_SUBDIRECTORY(rendertarget)
+
+# ADD_SUBDIRECTORY(imgui)
+# ADD_SUBDIRECTORY(rendertarget)

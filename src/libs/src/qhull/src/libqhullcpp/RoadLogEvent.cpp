@@ -1,14 +1,14 @@
 /****************************************************************************
 **
-** Copyright (c) 2008-2012 C.B. Barber. All rights reserved.
-** $Id: //main/2011/qhull/src/libqhullcpp/RoadLogEvent.cpp#1 $$Change: 1490 $
-** $Date: 2012/02/19 $$Author: bbarber $
+** Copyright (c) 2008-2015 C.B. Barber. All rights reserved.
+** $Id: //main/2015/qhull/src/libqhullcpp/RoadLogEvent.cpp#3 $$Change: 2066 $
+** $Date: 2016/01/18 $$Author: bbarber $
 **
 ****************************************************************************/
 
-#//! RoadError -- All exceptions thrown by Qhull are RoadErrors
+#//! RoadLogEvent -- All exceptions thrown by Qhull are RoadErrors
 
-#include "RoadError.h"
+#include "libqhullcpp/RoadLogEvent.h"
 
 #include <string>
 #include <sstream>
@@ -105,7 +105,7 @@ toString(const char *tag, int code) const
     return os.str();
 }//toString
 
-#//Class helpers (static)
+#//!\name Class helpers (static)
 
 //! True if this char is the first extra code
 bool RoadLogEvent::
