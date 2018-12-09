@@ -201,7 +201,7 @@ namespace LibSL  {
           sl_assert(sz == 1);
           _array.allocate(x, y, z);
           size_t size = fread(_array.raw(), sizeof(T_Type), _array.xsize()*_array.ysize()*_array.zsize(), f);
-          sl_assert(size == _array.xsize()*_array.ysize()*_array.ysize());
+          sl_assert(size == _array.xsize()*_array.ysize()*_array.zsize());
           fclose(f);
         }
         
