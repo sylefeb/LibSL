@@ -79,7 +79,7 @@ NAMESPACE::MarchingCubes::~MarchingCubes()
 void NAMESPACE::MarchingCubes::run( float iso )
 //-----------------------------------------------------------------------------
 {
-  clock_t time = clock() ;
+  // clock_t time = clock() ;
 
   compute_intersection_points( iso ) ;
 
@@ -778,7 +778,7 @@ void NAMESPACE::MarchingCubes::process_cube( )
 
 //_____________________________________________________________________________
 // Adding triangles
-void NAMESPACE::MarchingCubes::add_triangle( const char* trig, char n, int v12 )
+void NAMESPACE::MarchingCubes::add_triangle( const int* trig, char n, int v12 )
 //-----------------------------------------------------------------------------
 {
   int    tv[3] ;
