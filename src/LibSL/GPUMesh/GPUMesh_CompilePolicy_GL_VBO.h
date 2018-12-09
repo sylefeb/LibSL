@@ -39,7 +39,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 // #pragma message("Including VBO GL standard")
 
 #ifdef USE_GLUX
-# include <glux.h>
+#include <glux.h>
 #include "GL_ARB_vertex_buffer_object.h"
 GLUX_LOAD(GL_ARB_vertex_buffer_object)
 #include "GL_ARB_draw_instanced.h"
@@ -52,7 +52,7 @@ GLUX_LOAD(GL_ARB_draw_instanced)
 
 #define BUFFER_OFFSET(o) (((char *)NULL) + o)
 
-#ifdef EMSCRIPTEN
+#if defined(EMSCRIPTEN) | defined(ANDROID)
 #define GL_ARRAY_BUFFER_ARB GL_ARRAY_BUFFER
 #define GL_STATIC_DRAW_ARB GL_STATIC_DRAW
 #define GL_DYNAMIC_DRAW_ARB GL_DYNAMIC_DRAW

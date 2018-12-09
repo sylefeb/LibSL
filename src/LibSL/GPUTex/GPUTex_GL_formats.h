@@ -58,7 +58,11 @@ using namespace LibSL::System::Types;
 #ifdef EMSCRIPTEN
 #define GL_GLEXT_PROTOTYPES
 #endif
+#ifdef ANDROID
+#include <GLES2/gl2.h>
+#else
 #include <GL/gl.h>
+#endif
 #endif
 
 #ifndef EMSCRIPTEN
@@ -74,7 +78,11 @@ GLUX_LOAD(GL_NV_texture_shader2)
 #ifdef __APPLE__
 #include <OpenGL/glext.h>
 #else
+#ifdef ANDROID
+#include <GLES2/gl2ext.h>
+#else
 #include <GL/glext.h>
+#endif
 #endif
 #endif
 #endif
@@ -87,6 +95,7 @@ namespace LibSL  {
     template <typename T_Type,int T_Num> class GL_format;
 
 #ifndef EMSCRIPTEN
+#ifndef ANDROID
     template <> class GL_format<unsigned char,1>
     {
     public:
@@ -109,12 +118,13 @@ namespace LibSL  {
             isdepth             = 0};
     };
 #endif
+#endif
 
     template <> class GL_format<unsigned char,3>
     {
     public:
       enum {
-#ifdef EMSCRIPTEN
+#if defined(EMSCRIPTEN) | defined(ANDROID)
             internal_format     = GL_RGB,
             format              = GL_RGB,
             int_internal_format = 0,
@@ -132,7 +142,7 @@ namespace LibSL  {
     {
     public:
       enum {
-#ifdef EMSCRIPTEN
+#if defined(EMSCRIPTEN) | defined(ANDROID)
             internal_format     = GL_RGBA,
             format              = GL_RGBA,
             int_internal_format = 0,
@@ -148,6 +158,7 @@ namespace LibSL  {
 
     
 #ifndef EMSCRIPTEN
+#ifndef ANDROID
 #ifndef __APPLE__
     template <> class GL_format<unsigned short,1>
     {
@@ -215,12 +226,13 @@ namespace LibSL  {
     };
 
 #endif
+#endif
 
     template <> class GL_format<half,2>
     {
     public:
       enum {
-#ifdef EMSCRIPTEN
+#if defined(EMSCRIPTEN) | defined(ANDROID)
             internal_format     = GL_LUMINANCE_ALPHA,
             format              = GL_LUMINANCE_ALPHA,
 #else
@@ -233,7 +245,7 @@ namespace LibSL  {
     };
 
 #ifndef EMSCRIPTEN
-
+#ifndef ANDROID
     template <> class GL_format<half, 3>
     {
     public:
@@ -245,7 +257,9 @@ namespace LibSL  {
     };
 
 #endif
+#endif
 
+#ifndef ANDROID
     template <> class GL_format<half, 4>
     {
     public:
@@ -256,8 +270,10 @@ namespace LibSL  {
             int_format          = -1,
             isdepth             = 0};
     };
+#endif
 
 #ifndef EMSCRIPTEN
+#ifndef ANDROID
 
     template <> class GL_format<float, 1>
     {
@@ -290,13 +306,14 @@ namespace LibSL  {
     };
 
 #endif
+#endif
 
     template <> class GL_format<float,4>
     {
     public:
       //enum {internal_format=GL_RGBA32F_ARB};
       enum {
-#ifdef EMSCRIPTEN
+#if defined(EMSCRIPTEN) | defined(ANDROID)
             internal_format     = GL_RGBA,
             format              = GL_RGBA,
 #else
@@ -309,7 +326,7 @@ namespace LibSL  {
     };
 
 #ifndef EMSCRIPTEN
-
+#ifndef ANDROID
     // depth texture format
 
     template <> class GL_format<depth32,1>
@@ -341,6 +358,7 @@ namespace LibSL  {
             int_format          = -1,
             isdepth             = 1};
     };
+#endif
 #endif
 
   } // namespace LibSL::GPUTex

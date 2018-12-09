@@ -65,7 +65,7 @@ public:
       m_iNbPrim = nbidx-2;
       m_bValid  = (nbidx > 2);
       break;
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
     case GPUMESH_QUADS:
       m_iNbPrim = nbidx/4;
       m_bValid  = (nbidx % 4 == 0);

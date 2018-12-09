@@ -63,7 +63,11 @@ using namespace LibSL::System::Types;
 #include <OpenGL/gl.h>
 #else
 #ifndef EMSCRIPTEN
+#ifdef ANDROID
+#include <GLES2/gl2.h>
+#else
 #include <GL/gl.h>
+#endif
 #else
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
@@ -118,7 +122,12 @@ using namespace LibSL::System::Types;
 #ifdef __APPLE__
 #include <OpenGL/glext.h>
 #else
+#ifdef ANDROID
+#include <GLES2/gl2ext.h>
+#define GLhandleARB GLuint
+#else
 #include <GL/glext.h>
+#endif
 #endif
 #endif
 #endif // EMSCRIPTEN
@@ -127,13 +136,14 @@ using namespace LibSL::System::Types;
 #include <string>
 #include <list>
 
-#ifdef EMSCRIPTEN
+#if defined(EMSCRIPTEN) | defined(ANDROID)
 #define glCreateShaderObjectARB glCreateShader
 #define glCreateProgramObjectARB glCreateProgram
 #define glCompileShaderARB glCompileShader
 #define glShaderSourceARB glShaderSource
 #define glAttachObjectARB glAttachShader
 #define glLinkProgramARB glLinkProgram
+#define glDeleteObjectARB glDeleteShader
 #define GLcharARB GLchar
 //#define GL_OBJECT_COMPILE_STATUS_ARB GL_COMPILE_STATUS
 //#define GL_OBJECT_INFO_LOG_LENGTH_ARB GL_INFO_LOG_LENGTH
@@ -332,7 +342,7 @@ namespace LibSL {
 		class GLProtectMatrices
 		{
     private:
-#ifdef EMSCRIPTEN     
+#if defined(EMSCRIPTEN) | defined(ANDROID)
       m4x4f m_Proj;
       m4x4f m_MdlView;
       m4x4f m_Texture;

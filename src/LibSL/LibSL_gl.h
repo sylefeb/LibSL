@@ -75,8 +75,12 @@ ERROR_____either_OPENGL_or_DIRECT3D_must_be_defined__not_both _;
 #include <OpenGL/glu.h>
 #else
 #ifndef EMSCRIPTEN
+#ifdef ANDROID
+#include <GLES2/gl2.h>
+#else
 #include <GL/gl.h>
 #include <GL/glu.h>
+#endif
 #else
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>

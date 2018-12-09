@@ -50,8 +50,14 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #else
 #ifdef EMSCRIPTEN
 #define GL_GLEXT_PROTOTYPES
-#endif
+#else
+#ifdef ANDROID
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#else
 #include <GL/gl.h>
+#endif
+#endif
 #endif
 
 // ------------------------------------------------------
@@ -73,7 +79,7 @@ using namespace LibSL::System::Types;
 
 // ------------------------------------------------------
 
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
 #ifdef USE_GLUX
 #include <glux.h>
 #include "GL_EXT_framebuffer_object.h"
@@ -83,11 +89,10 @@ GLUX_LOAD(GL_EXT_framebuffer_object)
 GLUX_LOAD(GL_ARB_draw_buffers)
 GLUX_LOAD(GL_EXT_texture3D)
 #endif // USE_GLUX
-#else // EMSCRIPTEN
-#define GLhandleARB GLhandle
+#else // EMSCRIPTEN + ANDROID
+#define GLhandleARB GLuint
 #define glRenderbufferStorageEXT glRenderbufferStorage
 //#define GL_GENERATE_MIPMAP_SGIS GL_GENERATE_MIPMAP_HINT
-//#define GL_RENDERBUFFER_EXT GL_RENDERBUFFER
 //#define GL_FRAMEBUFFER_EXT  GL_FRAMEBUFFER
 //#define GL_STENCIL_ATTACHMENT_EXT  GL_STENCIL_ATTACHMENT
 //#define GL_DEPTH_ATTACHMENT_EXT  GL_DEPTH_ATTACHMENT
@@ -104,6 +109,14 @@ GLUX_LOAD(GL_EXT_texture3D)
 #define glDeleteFramebuffersEXT glDeleteFramebuffers
 #define glFramebufferTexture2DEXT glFramebufferTexture2D
 #define glFramebufferRenderbufferEXT glFramebufferRenderbuffer
+#ifdef ANDROID
+#define GL_RENDERBUFFER_EXT GL_RENDERBUFFER
+#define GL_FRAMEBUFFER_EXT  GL_FRAMEBUFFER
+#define GL_DEPTH_ATTACHMENT_EXT  GL_DEPTH_ATTACHMENT
+#define GL_DEPTH_STENCIL_ATTACHMENT_EXT  GL_DEPTH_STENCIL_ATTACHMENT
+#define GL_FRAMEBUFFER_COMPLETE_EXT GL_FRAMEBUFFER_COMPLETE
+#define GL_FRAMEBUFFER_UNSUPPORTED_EXT GL_FRAMEBUFFER_UNSUPPORTED
+#endif
 #endif
 
 // ------------------------------------------------------
@@ -230,7 +243,7 @@ namespace LibSL  {
           GL_type<typename T_PixelFormat::t_Element>::type, 
           array.raw());
         if (flags & GPUTEX_AUTOGEN_MIPMAP) {
-#ifdef EMSCRIPTEN
+#if defined(EMSCRIPTEN) | defined(ANDROID)
 #define isPowerOfTwo(x) ((x != 0) && ((x & (~x + 1)) == x))
           if (isPowerOfTwo(array.xsize()) && isPowerOfTwo(array.ysize()))
 #endif
@@ -315,7 +328,7 @@ namespace LibSL  {
         typename T_APIPolicy::t_HandleRT2D handle;
         handle.depth_rb   = 0;
         handle.stencil_rb = 0;
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
         int maxRenterTargets = 0;
         glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS_EXT, &maxRenterTargets);
         sl_assert(num <uint(maxRenterTargets) && num > 0);
@@ -370,12 +383,15 @@ namespace LibSL  {
         if (!is_depth) {
           // color rt + depth
           // -> depth
-#ifdef EMSCRIPTEN
+#if defined(EMSCRIPTEN) | defined(ANDROID)
           if (ADD_DEPTH) {
             glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, handle.depth_rb);
+#ifndef ANDROID
             if (ADD_STENCIL) {
               glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_STENCIL, w, h);
-            } else {
+            } else
+#endif
+            {
               glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT16, w, h);
             }
           }
@@ -397,11 +413,14 @@ namespace LibSL  {
               GL_TEXTURE_2D, 
               handle.textures[n], 0);
           }
-#ifdef EMSCRIPTEN
+#if defined(EMSCRIPTEN) | defined(ANDROID)
           if (handle.depth_rb) {
+#ifndef ANDROID
             if (handle.stencil_rb) {
               glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER_EXT, handle.depth_rb);
-            } else {
+            } else
+#endif
+            {
               glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, handle.depth_rb);
             }
           }
@@ -417,7 +436,7 @@ namespace LibSL  {
           // -> attach everything together
           glBindFramebufferEXT     (GL_FRAMEBUFFER_EXT , handle.fbo);
           glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT , GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, handle.textures[0], 0);
-          #ifndef EMSCRIPTEN
+          #if !defined(EMSCRIPTEN) && !defined(ANDROID)
           glDrawBuffer(GL_NONE);
           glReadBuffer(GL_NONE);
           #endif
@@ -465,7 +484,7 @@ namespace LibSL  {
         // makes sure Tuple have the correct size (read back relies on pointers)
         sl_assert(sizeof(T_PixelFormat) == sizeof(typename T_PixelFormat::t_Element)*T_PixelFormat::e_Size);
         sl_assert( glGetError() == 0 );
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         glPixelStorei(GL_PACK_ALIGNMENT, 1);
         glBindTexture(GL_TEXTURE_2D, rt.textures[target]);
@@ -505,8 +524,8 @@ namespace LibSL  {
       static void bindRenderTarget2D(const typename T_APIPolicy::t_HandleRT2D& rt)
       {
         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,rt.fbo);
+        #if !defined(EMSCRIPTEN) && !defined(ANDROID)
         bool is_depth = (GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::isdepth != 0);
-        #ifndef EMSCRIPTEN
         if (!is_depth)
         {
           if (rt.numtargets > 0)
@@ -572,7 +591,7 @@ namespace LibSL  {
       }
 
 
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
 
       /// Create 3D texture
       static 

@@ -46,7 +46,46 @@ knowledge of the CeCILL-C license and that you accept its terms.
 using namespace LibSL::Memory::Array;
 using namespace LibSL::CppHelpers;
 
-#ifndef EMSCRIPTEN
+#if defined(EMSCRIPTEN) | defined(ANDROID)
+#define OPENGLES
+#endif
+
+#ifdef ANDROID
+#define GL_OBJECT_COMPILE_STATUS_ARB GL_COMPILE_STATUS
+#define GL_OBJECT_INFO_LOG_LENGTH_ARB GL_INFO_LOG_LENGTH
+#define GL_OBJECT_LINK_STATUS_ARB GL_LINK_STATUS
+/*
+#define glCreateShaderObjectARB glCreateShader
+#define glShaderSourceARB glShaderSource
+#define glCompileShaderARB glCompileShader
+#define GLcharARB GLchar
+#define glDeleteObjectARB glDeleteShader
+#define glCreateProgramObjectARB glCreateProgram
+#define glAttachObjectARB glAttachShader
+#define glLinkProgramARB glLinkProgram
+#define glUseProgramObjectARB glUseProgram
+#define glGetUniformLocationARB glGetUniformLocation
+#define glUniform1fARB glUniform1f
+#define glUniform2fARB glUniform2f
+#define glUniform3fARB glUniform3f
+#define glUniform4fARB glUniform4f
+#define glUniform1fvARB glUniform1fv
+#define glUniform2fvARB glUniform2fv
+#define glUniform3fvARB glUniform3fv
+#define glUniform4fvARB glUniform4fv
+#define glUniform1iARB glUniform1i
+#define glUniform2iARB glUniform2i
+#define glUniform3iARB glUniform3i
+#define glUniform4iARB glUniform4i
+#define glUniform1ivARB glUniform1iv
+#define glUniform2ivARB glUniform2iv
+#define glUniform3ivARB glUniform3iv
+#define glUniform4ivARB glUniform4iv
+#define glUniformMatrix4fvARB glUniformMatrix4fv
+*/
+#endif
+
+#ifndef OPENGLES
 #ifdef USE_GLUX
 GLUX_LOAD(GL_ARB_shader_objects);
 GLUX_LOAD(GL_ARB_vertex_shader);
@@ -88,7 +127,7 @@ GLhandleARB NAMESPACE::loadGLSLProgram(const char *prg,GLuint type)
   glCompileShaderARB(id);
 
   GLint compiled;
-  #ifdef EMSCRIPTEN
+  #ifdef OPENGLES
   glGetShaderiv(id,GL_OBJECT_COMPILE_STATUS_ARB, &compiled);
   #else
   glGetObjectParameterivARB(id,GL_OBJECT_COMPILE_STATUS_ARB, &compiled);
@@ -96,14 +135,14 @@ GLhandleARB NAMESPACE::loadGLSLProgram(const char *prg,GLuint type)
   if (!compiled) {
     cerr << "**** GLSL shader failed to compile (" << (type == GL_VERTEX_SHADER ? "vertex" : (type == GL_FRAGMENT_SHADER ? "fragment" : "geometry")) << ") ****" << endl;
     GLint maxLength;
-    #ifdef EMSCRIPTEN
+    #ifdef OPENGLES
     glGetShaderiv(id,GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
     #else
     glGetObjectParameterivARB(id,GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
     #endif
     Array<GLcharARB> infoLog(maxLength+1);
     GLint len = 0;
-#ifdef EMSCRIPTEN
+#ifdef OPENGLES
     glGetShaderInfoLog(id, maxLength, &len, infoLog.raw());    
 #else
     glGetInfoLogARB(id, maxLength, &len, infoLog.raw());
@@ -146,7 +185,7 @@ void NAMESPACE::GLShader::init(
     glAttachObjectARB(m_Shader,fp);
   }
 
-#ifndef EMSCRIPTEN
+#ifndef OPENGLES
   if (gs_code) {
     //sl_assert(GLUX_IS_AVAILABLE(GL_EXT_geometry_shader4) == GLUX_AVAILABLE);
 #ifdef __APPLE__
@@ -185,7 +224,7 @@ void NAMESPACE::GLShader::init(
   glBindAttribLocationARB(m_Shader, LibSL::GPUMesh::gl4::mvf_attrib_location<MVF_BASE_TEXCOORD7>::value, "mvf_texcoord7");
   LIBSL_GL_CHECK_ERROR;
 #else
-#ifdef EMSCRIPTEN
+#ifdef OPENGLES
   // set default bindings
   glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_POSITION >::value, "mvf_position");
   glBindAttribLocation(m_Shader, LibSL::GPUMesh::gles::mvf_attrib_location<MVF_BASE_POSITION >::value, "mvf_vertex"); // aliasing
@@ -221,7 +260,7 @@ void NAMESPACE::GLShader::init(
   glLinkProgramARB(m_Shader);
 
   GLint linked;
-  #ifdef EMSCRIPTEN
+  #ifdef OPENGLES
   glGetProgramiv(m_Shader,GL_OBJECT_LINK_STATUS_ARB, &linked);
   #else
   glGetObjectParameterivARB(m_Shader,GL_OBJECT_LINK_STATUS_ARB, &linked);
@@ -229,13 +268,13 @@ void NAMESPACE::GLShader::init(
   if (!linked) {
     cout << "**** GLSL program failed to link ****" << endl;
     GLint maxLength;
-    #ifdef EMSCRIPTEN
+    #ifdef OPENGLES
     glGetProgramiv(m_Shader,GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
     #else
     glGetObjectParameterivARB(m_Shader,GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
     #endif
     Array<GLcharARB> infoLog(maxLength);
-#ifdef EMSCRIPTEN
+#ifdef OPENGLES
     glGetProgramInfoLog(m_Shader, maxLength, NULL, infoLog.raw());
 #else
     glGetInfoLogARB(m_Shader, maxLength, NULL, infoLog.raw());
@@ -252,14 +291,14 @@ void NAMESPACE::GLShader::init(
   }
 
   if (vp_code) {
-    #ifdef EMSCRIPTEN
+    #ifdef OPENGLES
     glDeleteShader(vp);
     #else
     glDeleteObjectARB(vp);
     #endif
   }
   if (fp_code) {
-    #ifdef EMSCRIPTEN
+    #ifdef OPENGLES
     glDeleteShader(fp);
     #else
     glDeleteObjectARB(fp);
@@ -267,7 +306,7 @@ void NAMESPACE::GLShader::init(
   }
   if (gs_code) {
     // default values for geometry shader inputs / outputs
-    #ifdef EMSCRIPTEN
+    #ifdef OPENGLES
     glDeleteShader(gs);
     #else
     glDeleteObjectARB(gs);
@@ -289,7 +328,7 @@ void NAMESPACE::GLShader::terminate()
 {
   if (m_Shader != 0) {
     glUseProgramObjectARB(0);
-    #ifdef EMSCRIPTEN
+    #ifdef OPENGLES
     glDeleteProgram(m_Shader);
     #else
     glDeleteObjectARB(m_Shader);
@@ -304,7 +343,7 @@ void NAMESPACE::GLShader::terminate()
 void NAMESPACE::GLShader::authorize() const
 {
   if (m_Shader == 0) {
-#ifdef EMSCRIPTEN
+#ifdef OPENGLES
     cout << "GLShader::authorize - shader used without having been initialized !" << endl;
 #endif
     throw GLException("GLShader::authorize - shader used without having been initialized !");
@@ -355,7 +394,7 @@ void NAMESPACE::GLParameter::authorize() const
 {
 /*  GLenum err; err = glGetError(); if (err) {
     std::cerr << "GLParameter::authorize() GL error detected" << std::endl;
-#ifdef EMSCRIPTEN
+#ifdef OPENGLES
     cout << "GLParameter::authorize() GL error detected" << endl;
 #endif
   }
@@ -408,7 +447,7 @@ void NAMESPACE::GLParameter::set(const m4x4f& m)
 {
   authorize();
   if (!m_Strict && m_Handle == -1) return;
-  #ifdef EMSCRIPTEN
+  #ifdef OPENGLES
   glUniformMatrix4fvARB(m_Handle,1,GL_FALSE,&m.transpose()[0]); // row major
   #else
   glUniformMatrix4fvARB(m_Handle, 1, GL_TRUE, &m[0]); // row major
@@ -418,13 +457,13 @@ void NAMESPACE::GLParameter::set(const LibSL::Memory::Array::Array<m4x4f>& m)
 {
   authorize();
   if (!m_Strict && m_Handle == -1) return;
-#ifdef EMSCRIPTEN
-  sl_assert(false); // glUniformMatrix4fvARB cannot transpose on call with EMSCRIPTEN
+#ifdef OPENGLES
+  sl_assert(false); // glUniformMatrix4fvARB cannot transpose on call with OPENGLES
 #else
   glUniformMatrix4fvARB(m_Handle, m.size(), GL_TRUE, &(m[0][0])); // row major
 #endif
 }
-#ifndef EMSCRIPTEN
+#ifndef OPENGLES
 void NAMESPACE::GLParameter::set(uint v)
 {
   authorize();
@@ -489,7 +528,7 @@ void NAMESPACE::GLParameter::setArray(const int *pv,int size)
   if (!m_Strict && m_Handle == -1) return;
   glUniform1ivARB(m_Handle,size,pv);
 }
-#ifndef EMSCRIPTEN
+#ifndef OPENGLES
 void NAMESPACE::GLParameter::setArray(const uint *pv,int size)
 {
   authorize();
@@ -509,7 +548,7 @@ void NAMESPACE::GLParameter::setArray(const v2i *pv,int size)
   if (!m_Strict && m_Handle == -1) return;
   glUniform2ivARB(m_Handle,size,(int*)pv);
 }
-#ifndef EMSCRIPTEN
+#ifndef OPENGLES
 void NAMESPACE::GLParameter::setArray(const v2u *pv,int size)
 {
   authorize();
@@ -529,7 +568,7 @@ void NAMESPACE::GLParameter::setArray(const v3i *pv,int size)
   if (!m_Strict && m_Handle == -1) return;
   glUniform3ivARB(m_Handle,size,(int*)pv);
 }
-#ifndef EMSCRIPTEN
+#ifndef OPENGLES
 void NAMESPACE::GLParameter::setArray(const v3u *pv,int size)
 {
   authorize();
@@ -549,7 +588,7 @@ void NAMESPACE::GLParameter::setArray(const v4i *pv,int size)
   if (!m_Strict && m_Handle == -1) return;
   glUniform4ivARB(m_Handle,size,(int*)pv);
 }
-#ifndef EMSCRIPTEN
+#ifndef OPENGLES
 void NAMESPACE::GLParameter::setArray(const v4u *pv,int size)
 {
   authorize();
@@ -835,7 +874,7 @@ void NAMESPACE::GLCompute::run(const v3i& numGroups)
 
 NAMESPACE::GLProtectMatrices::GLProtectMatrices()
 {
-#ifndef EMSCRIPTEN
+#ifndef OPENGLES
   glMatrixMode(GL_TEXTURE);
   glPushMatrix();
   glMatrixMode(GL_PROJECTION);
@@ -851,7 +890,7 @@ NAMESPACE::GLProtectMatrices::GLProtectMatrices()
 
 NAMESPACE::GLProtectMatrices::~GLProtectMatrices()
 {
-#ifndef EMSCRIPTEN
+#ifndef OPENGLES
   glMatrixMode(GL_TEXTURE);
   glPopMatrix();
   glMatrixMode(GL_PROJECTION);

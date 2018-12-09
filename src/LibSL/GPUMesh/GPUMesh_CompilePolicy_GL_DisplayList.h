@@ -36,7 +36,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 // ----------------------------------------------
 #pragma once
 
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
 
 #include <assert.h>
 

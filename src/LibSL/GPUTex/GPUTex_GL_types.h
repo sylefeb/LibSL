@@ -56,7 +56,11 @@ using namespace LibSL::System::Types;
 #ifdef EMSCRIPTEN
 #define GL_GLEXT_PROTOTYPES
 #endif
+#ifdef ANDROID
+#include <GLES2/gl2.h>
+#else
 #include <GL/gl.h>
+#endif
 #endif
 
 // ------------------------------------------------------
@@ -95,7 +99,7 @@ namespace LibSL  {
     public:
       enum {type=GL_SHORT};
     };
-#ifdef EMSCRIPTEN
+#if defined(EMSCRIPTEN) | defined(ANDROID)
     template <> class GL_type<half>
     {
     public:

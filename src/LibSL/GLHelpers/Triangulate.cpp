@@ -44,6 +44,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 // ------------------------------------------------------
 
 #ifndef EMSCRIPTEN
+#ifndef ANDROID
 
 #include "Triangulate.h"
 
@@ -159,4 +160,5 @@ bool LibSL::GLHelpers::triangulate(
 
 // ------------------------------------------------
 
+#endif
 #endif

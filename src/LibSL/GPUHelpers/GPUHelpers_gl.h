@@ -45,7 +45,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 
 #pragma once
 
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
 
 #include "LibSL/GPUHelpers/GPUHelpers.h"
 
@@ -53,7 +53,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #include <OpenGL/gl.h>
 #else
 #ifndef EMSCRIPTEN
+#ifdef ANDROID
+#include <GLES2/gl2.h>
+#else
 #include <GL/gl.h>
+#endif
 #endif
 #endif
 

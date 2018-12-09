@@ -49,7 +49,12 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
 #else
+#ifdef ANDROID
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#else
 #include <GL/gl.h>
+#endif
 #endif
 #endif // EMSCRIPTEN
 
@@ -189,7 +194,7 @@ void NAMESPACE::setAlwaysRefresh(bool r)
 
 #include "SimpleUI_glut.cpp"
 
-#else
+#elif defined(WIN32) | defined(_WIN64)
 
 #include "SimpleUI_win_gl.cpp"
 

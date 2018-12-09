@@ -37,6 +37,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #include "LibSL.precompiled.h"
 //---------------------------------------------------------------------------
 
+#ifndef ANDROID
+
 #ifdef WIN32
 #include <windows.h>
 #endif
@@ -684,3 +686,5 @@ void NAMESPACE::setCustomCallbackMsgProc(WNDPROC proc)
 #endif
 
 //---------------------------------------------------------------------------
+
+#endif // ANDROID

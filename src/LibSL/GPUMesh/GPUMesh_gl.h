@@ -55,7 +55,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #ifdef EMSCRIPTEN
 #define GL_GLEXT_PROTOTYPES
 #endif
+#ifdef ANDROID
+#include <GLES2/gl2.h>
+#else
 #include <GL/gl.h>
+#endif
 #endif
 
 //#ifndef LIBSL_NO_GRAPHICS_API
@@ -79,7 +83,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 
 #include <LibSL/GPUMesh/GPUMesh.h>
 
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
 #include <LibSL/GPUMesh/GPUMesh_CompilePolicy_GL_Calls.h>
 #include <LibSL/GPUMesh/GPUMesh_CompilePolicy_GL_DisplayList.h>
 #include <LibSL/GPUMesh/GPUMesh_CompilePolicy_GL_VBO.h>

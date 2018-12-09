@@ -52,7 +52,12 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #define APIENTRY
 #else
 #ifndef EMSCRIPTEN
+#ifdef ANDROID
+#include <GLES2/gl2.h>
+#define APIENTRY
+#else
 #include <GL/gl.h>
+#endif
 #endif
 #endif
 
@@ -63,6 +68,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 GLUX_LOAD(GL_ARB_multitexture)
 GLUX_LOAD(GL_ARB_vertex_program)
 #endif
+
+#ifndef ANDROID
 
 // -----------------------------------------
 namespace LibSL {
@@ -180,3 +187,5 @@ public:
 } // namespace GPUMesh
 } // namespace LibSL
 // -----------------------------------------
+
+#endif // !ANDROID

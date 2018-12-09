@@ -53,6 +53,10 @@ knowledge of the CeCILL-C license and that you accept its terms.
 
 using namespace LibSL::GPUTex;
 
+#if defined(EMSCRIPTEN) | defined(ANDROID)
+#define OPENGLES
+#endif
+
 // ------------------------------------------------------
 
 #define NAMESPACE LibSL::GPUHelpers::Font
@@ -347,7 +351,7 @@ void NAMESPACE::printStringN(float x,float y,float t,const char *s,int num,uint 
 #ifdef OPENGL
   LIBSL_GL_CHECK_ERROR;
   glBindTexture(GL_TEXTURE_2D, m_Tex->handle());
-#ifdef EMSCRIPTEN
+#ifdef OPENGLES
   LibSL::GLHelpers::GLBasicPipeline::getUniqueInstance()->bindTextureUnit(0);
   LibSL::GLHelpers::GLBasicPipeline::getUniqueInstance()->enableTexture();
 #else
@@ -407,7 +411,7 @@ void NAMESPACE::printStringN(float x,float y,float t,const char *s,int num,uint 
   }
 
 #ifdef OPENGL
-#ifdef EMSCRIPTEN
+#ifdef OPENGLES
   LibSL::GLHelpers::GLBasicPipeline::getUniqueInstance()->disableTexture();
   // restore tex matrix
   m4x4f mtex;

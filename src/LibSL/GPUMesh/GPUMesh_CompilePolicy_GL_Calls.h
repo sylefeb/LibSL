@@ -36,7 +36,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 // ----------------------------------------------
 #pragma once
 
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
 
 #include <assert.h>
 
@@ -51,7 +51,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #include "GPUMesh_VertexStorage.h"
 #include "GPUMesh_GL_types.h"
 #include "GPUMesh_GL_funcs.h"
-
 
 namespace LibSL {
 namespace GPUMesh {
@@ -235,4 +234,4 @@ namespace GPUMesh {
 } // namespace GPUMesh
 } // namespace LibSL
 
-#endif
+#endif // !EMSCRIPTEN !ANDROID

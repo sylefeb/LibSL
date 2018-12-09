@@ -53,7 +53,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #ifdef EMSCRIPTEN
 #define GL_GLEXT_PROTOTYPES
 #endif
+#ifdef ANDROID
+#include <GLES2/gl2.h>
+#else
 #include <GL/gl.h>
+#endif
 #endif
 
 namespace LibSL {
@@ -67,10 +71,12 @@ template <> struct GLTypes<float>
 };
 
 #ifndef EMSCRIPTEN
+#ifndef ANDROID
 template <> struct GLTypes<double>
 {
   enum    {gl_define = GL_DOUBLE};
 };
+#endif
 #endif
 
 template <> struct GLTypes<unsigned char>

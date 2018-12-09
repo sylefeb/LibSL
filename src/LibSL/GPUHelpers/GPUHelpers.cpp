@@ -182,9 +182,13 @@ void NAMESPACE::Transform::set(uint matrixid,const m4x4f& m)
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
 #else
+#ifdef ANDROID
+#include <GLES2/gl2.h>
+#else
 #include <GL/gl.h>
 #ifndef EMSCRIPTEN
 #include <GL/glu.h>
+#endif
 #endif
 #endif
 
@@ -199,7 +203,11 @@ void NAMESPACE::clearScreen(
                             int   stencil)
 {
   glClearColor(r,g,b,a);
+#ifdef ANDROID
+  glClearDepthf(depth);
+#else
   glClearDepth(depth);
+#endif
   glClearStencil(stencil);
 
   GLbitfield glflags=0;
@@ -232,7 +240,7 @@ ImageRGBA_Ptr NAMESPACE::captureScreen()
 
 void NAMESPACE::Transform::ortho2D(uint matrixid,float l,float r,float t,float b)
 {
-#ifdef EMSCRIPTEN
+#if defined(EMSCRIPTEN) | defined(ANDROID)
   m4x4f m = LibSL::Math::orthoMatrixGL<float>(l,r,t,b,-1,1);
   if (matrixid == LIBSL_MODELVIEW_MATRIX) {
     LibSL::GLHelpers::GLBasicPipeline::getUniqueInstance()->setModelview(m);
@@ -252,7 +260,7 @@ void NAMESPACE::Transform::ortho2D(uint matrixid,float l,float r,float t,float b
 
 void NAMESPACE::Transform::ortho2D(uint matrixid,float l,float r,float t,float b,float znear,float zfar)
 {
-#ifdef EMSCRIPTEN
+#if defined(EMSCRIPTEN) | defined(ANDROID)
   m4x4f m = LibSL::Math::orthoMatrixGL<float>(l, r, t, b, znear, zfar);
   if (matrixid == LIBSL_MODELVIEW_MATRIX) {
     LibSL::GLHelpers::GLBasicPipeline::getUniqueInstance()->setModelview(m);
@@ -272,7 +280,7 @@ void NAMESPACE::Transform::ortho2D(uint matrixid,float l,float r,float t,float b
 
 void NAMESPACE::Transform::identity(uint matrixid)
 {
-#ifdef EMSCRIPTEN
+#if defined(EMSCRIPTEN) | defined(ANDROID)
   m4x4f m = m4x4f::identity();
   if (matrixid == LIBSL_MODELVIEW_MATRIX) {
     LibSL::GLHelpers::GLBasicPipeline::getUniqueInstance()->setModelview(m);
@@ -291,7 +299,7 @@ void NAMESPACE::Transform::identity(uint matrixid)
 
 void NAMESPACE::Transform::perspective(uint matrixid,float fov_rad,float aspect,float znear,float zfar)
 {
-#ifdef EMSCRIPTEN
+#if defined(EMSCRIPTEN) | defined(ANDROID)
   m4x4f m = LibSL::Math::perspectiveMatrixGL<float>(fov_rad,aspect,znear,zfar);
   if (matrixid == LIBSL_MODELVIEW_MATRIX) {
     LibSL::GLHelpers::GLBasicPipeline::getUniqueInstance()->setModelview(m);
@@ -314,7 +322,7 @@ void NAMESPACE::Transform::lookat(uint matrixid,
                                   const LibSL::Math::v3f& at,
                                   const LibSL::Math::v3f& up)
 {
-#ifdef EMSCRIPTEN
+#if defined(EMSCRIPTEN) | defined(ANDROID)
   m4x4f m = LibSL::Math::lookatMatrix(eye,at,up);
   if (matrixid == LIBSL_MODELVIEW_MATRIX) {
     LibSL::GLHelpers::GLBasicPipeline::getUniqueInstance()->setModelview(m);
@@ -338,7 +346,7 @@ void NAMESPACE::Transform::lookat(uint matrixid,
 
 void NAMESPACE::Transform::set(uint matrixid,const m4x4f& m)
 {
-#ifdef EMSCRIPTEN
+#if defined(EMSCRIPTEN) | defined(ANDROID)
   if (matrixid == LIBSL_MODELVIEW_MATRIX) {
     LibSL::GLHelpers::GLBasicPipeline::getUniqueInstance()->setModelview(m);
   } else if (matrixid == LIBSL_PROJECTION_MATRIX) {

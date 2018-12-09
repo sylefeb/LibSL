@@ -48,6 +48,32 @@ knowledge of the CeCILL-C license and that you accept its terms.
 
 #define NAMESPACE LibSL::UIHelpers::SimpleUI
 
+#ifdef ANDROID
+#include <dlfcn.h>
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+
+typedef void (GL_APIENTRYP PFNGLBINDVERTEXARRAYOESPROC) (GLuint array);
+typedef void (GL_APIENTRYP PFNGLDELETEVERTEXARRAYSOESPROC) (GLsizei n, const GLuint *arrays);
+typedef void (GL_APIENTRYP PFNGLGENVERTEXARRAYSOESPROC) (GLsizei n, GLuint *arrays);
+typedef GLboolean (GL_APIENTRYP PFNGLISVERTEXARRAYOESPROC) (GLuint array);
+
+PFNGLBINDVERTEXARRAYOESPROC glBindVertexArray;
+PFNGLDELETEVERTEXARRAYSOESPROC glDeleteVertexArrays;
+PFNGLGENVERTEXARRAYSOESPROC glGenVertexArrays;
+PFNGLISVERTEXARRAYOESPROC glIsVertexArray;
+void androidInitGLEXT()
+{
+    void *libhandle = dlopen("libGLESv2.so", RTLD_LAZY);
+    glBindVertexArray = (PFNGLBINDVERTEXARRAYOESPROC) dlsym(libhandle, "glBindVertexArrayOES");
+    glDeleteVertexArrays = (PFNGLDELETEVERTEXARRAYSOESPROC) dlsym(libhandle,
+                                                                   "glDeleteVertexArraysOES");
+    glGenVertexArrays = (PFNGLGENVERTEXARRAYSOESPROC) dlsym(libhandle, "glGenVertexArraysOES");
+    glIsVertexArray = (PFNGLISVERTEXARRAYOESPROC) dlsym(libhandle, "glIsVertexArrayOES");
+
+}
+#endif
+
 // ----------------------------------------------------
 
 static void ImGui_generic_init()
@@ -75,6 +101,9 @@ static void ImGui_generic_init()
   io.KeyMap[ImGuiKey_Z] = 'z';
   // Disable imgui.ini
   io.IniFilename = NULL;
+#ifdef ANDROID
+  androidInitGLEXT();
+#endif
 }
 
 // ----------------------------------------------------
@@ -89,7 +118,7 @@ static void ImGui_generic_init()
 
 #include <LibSL/GLHelpers/GLHelpers.h>
 
-#ifdef EMSCRIPTEN
+#if defined(EMSCRIPTEN) | defined(ANDROID)
 #define glActiveTextureARB glActiveTexture
 #endif
 
@@ -132,7 +161,7 @@ static void ImGui_ImplSimpleUI_RenderDrawLists(ImDrawData* draw_data)
   GLint last_active_texture; glGetIntegerv(GL_ACTIVE_TEXTURE, &last_active_texture);
   GLint last_array_buffer; glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &last_array_buffer);
   GLint last_element_array_buffer; glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &last_element_array_buffer);
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
   GLint last_vertex_array; glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &last_vertex_array);
 #endif
   //GLint last_blend_src; glGetIntegerv(GL_BLEND_SRC, &last_blend_src);
@@ -208,7 +237,7 @@ static void ImGui_ImplSimpleUI_RenderDrawLists(ImDrawData* draw_data)
   glUseProgram(last_program);
   glActiveTextureARB(last_active_texture);
   glBindTexture(GL_TEXTURE_2D, last_texture);
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
   glBindVertexArray(last_vertex_array);
 #endif
   glBindBuffer(GL_ARRAY_BUFFER, last_array_buffer);
@@ -264,7 +293,7 @@ static bool ImGui_ImplSimpleUI_CreateDeviceObjects()
   GLint last_texture, last_array_buffer;
   glGetIntegerv(GL_TEXTURE_BINDING_2D, &last_texture);
   glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &last_array_buffer);
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
   GLint last_vertex_array;
   glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &last_vertex_array);
 #endif
@@ -284,7 +313,7 @@ static bool ImGui_ImplSimpleUI_CreateDeviceObjects()
     "}\n";
 
   const GLchar* fragment_shader =
-#ifdef EMSCRIPTEN
+#if defined(EMSCRIPTEN) | defined(ANDROID)
     "precision mediump float;\n"
 #endif
     "uniform sampler2D Texture;\n"
@@ -333,7 +362,7 @@ static bool ImGui_ImplSimpleUI_CreateDeviceObjects()
   // Restore modified GL state
   glBindTexture(GL_TEXTURE_2D, last_texture);
   glBindBuffer(GL_ARRAY_BUFFER, last_array_buffer);
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
   glBindVertexArray(last_vertex_array);
 #endif
 

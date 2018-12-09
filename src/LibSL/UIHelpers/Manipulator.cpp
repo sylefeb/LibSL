@@ -285,7 +285,7 @@ void Manipulator::drawRotationHandles()
 #endif
 
 #ifdef OPENGL
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
   glPushAttrib(GL_ENABLE_BIT);
   glDisable   (GL_TEXTURE_2D);
   glDisable   (GL_LIGHTING);
@@ -301,7 +301,7 @@ void Manipulator::drawRotationHandles()
   LIBSL_D3D_DEVICE->SetRenderState(D3DRS_AMBIENT , 0xFF0000FF );
 #endif
 #ifdef OPENGL
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
   glColor3f(1,0,0);
 #endif
 #endif
@@ -313,7 +313,7 @@ void Manipulator::drawRotationHandles()
   LIBSL_D3D_DEVICE->SetRenderState(D3DRS_AMBIENT , 0xFF00FF00 );
 #endif
 #ifdef OPENGL
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
   glColor3f(0,1,0);
 #endif
 #endif
@@ -325,7 +325,7 @@ void Manipulator::drawRotationHandles()
   LIBSL_D3D_DEVICE->SetRenderState(D3DRS_AMBIENT , 0xFFFF0000 );
 #endif
 #ifdef OPENGL
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
   glColor3f(0,0,1);
 #endif
 #endif
@@ -337,7 +337,7 @@ void Manipulator::drawRotationHandles()
   LIBSL_D3D_DEVICE->SetRenderState(D3DRS_AMBIENT , 0xFF0101FF );
 #endif
 #ifdef OPENGL
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
   float _1_255 = 1.5f/255.0f;
   glColor3f(1,_1_255,_1_255);
 #endif
@@ -350,7 +350,7 @@ void Manipulator::drawRotationHandles()
   LIBSL_D3D_DEVICE->SetRenderState(D3DRS_AMBIENT , 0xFF01FF01 );
 #endif
 #ifdef OPENGL
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
   glColor3f(_1_255,1,_1_255);
 #endif
 #endif
@@ -362,7 +362,7 @@ void Manipulator::drawRotationHandles()
   LIBSL_D3D_DEVICE->SetRenderState(D3DRS_AMBIENT , 0xFFFF0101 );
 #endif
 #ifdef OPENGL
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
   glColor3f(_1_255,_1_255,1);
 #endif
 #endif
@@ -374,7 +374,7 @@ void Manipulator::drawRotationHandles()
   LIBSL_D3D_DEVICE->SetRenderState(D3DRS_AMBIENT , 0xFFFFFFFF );
 #endif
 #ifdef OPENGL
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
   glColor3f(1,1,1);
 #endif
 #endif
@@ -387,7 +387,7 @@ void Manipulator::drawRotationHandles()
   LIBSL_D3D_DEVICE->SetRenderState(D3DRS_ZENABLE,  TRUE  );
 #endif
 #ifdef OPENGL
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
   glPopAttrib();
 #endif
 #endif
@@ -410,7 +410,7 @@ void Manipulator::drawTranslationHandles()
 #endif
 
 #ifdef OPENGL
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
   glPushAttrib(GL_ENABLE_BIT);
   glDisable   (GL_TEXTURE_2D);
   glDisable   (GL_LIGHTING);
@@ -426,7 +426,7 @@ void Manipulator::drawTranslationHandles()
   LIBSL_D3D_DEVICE->SetRenderState(D3DRS_AMBIENT , 0xFF0000FF );
 #endif
 #ifdef OPENGL
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
   glColor3f(1,0,0);
 #endif
 #endif
@@ -442,7 +442,7 @@ void Manipulator::drawTranslationHandles()
   LIBSL_D3D_DEVICE->SetRenderState(D3DRS_AMBIENT , 0xFF00FF00 );
 #endif
 #ifdef OPENGL
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
   glColor3f(0,1,0);
 #endif
 #endif
@@ -458,7 +458,7 @@ void Manipulator::drawTranslationHandles()
   LIBSL_D3D_DEVICE->SetRenderState(D3DRS_AMBIENT , 0xFFFF0000 );
 #endif
 #ifdef OPENGL
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
   glColor3f(0,0,1);
 #endif
 #endif
@@ -475,7 +475,7 @@ void Manipulator::drawTranslationHandles()
   LIBSL_D3D_DEVICE->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW );
 #endif
 #ifdef OPENGL
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
   float _1_255 = 1.5f/255.0f;
   glColor3f(1,_1_255,_1_255);
   glEnable   (GL_CULL_FACE);
@@ -492,7 +492,7 @@ void Manipulator::drawTranslationHandles()
   LIBSL_D3D_DEVICE->SetRenderState(D3DRS_AMBIENT , 0xFF01FF01 );
 #endif
 #ifdef OPENGL
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
   glColor3f(_1_255,1,_1_255);
 #endif
 #endif
@@ -505,7 +505,7 @@ void Manipulator::drawTranslationHandles()
   LIBSL_D3D_DEVICE->SetRenderState(D3DRS_AMBIENT , 0xFFFF0101 );
 #endif
 #ifdef OPENGL
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
   glColor3f(_1_255,_1_255,1);
 #endif
 #endif
@@ -519,7 +519,7 @@ void Manipulator::drawTranslationHandles()
   LIBSL_D3D_DEVICE->SetRenderState(D3DRS_AMBIENT , 0xFFFFFFFF );
 #endif
 #ifdef OPENGL
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
   glColor3f(1,1,1);
 #endif
 #endif
@@ -533,7 +533,7 @@ void Manipulator::drawTranslationHandles()
   LIBSL_D3D_DEVICE->SetRenderState(D3DRS_ZENABLE,  TRUE  );
 #endif
 #ifdef OPENGL
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(ANDROID)
   glPopAttrib();
 #endif
 #endif

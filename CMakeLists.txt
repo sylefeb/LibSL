@@ -32,6 +32,8 @@ OPTION(LIBSL_BUILD_LIBARCHIVE      "Build libarchive"   OFF)
 OPTION(LIBSL_USE_GLUX              "Use gluX with LibSL_gl"   OFF)
 OPTION(LIBSL_POWER_USER            "Power user mode (reserved, do not use)" OFF)
 
+ADD_DEFINITIONS(-DANDROID)
+
 else (ANDROID)
 
 if(EMSCRIPTEN)
