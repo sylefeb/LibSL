@@ -193,10 +193,13 @@ void NAMESPACE::setAlwaysRefresh(bool r)
 
 #include "SimpleUI_win_gl.cpp"
 
+#endif
+
 #else // DIRECT3D or DIRECTX10
 
 #include "SimpleUI_win_d3d.cpp"
 
 #endif
+
 
 //---------------------------------------------------------------------------
