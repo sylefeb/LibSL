@@ -1,4 +1,11 @@
-#include "styleManager.h"
+/****************************************/
+/* JE TT 2018-10-12: StyleManager class */
+/*                                      */
+/*  Imgui style managing system         */
+/*                                      */
+/****************************************/
+
+#include "StyleManager.h"
 #include <fstream>
 
 #include <iostream>
@@ -22,9 +29,10 @@ using namespace std;
 #define regex_rule             string("(" + regex_label + ")" + ":(.*?);")
 #define regex_color_definition string("(" + regex_label + ")" + "=(.*?);")
 
-styleManager *styleManager::m_singleton = nullptr;
 
-ImVec4 hexToRGBA(string& hex)
+#define NAMESPACE LibSL::UIHelpers::StyleManager
+
+ImVec4 NAMESPACE::hexToRGBA(std::string& hex)
 {
   for (auto & c : hex) c = toupper(c);
 
@@ -38,14 +46,15 @@ ImVec4 hexToRGBA(string& hex)
     } else {
 
       rgba[i] = (hex[i * 2 + 1] >= '0' && hex[i * 2 + 1] <= '9' ? hex[i * 2 + 1] - '0' : 10 + hex[i * 2 + 1] - 'A') * 16.f / 255.f
-              + (hex[i * 2 + 2] >= '0' && hex[i * 2 + 2] <= '9' ? hex[i * 2 + 2] - '0' : 10 + hex[i * 2 + 2] - 'A') * 1.f / 255.f;
+        + (hex[i * 2 + 2] >= '0' && hex[i * 2 + 2] <= '9' ? hex[i * 2 + 2] - '0' : 10 + hex[i * 2 + 2] - 'A') * 1.f / 255.f;
     }
   }
 
   return ImVec4(rgba[0], rgba[1], rgba[2], rgba[3]);
 }
 
-ImVec4 rgbfloatToRGBA(string& rgb)
+
+ImVec4 NAMESPACE::rgbfloatToRGBA(string& rgb)
 {
   float rgba[4] = { 0.f, 0.f, 0.f, 1.f };
   int i = 0;
@@ -60,7 +69,7 @@ ImVec4 rgbfloatToRGBA(string& rgb)
   return ImVec4(rgba[0], rgba[1], rgba[2], rgba[3]);
 }
 
-ImVec4 rgbintToRGBA(string& rgb)
+ImVec4 NAMESPACE::rgbintToRGBA(string& rgb)
 {
   float rgba[4] = { 0.f, 0.f, 0.f, 1.f};
   int i = 0;
@@ -75,25 +84,27 @@ ImVec4 rgbintToRGBA(string& rgb)
   return ImVec4(rgba[0], rgba[1], rgba[2], rgba[3]);
 }
 
-ImVec4 parseColor(string& input) {
+ImVec4 NAMESPACE::parseColor(string& input) {
   ImVec4 color;
   smatch sm_color;
   if (regex_search(input, sm_color, regex(regex_hex))) {
-    color = hexToRGBA(input);
+    color = StyleManager::hexToRGBA(input);
   }
 
   if (regex_search(input, sm_color, regex(regex_rgb_float))) {
-    color = rgbfloatToRGBA(input);
+    color = StyleManager::rgbfloatToRGBA(input);
   }
 
   if (regex_search(input, sm_color, regex(regex_rgb_int))) {
-    color = rgbintToRGBA(input);
+    color = StyleManager::rgbintToRGBA(input);
   }
 
   return color;
 }
 
-void styleManager::load(const char* fname)
+LibSL::UIHelpers::StyleManager *NAMESPACE::m_singleton = nullptr;
+
+void NAMESPACE::load(const char* fname)
 {
   styleSheetCol.clear();
   styleSheetVar.clear();
@@ -125,12 +136,12 @@ void styleManager::load(const char* fname)
     smatch sm_def;
     while (regex_search(toParse, sm_def, regex(regex_color_definition))) {
       string color_name = sm_def[1], color_def = sm_def[2];
-      color = parseColor(color_def);
+      color = StyleManager::parseColor(color_def);
       colors.emplace(color_name, color);
       toParse = sm_def.suffix().str();
     }
   } catch (const std::regex_error& e) {
-    cerr << "ParseInput: regex_error caught: " << e.what() << endl;
+    cerr << "[StyleManager] regex_error caught: " << e.what() << endl;
   }
 
   // parse rules
@@ -148,7 +159,7 @@ void styleManager::load(const char* fname)
         string sm_2 = sm_rule[2];
 
         if (regex_search(sm_2, sm_color, regex(regex_color))) {
-          color = parseColor(string(sm_rule[2]));
+          color = StyleManager::parseColor(string(sm_rule[2]));
         } else if (regex_search(sm_2, sm_color, regex(regex_label))) {
           color = colors[string(sm_rule[2])];
         }
@@ -163,12 +174,12 @@ void styleManager::load(const char* fname)
       toParse = sm_context.suffix().str();
     }
   } catch (const std::regex_error& e) {
-    cerr << "ParseInput: regex_error caught: " << e.what() << endl;
+    cerr << "[StyleManager] regex_error caught: " << e.what() << endl;
   }
 
 }
 
-void styleManager::push(const char* context) {
+void NAMESPACE::push(const char* context) {
   int pop = 0;
 
   if (styleSheetCol.find(context) != styleSheetCol.end()) {
@@ -183,13 +194,13 @@ void styleManager::push(const char* context) {
   popCounter.push_back(pop);
 }
 
-void styleManager::pop() {
+void NAMESPACE::pop() {
   int pop = popCounter.back();
   popCounter.pop_back();
   ImGui::PopStyleColor(pop);
 }
 
-ImVec4 styleManager::getColor(const std::string context, const std::string rule) {
+ImVec4 NAMESPACE::getColor(const std::string context, const std::string rule) {
   ImVec4 color;
   if (styleSheetCol.find(context) != styleSheetCol.end()) {
     auto list = styleSheetCol.at(context);

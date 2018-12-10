@@ -1,4 +1,13 @@
+/****************************************/
+/* JE TT 2018-10-12: StyleManager class */
+/*                                      */
+/*  Imgui style managing system         */
+/*                                      */
+/****************************************/
+
 #pragma once
+#include <LibSL/LibSL.common.h>
+
 #include <imgui.h>
 
 #include <vector>
@@ -7,13 +16,17 @@
 #include <string>
 #include <sstream>
 
-class styleManager {
+namespace LibSL {
+  namespace UIHelpers {
+
+
+class LIBSL_DLL StyleManager {
 public:
 
 
-  static styleManager* get() {
+  static StyleManager* get() {
     if (!m_singleton) {
-      m_singleton = new styleManager();
+      m_singleton = new StyleManager();
     }
     return m_singleton;
   }
@@ -27,15 +40,20 @@ public:
   ImVec4 getColor(const std::string, const std::string);
 
 private:
-  styleManager() = default;
+  StyleManager() = default;
 
   std::vector<int> popCounter;
 
   std::map<std::string, std::vector<std::pair<std::string, ImVec4>>> styleSheetCol;
   std::map<std::string, std::vector<std::pair<std::string, float>>>  styleSheetVar;
 
-  static styleManager* m_singleton;
+  static StyleManager* m_singleton;
 
+
+  static inline ImVec4 rgbintToRGBA(std::string& rgb);
+  static inline ImVec4 rgbfloatToRGBA(std::string& rgb);
+  static inline ImVec4 hexToRGBA(std::string& hex);
+  static inline ImVec4 parseColor(std::string& color);
 };
 
 // Search and remove whitespace from both ends of the string
@@ -75,7 +93,8 @@ static void SplitEnumArgs(const char* _szArgs, std::string _Array[], int _nMax)
         } \
     }
 
-DECLARE_ENUM(ImGuiColor, ImGuiCol_Text,
+DECLARE_ENUM( ImGuiColor,
+ImGuiCol_Text,
 ImGuiCol_TextDisabled,
 ImGuiCol_WindowBg,
 ImGuiCol_ChildBg,
@@ -120,3 +139,6 @@ ImGuiCol_ModalWindowDarkening,
 ImGuiCol_DragDropTarget,
 ImGuiCol_COUNT,
 ImGuiCol_ERROR);
+
+  }
+}
