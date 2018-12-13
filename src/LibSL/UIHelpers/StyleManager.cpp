@@ -159,7 +159,8 @@ void NAMESPACE::load(const char* fname)
         string sm_2 = sm_rule[2];
 
         if (regex_search(sm_2, sm_color, regex(regex_color))) {
-          color = StyleManager::parseColor(string(sm_rule[2]));
+          string rule = sm_rule[2];
+          color = StyleManager::parseColor(rule);
         } else if (regex_search(sm_2, sm_color, regex(regex_label))) {
           color = colors[string(sm_rule[2])];
         }
