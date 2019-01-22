@@ -31,6 +31,11 @@ public:
     return m_singleton;
   }
 
+  static void reset() {
+    delete m_singleton;
+    m_singleton = nullptr;
+  }
+
   void load(const char* fname);
 
   void push(const char*);
@@ -41,6 +46,8 @@ public:
 
 private:
   StyleManager() = default;
+  StyleManager(StyleManager const&) = default;
+  StyleManager& operator=(StyleManager const&) = default;
 
   std::vector<int> popCounter;
 
