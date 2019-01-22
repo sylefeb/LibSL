@@ -34,7 +34,9 @@ using namespace std;
 
 ImVec4 NAMESPACE::hexToRGBA(std::string& hex)
 {
-  for (auto & c : hex) c = toupper(c);
+  for(int i = 0; i < (int)hex.size(); i++) {
+    hex[i] = toupper(hex[i]);
+  }
 
   float rgba[4] = { 0,0,0,0 };
 
@@ -137,7 +139,8 @@ void NAMESPACE::load(const char* fname)
     while (regex_search(toParse, sm_def, regex(regex_color_definition))) {
       string color_name = sm_def[1], color_def = sm_def[2];
       color = StyleManager::parseColor(color_def);
-      colors.emplace(color_name, color);
+      std::pair<string,ImVec4> element = std::make_pair(color_name, color);
+      colors.insert(element);
       toParse = sm_def.suffix().str();
     }
   } catch (const std::regex_error& e) {
@@ -149,8 +152,8 @@ void NAMESPACE::load(const char* fname)
   try {
     smatch sm_context, sm_rule, sm_color;
     while (regex_search(toParse, sm_context, regex(regex_context))) {
-      vector<pair<string, ImVec4>> colorStyle;
-      vector<pair<string, ImVec4>> varStyle;
+      vector<pair<string, ImVec4 > > colorStyle;
+      vector<pair<string, ImVec4 > > varStyle;
       context = sm_context[1];
 
       string sm_1 = sm_context[2];
@@ -159,7 +162,8 @@ void NAMESPACE::load(const char* fname)
         string sm_2 = sm_rule[2];
 
         if (regex_search(sm_2, sm_color, regex(regex_color))) {
-          color = StyleManager::parseColor(string(sm_rule[2]));
+          string rule = sm_rule[2];
+          color = StyleManager::parseColor(rule);
         } else if (regex_search(sm_2, sm_color, regex(regex_label))) {
           color = colors[string(sm_rule[2])];
         }
@@ -170,7 +174,8 @@ void NAMESPACE::load(const char* fname)
         sm_1 = sm_rule.suffix().str();
       }
 
-      styleSheetCol.emplace(context, colorStyle);
+      std::pair<string, vector<pair<string, ImVec4 > > > element = std::make_pair(context, colorStyle);
+      styleSheetCol.insert(element);
       toParse = sm_context.suffix().str();
     }
   } catch (const std::regex_error& e) {
@@ -183,10 +188,10 @@ void NAMESPACE::push(const char* context) {
   int pop = 0;
 
   if (styleSheetCol.find(context) != styleSheetCol.end()) {
-    std::vector<pair<string, ImVec4>> style = styleSheetCol.at(context);
-    for (auto s : style) {
-      ImGuiColor::ImGuiColor type = ImGuiColor::FromString("ImGuiCol_" + s.first);
-      ImGui::PushStyleColor(type, s.second);
+    std::vector<pair<string, ImVec4 > > style = styleSheetCol.at(context);
+    for(int i = 0; i < (int)style.size(); i++) {
+      ImGuiColor::ImGuiColor type = ImGuiColor::FromString("ImGuiCol_" + style[i].first);
+      ImGui::PushStyleColor(type, style[i].second);
       pop++;
     }
   }
@@ -203,13 +208,13 @@ void NAMESPACE::pop() {
 ImVec4 NAMESPACE::getColor(const std::string context, const std::string rule) {
   ImVec4 color;
   if (styleSheetCol.find(context) != styleSheetCol.end()) {
-    auto list = styleSheetCol.at(context);
+    std::vector<std::pair<std::string, ImVec4> > list = styleSheetCol.at(context);
 
-    auto it = std::find_if(list.begin(), list.end(),
-      [&rule](const std::pair<std::string, ImVec4>& element) { return element.first == rule; });
-
-    if (it != list.end()) {
-      color = it->second;
+    for(int i = 0; i < (int)list.size(); i++) {
+      if(list[i].first == rule) {
+        color = list[i].second;
+        break;
+      }
     }
   }
   return color;

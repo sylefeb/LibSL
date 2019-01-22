@@ -51,8 +51,8 @@ private:
 
   std::vector<int> popCounter;
 
-  std::map<std::string, std::vector<std::pair<std::string, ImVec4>>> styleSheetCol;
-  std::map<std::string, std::vector<std::pair<std::string, float>>>  styleSheetVar;
+  std::map<std::string, std::vector<std::pair<std::string, ImVec4> > > styleSheetCol;
+  std::map<std::string, std::vector<std::pair<std::string, float> > >  styleSheetVar;
 
   static StyleManager* m_singleton;
 
