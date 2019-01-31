@@ -1,8 +1,3 @@
-# Removes warning about a new policy introduced by CMake 3.0
-IF (POLICY CMP0048 OR (NOT CMAKE_VERSION VERSION_LESS 3.0))
-	CMAKE_POLICY(SET CMP0048 OLD)
-ENDIF ()
-
 PROJECT(LIBSL)
 
 ###############################
@@ -206,6 +201,7 @@ SET(LIBSL_GL_SOURCE
 	UIHelpers/StyleManager.cpp
   ../libs/src/imgui/imgui.cpp
   ../libs/src/imgui/imgui_draw.cpp
+  ../libs/src/imgui/imgui_widgets.cpp
 )
 
 SET(LIBSL_GL4_HEADERS
@@ -238,6 +234,7 @@ SET(LIBSL_GL4_SOURCE
  	UIHelpers/BindImGui.cpp
   ../libs/src/imgui/imgui.cpp
   ../libs/src/imgui/imgui_draw.cpp
+  ../libs/src/imgui/imgui_widgets.cpp
 )
 
 SET(LIBSL_GL4CORE_HEADERS
@@ -268,6 +265,7 @@ SET(LIBSL_GL4CORE_SOURCE
  	UIHelpers/BindImGui.cpp
   ../libs/src/imgui/imgui.cpp
   ../libs/src/imgui/imgui_draw.cpp
+  ../libs/src/imgui/imgui_widgets.cpp
 )
 
 CreateSourceGroups("Header files" src "${LIBSL_GL_HEADERS}")

@@ -529,6 +529,7 @@ void NAMESPACE::bindImGui()
 
 void NAMESPACE::initImGui()
 {
+  ::ImGui::CreateContext();
   ImGui_generic_init();
 
   ImGuiIO& io = ::ImGui::GetIO();
@@ -547,7 +548,7 @@ void NAMESPACE::terminateImGui()
 {
   ImGui_ImplSimpleUI_InvalidateDeviceObjects();
 
-  ::ImGui::Shutdown();
+  ::ImGui::DestroyContext();
 }
 
 
