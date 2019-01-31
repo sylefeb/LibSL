@@ -1,8 +1,3 @@
-# Removes warning about a new policy introduced by CMake 3.0
-IF (POLICY CMP0048 OR (NOT CMAKE_VERSION VERSION_LESS 3.0))
-	CMAKE_POLICY(SET CMP0048 OLD)
-ENDIF ()
-
 PROJECT(LIBSL)
 
 ###############################
@@ -109,6 +104,7 @@ SET(LIBSL_CORE_HEADERS
 	TemplateHelpers/TemplateHelpers.h
 	UIHelpers/Manipulator.h
 	UIHelpers/SimpleUI.h
+	UIHelpers/StyleManager.h
 	UIHelpers/Trackball.h
 	UIHelpers/TrackballUI.h
 	UIHelpers/BindImGui.h
@@ -182,6 +178,7 @@ SET(LIBSL_GL_HEADERS
   GLHelpers/GLBasicPipeline.h
 	UIHelpers/BindAntTweakBar.h
  	UIHelpers/BindImGui.h
+	UIHelpers/StyleManager.h
   ../libs/src/imgui/imgui.h
   )
 
@@ -200,9 +197,11 @@ SET(LIBSL_GL_SOURCE
         UIHelpers/TrackballUI.cpp
 	UIHelpers/Trackball.cpp
 	UIHelpers/BindAntTweakBar.cpp
- 	UIHelpers/BindImGui.cpp
+	UIHelpers/BindImGui.cpp
+	UIHelpers/StyleManager.cpp
   ../libs/src/imgui/imgui.cpp
   ../libs/src/imgui/imgui_draw.cpp
+  ../libs/src/imgui/imgui_widgets.cpp
 )
 
 SET(LIBSL_GL4_HEADERS
@@ -212,6 +211,7 @@ SET(LIBSL_GL4_HEADERS
   GLHelpers/GLBasicPipeline.h
 	UIHelpers/BindAntTweakBar.h
  	UIHelpers/BindImGui.h
+	UIHelpers/StyleManager.h
   ../libs/src/imgui/imgui.h
   )
 
@@ -229,10 +229,12 @@ SET(LIBSL_GL4_SOURCE
 	UIHelpers/SimpleUI.cpp
 	UIHelpers/TrackballUI.cpp
 	UIHelpers/Trackball.cpp
+	UIHelpers/StyleManager.cpp
 	UIHelpers/BindAntTweakBar.cpp
  	UIHelpers/BindImGui.cpp
   ../libs/src/imgui/imgui.cpp
   ../libs/src/imgui/imgui_draw.cpp
+  ../libs/src/imgui/imgui_widgets.cpp
 )
 
 SET(LIBSL_GL4CORE_HEADERS
@@ -241,6 +243,7 @@ SET(LIBSL_GL4CORE_HEADERS
   GLHelpers/GLBasicPipeline.h
 	UIHelpers/BindAntTweakBar.h
  	UIHelpers/BindImGui.h
+	UIHelpers/StyleManager.h
   ../libs/src/imgui/imgui.h
   )
 
@@ -255,12 +258,14 @@ SET(LIBSL_GL4CORE_SOURCE
 	GPUHelpers/Shapes.cpp
 	UIHelpers/Manipulator.cpp
 	UIHelpers/SimpleUI.cpp
+	UIHelpers/StyleManager.cpp
 	UIHelpers/TrackballUI.cpp
 	UIHelpers/Trackball.cpp
 	UIHelpers/BindAntTweakBar.cpp
  	UIHelpers/BindImGui.cpp
   ../libs/src/imgui/imgui.cpp
   ../libs/src/imgui/imgui_draw.cpp
+  ../libs/src/imgui/imgui_widgets.cpp
 )
 
 CreateSourceGroups("Header files" src "${LIBSL_GL_HEADERS}")
