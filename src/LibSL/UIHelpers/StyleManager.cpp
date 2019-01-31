@@ -34,7 +34,7 @@ using namespace std;
 
 ImVec4 NAMESPACE::hexToRGBA(std::string& hex)
 {
-  for(int i = 0; i < hex.size(); i++) {
+  for(int i = 0; i < (int)hex.size(); i++) {
     hex[i] = toupper(hex[i]);
   }
 
@@ -189,7 +189,7 @@ void NAMESPACE::push(const char* context) {
 
   if (styleSheetCol.find(context) != styleSheetCol.end()) {
     std::vector<pair<string, ImVec4 > > style = styleSheetCol.at(context);
-    for(int i = 0; i < style.size(); i++) {
+    for(int i = 0; i < (int)style.size(); i++) {
       ImGuiColor::ImGuiColor type = ImGuiColor::FromString("ImGuiCol_" + style[i].first);
       ImGui::PushStyleColor(type, style[i].second);
       pop++;
@@ -210,7 +210,7 @@ ImVec4 NAMESPACE::getColor(const std::string context, const std::string rule) {
   if (styleSheetCol.find(context) != styleSheetCol.end()) {
     std::vector<std::pair<std::string, ImVec4> > list = styleSheetCol.at(context);
 
-    for(int i = 0; i < list.size(); i++) {
+    for(int i = 0; i < (int)list.size(); i++) {
       if(list[i].first == rule) {
         color = list[i].second;
         break;
