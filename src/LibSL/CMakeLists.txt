@@ -194,7 +194,7 @@ SET(LIBSL_GL_SOURCE
 	Mesh/AnimatedMeshGLSLRenderer.cpp
 	UIHelpers/Manipulator.cpp
 	UIHelpers/SimpleUI.cpp
-        UIHelpers/TrackballUI.cpp
+  UIHelpers/TrackballUI.cpp
 	UIHelpers/Trackball.cpp
 	UIHelpers/BindAntTweakBar.cpp
 	UIHelpers/BindImGui.cpp
