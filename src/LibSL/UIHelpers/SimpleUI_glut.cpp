@@ -208,17 +208,10 @@ void NAMESPACE::refresh()
   glutPostRedisplay();
 }
 
-//#ifdef EMSCRIPTEN
-//static void glutMouseWheel(int button, int dir, int x, int y)
-//{
-//  NAMESPACE::onMouseWheel(dir);
-//}
-//#endif
-
 void NAMESPACE::init(uint width,uint height,const char *title,char **argv,int argc,bool frameLess,bool hidden,bool fullscreen)
 {
-  sl_assert(!hidden);    // not supported
-  sl_assert(!frameLess); // not supported
+  sl_assert(!hidden);     // not supported
+  sl_assert(!frameLess);  // not supported
   sl_assert(!fullscreen); // not supported
 
   glutInit              (&argc, argv);
@@ -243,7 +236,7 @@ void NAMESPACE::init(uint width,uint height,const char *title,char **argv,int ar
   glutPassiveMotionFunc (glutMotion);
   glutMouseFunc         (glutMouse);
   glutKeyboardFunc      (glutKeyboard);
-  glutKeyboardUpFunc	  (glutKeyboardUp);
+  glutKeyboardUpFunc	(glutKeyboardUp);
   glutSpecialFunc       (glutKeyboardSpecial);
   glutSpecialUpFunc     (glutKeyboardSpecialUp);
   glutReshapeFunc       (glutReshape);
@@ -285,8 +278,15 @@ void NAMESPACE::shutdown()
 void NAMESPACE::exit()
 {
   LibSL::GLHelpers::GLBasicPipeline::terminate();
-
   ::exit (0);
+}
+
+void NAMESPACE::showCursor(bool show) {
+  if (show) {
+    glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
+  } else {
+    glutSetCursor(GLUT_CURSOR_NONE);
+  }
 }
 
 void NAMESPACE::glSwapBuffers()
@@ -300,12 +300,4 @@ void NAMESPACE::glShowWindow(bool hide)
     glutHideWindow();
   else
     glutShowWindow();
-}
-
-void NAMESPACE::showCursor(bool show) {
-  if (show) {
-    glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
-  } else {
-    glutSetCursor(GLUT_CURSOR_NONE);
-  }
 }
