@@ -227,6 +227,11 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
   }
   if (!glfw_window) {
 #ifdef OPENGLCORE
+    // In case core profile fails.
+    // From: https://www.glfw.org/docs/latest/window_guide.html#window_hints_ctx
+    // While there is no way to ask the driver for a context of the highest
+    // supported version, GLFW will attempt to provide this when you ask for
+    // a version 1.0 context, which is the default for these hints.
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 1);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);

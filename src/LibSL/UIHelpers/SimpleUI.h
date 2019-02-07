@@ -79,12 +79,6 @@ ERROR_____either_DIRECTX10_or_DIRECT3D_must_be_defined__not_both _;
 #endif
 #endif
 
-#ifdef USE_GLFW
-//#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h> // includes appropriate opengl headers
-//CZ 2018-05-02 : beware of exposed OpenGL version
-#endif
-
 namespace LibSL {
   namespace UIHelpers {
 
