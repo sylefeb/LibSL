@@ -34,6 +34,9 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL-C license and that you accept its terms.
 -------------------------------------------------------------------- */
 
+#ifdef EMSCRIPTEN
+#include <emscripten/emscripten.h>
+#endif
 #include <GLFW/glfw3.h>
 
 //---------------------------------------------------------------------------
@@ -191,7 +194,16 @@ static void glfwClose(GLFWwindow* window)
 
 static void glfwRefresh(GLFWwindow* window)
 {
-  glfwSwapBuffers(window);
+  glfwRender();
+}
+
+static void glfwMainLoop()
+{
+  if (s_AlwaysRefresh) {
+    glfwPollEvents();
+  } else {
+    glfwWaitEvents();
+  }
   glfwRender();
 }
 
@@ -205,10 +217,14 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #else
+  // In case core profile fails.
+  // From: https://www.glfw.org/docs/latest/window_guide.html#window_hints_ctx
+  // While there is no way to ask the driver for a context of the highest
+  // supported version, GLFW will attempt to provide this when you ask for
+  // a version 1.0 context, which is the default for these hints.
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_FALSE);
 #endif
-  glfwWindowHint(GLFW_DOUBLEBUFFER,GL_TRUE);
 
   // window creation
   if (fullscreen) {
@@ -227,11 +243,6 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
   }
   if (!glfw_window) {
 #ifdef OPENGLCORE
-    // In case core profile fails.
-    // From: https://www.glfw.org/docs/latest/window_guide.html#window_hints_ctx
-    // While there is no way to ask the driver for a context of the highest
-    // supported version, GLFW will attempt to provide this when you ask for
-    // a version 1.0 context, which is the default for these hints.
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 1);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
@@ -245,7 +256,7 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
 #endif
   }
   // window position
-  glfwSetWindowPos(glfw_window, 0, 0);
+  glfwSetWindowPos(glfw_window, 0, 1);
   // opengl context
   glfwMakeContextCurrent(glfw_window);
 
@@ -282,15 +293,14 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
 
 void NAMESPACE::loop()
 {
+#ifdef EMSCRIPTEN
+  emscripten_set_main_loop(glfwMainLoop,0,1);
+#else
   while (!glfwWindowShouldClose(glfw_window))
   {
-    glfwRender();
-    if (s_AlwaysRefresh) {
-      glfwPollEvents();
-    } else {
-      glfwWaitEvents();
-    }
+    glfwMainLoop();
   }
+#endif
 }
 
 void NAMESPACE::shutdown()
