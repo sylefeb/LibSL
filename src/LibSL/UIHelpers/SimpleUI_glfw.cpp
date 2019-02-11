@@ -114,7 +114,11 @@ static void glfwMouseButton(GLFWwindow* window, int glfw_button, int glfw_action
 
 static void glfwMouseWheel(GLFWwindow* window, double x, double y)
 {
+#ifdef EMSCRIPTEN
+  NAMESPACE::onMouseWheel(-y);
+#else
   NAMESPACE::onMouseWheel(y);
+#endif
 }
 
 static void glfwMouseMove(GLFWwindow* window, double x, double y)
