@@ -65,7 +65,8 @@ namespace LibSL {
     public:
       Svg(const std::string &fname,         
         LibSL::Geometry::AAB<2> viewbox = LibSL::Geometry::AAB<2>(),
-        LibSL::Math::m4x4f transform = LibSL::Math::m4x4f::identity());
+        LibSL::Math::m4x4f transform = LibSL::Math::m4x4f::identity(),
+        const char* units = nullptr);
       ~Svg();
 
 			void setProperties(std::string strokeColor, std::string fillColor, float strokeWidth);

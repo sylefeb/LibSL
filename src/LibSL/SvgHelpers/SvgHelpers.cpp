@@ -59,7 +59,8 @@ using namespace std;
 NAMESPACE::Svg::Svg(
   const std::string &fname, 
   LibSL::Geometry::AAB<2> viewbox,
-  m4x4f transform)
+  m4x4f transform,
+  const char* units)
   : m_File(fname.c_str())
 {
   m_Trsf = transform;
@@ -74,12 +75,18 @@ NAMESPACE::Svg::Svg(
    baseProfile=\"full\"\n\
    version=\"1.1\"\n";
    if (!viewbox.empty()) {
-     m_File << "viewBox=\""
+     m_File << "   viewBox=\""
        << viewbox.minCorner()[0] << " "
        << viewbox.minCorner()[1] << " "
        << viewbox.extent()[0] << " "
        << viewbox.extent()[1]
-       << "\"";
+       << "\"\n";
+     if (units != nullptr) {
+       m_File << "   width=\""
+         << viewbox.extent()[0] << units << "\"\n"
+         << "   height=\""
+         << viewbox.extent()[1] << units << "\"\n";
+     }
    }
   m_File << ">\n\
   <g id=\"layer1\">\n\
