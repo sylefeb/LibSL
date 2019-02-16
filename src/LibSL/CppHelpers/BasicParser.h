@@ -350,6 +350,12 @@ namespace LibSL {
         return float(atof(str));
       }
 
+      double      readDouble()
+      {
+        const char *str = readString(NULL, "0123456789.-+e");
+        return atof(str);
+      }
+
       int         readInt()
       {
         bool first = true;
