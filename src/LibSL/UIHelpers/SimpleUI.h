@@ -94,6 +94,7 @@ namespace LibSL {
       typedef void (*f_onMouseMotion)(uint x,uint y);
       typedef void (*f_onMouseWheel)(int increment);
       typedef void (*f_onReshape)(uint x,uint y);
+      typedef void (*f_onDragDrop)(uint nfiles,const char** files);
 
       extern f_onRender             onRender;
       extern f_onKeyPressed         onKeyPressed;
@@ -105,6 +106,7 @@ namespace LibSL {
       extern f_onMouseWheel         onMouseWheel;
       extern f_onAnimate            onAnimate;
       extern f_onReshape            onReshape;
+      extern f_onDragDrop           onDragDrop;
 
       LIBSL_DLL void init(uint width=256,uint height=256,
         const char *title=NULL,

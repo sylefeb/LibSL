@@ -189,6 +189,11 @@ static void glfwReshape(GLFWwindow *window, int w, int h)
   NAMESPACE::onReshape(w,h);
 }
 
+static void glfwDragDrop(GLFWwindow *window, int nfiles, const char** files)
+{
+  NAMESPACE::onDragDrop(nfiles, files);
+}
+
 #ifndef EMSCRIPTEN
 static void glfwClose(GLFWwindow* window)
 {
@@ -271,6 +276,7 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
   glfwSetCharCallback(glfw_window, glfwKeyboardText);
   glfwSetKeyCallback(glfw_window, glfwKeyboardSpecial);
   glfwSetWindowSizeCallback(glfw_window, glfwReshape);
+  glfwSetDropCallback(glfw_window, glfwDragDrop);
 #ifndef EMSCRIPTEN
   glfwSetWindowCloseCallback(glfw_window, glfwClose);
 #endif

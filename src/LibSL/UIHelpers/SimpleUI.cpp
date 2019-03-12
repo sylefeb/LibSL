@@ -127,6 +127,8 @@ static void defaultOnAnimate(double,float)
 {}
 static void defaultOnReshape(uint,uint)
 {}
+static void defaultOnDragDrop(uint,const char**)
+{}
 
 //---------------------------------------------------------------------------
 
@@ -140,6 +142,7 @@ NAMESPACE::f_onMouseMotion        NAMESPACE::onMouseMotion        = defaultOnMou
 NAMESPACE::f_onMouseWheel         NAMESPACE::onMouseWheel         = defaultOnMouseWheel;
 NAMESPACE::f_onAnimate            NAMESPACE::onAnimate            = defaultOnAnimate;
 NAMESPACE::f_onReshape            NAMESPACE::onReshape            = defaultOnReshape;
+NAMESPACE::f_onDragDrop           NAMESPACE::onDragDrop           = defaultOnDragDrop;
 
 //---------------------------------------------------------------------------
 
