@@ -49,35 +49,34 @@ uint glut_to_LibSL_scancode(uchar key,uint sc)
   //std::cout << "glut_to_LibSL_scancode k=" << (int)key << " sc=" << sc << std::endl;
   switch (sc)
   {
-  case GLUT_KEY_F1: return LIBSL_KEY_F1;
-  case GLUT_KEY_F2: return LIBSL_KEY_F2;
-  case GLUT_KEY_F3: return LIBSL_KEY_F3;
-  case GLUT_KEY_F4: return LIBSL_KEY_F4;
-  case GLUT_KEY_F5: return LIBSL_KEY_F5;
-  case GLUT_KEY_F6: return LIBSL_KEY_F6;
-  case GLUT_KEY_F7: return LIBSL_KEY_F7;
-  case GLUT_KEY_F8: return LIBSL_KEY_F8;
-  case GLUT_KEY_F9: return LIBSL_KEY_F9;
-  case GLUT_KEY_F10: return LIBSL_KEY_F10;
-  case GLUT_KEY_F11: return LIBSL_KEY_F11;
-  case GLUT_KEY_F12: return LIBSL_KEY_F12;
-  // case GLUT_RETURN: return LIBSL_KEY_ENTER;
-  case GLUT_KEY_UP: return LIBSL_KEY_UP;
-  case GLUT_KEY_RIGHT: return LIBSL_KEY_RIGHT;
-  case GLUT_KEY_LEFT: return LIBSL_KEY_LEFT;
-  case GLUT_KEY_DOWN: return LIBSL_KEY_DOWN;
-  case GLUT_KEY_PAGE_UP: return LIBSL_KEY_PAGE_UP;
-  case GLUT_KEY_PAGE_DOWN: return LIBSL_KEY_PAGE_DOWN;
-  case GLUT_KEY_HOME: return LIBSL_KEY_HOME;
-  case GLUT_KEY_END: return LIBSL_KEY_END;
-  case GLUT_KEY_INSERT: return LIBSL_KEY_INSERT;
+  case GLUT_KEY_F1:           return LIBSL_KEY_F1;
+  case GLUT_KEY_F2:           return LIBSL_KEY_F2;
+  case GLUT_KEY_F3:           return LIBSL_KEY_F3;
+  case GLUT_KEY_F4:           return LIBSL_KEY_F4;
+  case GLUT_KEY_F5:           return LIBSL_KEY_F5;
+  case GLUT_KEY_F6:           return LIBSL_KEY_F6;
+  case GLUT_KEY_F7:           return LIBSL_KEY_F7;
+  case GLUT_KEY_F8:           return LIBSL_KEY_F8;
+  case GLUT_KEY_F9:           return LIBSL_KEY_F9;
+  case GLUT_KEY_F10:          return LIBSL_KEY_F10;
+  case GLUT_KEY_F11:          return LIBSL_KEY_F11;
+  case GLUT_KEY_F12:          return LIBSL_KEY_F12;
+  case GLUT_KEY_UP:           return LIBSL_KEY_UP;
+  case GLUT_KEY_RIGHT:        return LIBSL_KEY_RIGHT;
+  case GLUT_KEY_LEFT:         return LIBSL_KEY_LEFT;
+  case GLUT_KEY_DOWN:         return LIBSL_KEY_DOWN;
+  case GLUT_KEY_PAGE_UP:      return LIBSL_KEY_PAGE_UP;
+  case GLUT_KEY_PAGE_DOWN:    return LIBSL_KEY_PAGE_DOWN;
+  case GLUT_KEY_HOME:         return LIBSL_KEY_HOME;
+  case GLUT_KEY_END:          return LIBSL_KEY_END;
+  case GLUT_KEY_INSERT:       return LIBSL_KEY_INSERT;
 #ifndef EMSCRIPTEN
-  case GLUT_KEY_DELETE: return LIBSL_KEY_DELETE;
+  case GLUT_KEY_DELETE:       return LIBSL_KEY_DELETE;
 #endif
-  case 112: return LIBSL_KEY_SHIFT;
-  case 114: return LIBSL_KEY_CTRL;
-  case 116: return LIBSL_KEY_ALT;
-  case 120: return LIBSL_KEY_BK_SPACE;
+  case 112:                   return LIBSL_KEY_SHIFT;
+  case 114:                   return LIBSL_KEY_CTRL;
+  case 116:                   return LIBSL_KEY_ALT;
+  case 120:                   return LIBSL_KEY_BK_SPACE;
   }
   switch (key)
   {

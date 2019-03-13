@@ -61,36 +61,36 @@ uint win32_VirtualKey_to_LibSL_scancode(uint vk)
 {
   switch (vk)
   {
-  case VK_F1: return LIBSL_KEY_F1;
-  case VK_F2: return LIBSL_KEY_F2;
-  case VK_F3: return LIBSL_KEY_F3;
-  case VK_F4: return LIBSL_KEY_F4;
-  case VK_F5: return LIBSL_KEY_F5;
-  case VK_F6: return LIBSL_KEY_F6;
-  case VK_F7: return LIBSL_KEY_F7;
-  case VK_F8: return LIBSL_KEY_F8;
-  case VK_F9: return LIBSL_KEY_F9;
-  case VK_F10: return LIBSL_KEY_F10;
-  case VK_F11: return LIBSL_KEY_F11;
-  case VK_F12: return LIBSL_KEY_F12;
-  case VK_RETURN: return LIBSL_KEY_ENTER;
-  case VK_UP: return LIBSL_KEY_UP;
-  case VK_RIGHT: return LIBSL_KEY_RIGHT;
-  case VK_LEFT: return LIBSL_KEY_LEFT;
-  case VK_DOWN: return LIBSL_KEY_DOWN;
-  case VK_PRIOR: return LIBSL_KEY_PAGE_UP;
-  case VK_NEXT: return LIBSL_KEY_PAGE_DOWN;
-  case VK_HOME: return LIBSL_KEY_HOME;
-  case VK_END: return LIBSL_KEY_END;
-  case VK_INSERT: return LIBSL_KEY_INSERT;
-  case VK_CONTROL: return LIBSL_KEY_CTRL;
-  case VK_RMENU: return LIBSL_KEY_ALT;
-  case VK_LMENU: return LIBSL_KEY_ALT;
-  case VK_SHIFT: return LIBSL_KEY_SHIFT;
-  case VK_TAB: return LIBSL_KEY_TAB;
-  case VK_BACK: return LIBSL_KEY_BK_SPACE;
-  case VK_ESCAPE: return LIBSL_KEY_ESC;
-  case VK_DELETE: return LIBSL_KEY_DELETE;
+  case VK_F1:       return LIBSL_KEY_F1;
+  case VK_F2:       return LIBSL_KEY_F2;
+  case VK_F3:       return LIBSL_KEY_F3;
+  case VK_F4:       return LIBSL_KEY_F4;
+  case VK_F5:       return LIBSL_KEY_F5;
+  case VK_F6:       return LIBSL_KEY_F6;
+  case VK_F7:       return LIBSL_KEY_F7;
+  case VK_F8:       return LIBSL_KEY_F8;
+  case VK_F9:       return LIBSL_KEY_F9;
+  case VK_F10:      return LIBSL_KEY_F10;
+  case VK_F11:      return LIBSL_KEY_F11;
+  case VK_F12:      return LIBSL_KEY_F12;
+  case VK_RETURN:   return LIBSL_KEY_ENTER;
+  case VK_UP:       return LIBSL_KEY_UP;
+  case VK_RIGHT:    return LIBSL_KEY_RIGHT;
+  case VK_LEFT:     return LIBSL_KEY_LEFT;
+  case VK_DOWN:     return LIBSL_KEY_DOWN;
+  case VK_PRIOR:    return LIBSL_KEY_PAGE_UP;
+  case VK_NEXT:     return LIBSL_KEY_PAGE_DOWN;
+  case VK_HOME:     return LIBSL_KEY_HOME;
+  case VK_END:      return LIBSL_KEY_END;
+  case VK_INSERT:   return LIBSL_KEY_INSERT;
+  case VK_CONTROL:  return LIBSL_KEY_CTRL;
+  case VK_RMENU:    return LIBSL_KEY_ALT;
+  case VK_LMENU:    return LIBSL_KEY_ALT;
+  case VK_SHIFT:    return LIBSL_KEY_SHIFT;
+  case VK_TAB:      return LIBSL_KEY_TAB;
+  case VK_BACK:     return LIBSL_KEY_BK_SPACE;
+  case VK_ESCAPE:   return LIBSL_KEY_ESC;
+  case VK_DELETE:   return LIBSL_KEY_DELETE;
   }
   return 0;
 }
@@ -106,10 +106,12 @@ static LRESULT CALLBACK SimpleUI_gl_WndProc(HWND hWnd, UINT message, WPARAM wPar
   switch (message)
   {
   case WM_ERASEBKGND:
+  {
     // Do nothing = do not erase the background
-    return 0;
+  } return 0;
 
   case WM_PAINT:
+  {
     // FC: adding missing BeginPaint/EndPaint
     // Windows continuously sends WM_PAINT messages if the WM_PAINT handler doesn't call BeginPaint/EndPaint,
     // eg. WM_PAINT messages are continuously transiting through the message loop and PeekMessage always returns TRUE.
@@ -125,115 +127,143 @@ static LRESULT CALLBACK SimpleUI_gl_WndProc(HWND hWnd, UINT message, WPARAM wPar
       SimpleUI_gl_Render();
       SwapBuffers(s_hDC);
       EndPaint(hWnd, &ps);
-      return 0;
     }
-    //else
+  } // else {
     //  return DefWindowProc(hWnd, message, wParam, lParam);
-
+    // }
+  return 0;
   case WM_CREATE:
-    return 0;
+  {
+  } return 0;
 
   case WM_CLOSE:
-    PostQuitMessage( 0 );
-    return 0;
+  {
+    PostQuitMessage(0);
+  } return 0;
 
   case WM_DESTROY:
-    return 0;
+  {
+  } return 0;
 
   case WM_KEYDOWN:
-    {
-      uint scancode = (lParam >> 16) & 0xFF;
+  {
+    uint scancode = (lParam >> 16) & 0xFF;
 
-      uint vk = MapVirtualKey(scancode, MAPVK_VSC_TO_VK);
-      uint lsc = win32_VirtualKey_to_LibSL_scancode(vk);
+    uint vk = MapVirtualKey(scancode, MAPVK_VSC_TO_VK);
+    uint lsc = win32_VirtualKey_to_LibSL_scancode(vk);
 
-      BYTE keyboardState[256];
-      GetKeyboardState(keyboardState);
-      char charvalue[2];
-      int toasc = ToAsciiEx((uint)wParam, scancode, keyboardState, (LPWORD)&charvalue[0], 0, GetKeyboardLayout(0));
-      if (toasc == 1 && charvalue[0] != 8 /*backspace*/) {
-        //std::cerr << "charvalue = " << (int)charvalue[0] << std::endl;
-        NAMESPACE::onKeyPressed(charvalue[0]);
-      } else if (lsc > 0) {
-        //std::cerr << "scancode = " << lsc << std::endl;
-        NAMESPACE::onScanCodePressed(lsc);
-      }
-
-      return 0;
+    BYTE keyboardState[256];
+    GetKeyboardState(keyboardState);
+    char charvalue[2];
+    int toasc = ToAsciiEx((uint)wParam, scancode, keyboardState, (LPWORD)&charvalue[0], 0, GetKeyboardLayout(0));
+    if (toasc == 1 && charvalue[0] != 8 /*backspace*/) {
+      //std::cerr << "charvalue = " << (int)charvalue[0] << std::endl;
+      NAMESPACE::onKeyPressed(charvalue[0]);
+    } else if (lsc > 0) {
+      //std::cerr << "scancode = " << lsc << std::endl;
+      NAMESPACE::onScanCodePressed(lsc);
     }
+  } return 0;
 
   case WM_KEYUP:
-    {
-      uint scancode = (lParam >> 16) & 0xFF;
-
-      uint vk = MapVirtualKey(scancode, MAPVK_VSC_TO_VK);
-      uint lsc = win32_VirtualKey_to_LibSL_scancode(vk);
-
-      BYTE keyboardState[256];
-      GetKeyboardState(keyboardState);
-      char charvalue[2];
-      int toasc = ToAsciiEx((uint)wParam, scancode, keyboardState, (LPWORD)&charvalue[0], 0, GetKeyboardLayout(0));
-      if (toasc == 1 && charvalue[0] != 8 /*backspace*/) {
-        //std::cerr << "charvalue = " << (int)charvalue[0] << std::endl;
-        NAMESPACE::onKeyUnpressed(charvalue[0]);
-      } else if (lsc > 0) {
-        //std::cerr << "scancode = " << lsc << std::endl;
-        NAMESPACE::onScanCodeUnpressed(lsc);
-      }
-
-      return 0;
+  {
+    uint scancode = (lParam >> 16) & 0xFF;
+    uint vk = MapVirtualKey(scancode, MAPVK_VSC_TO_VK);
+    uint lsc = win32_VirtualKey_to_LibSL_scancode(vk);
+    BYTE keyboardState[256];
+    GetKeyboardState(keyboardState);
+    char charvalue[2];
+    int toasc = ToAsciiEx((uint)wParam, scancode, keyboardState, (LPWORD)&charvalue[0], 0, GetKeyboardLayout(0));
+    if (toasc == 1 && charvalue[0] != 8 /*backspace*/) {
+      //std::cerr << "charvalue = " << (int)charvalue[0] << std::endl;
+      NAMESPACE::onKeyUnpressed(charvalue[0]);
+    } else if (lsc > 0) {
+      //std::cerr << "scancode = " << lsc << std::endl;
+      NAMESPACE::onScanCodeUnpressed(lsc);
     }
+  } return 0;
 
   case WM_MOUSEMOVE:
-    {
-      int xPos = LOWORD(lParam);
-      int yPos = HIWORD(lParam);
-      NAMESPACE::onMouseMotion(xPos,yPos);
-    }
-    return 0;
+  {
+    int xPos = LOWORD(lParam);
+    int yPos = HIWORD(lParam);
+    NAMESPACE::onMouseMotion(xPos,yPos);
+  } return 0;
 
-  case WM_LBUTTONDOWN: {
+  case WM_LBUTTONDOWN:
+  {
     int xPos = LOWORD(lParam);
     int yPos = HIWORD(lParam);
     NAMESPACE::onMouseButtonPressed(xPos,yPos,LIBSL_LEFT_BUTTON,LIBSL_BUTTON_DOWN);
-                       } return 0;
-  case WM_LBUTTONUP: {
+  } return 0;
+
+  case WM_LBUTTONUP:
+  {
     int xPos = LOWORD(lParam);
     int yPos = HIWORD(lParam);
     NAMESPACE::onMouseButtonPressed(xPos,yPos,LIBSL_LEFT_BUTTON,LIBSL_BUTTON_UP);
-                     } return 0;
+  } return 0;
 
-  case WM_MBUTTONDOWN: {
+  case WM_MBUTTONDOWN:
+  {
     int xPos = LOWORD(lParam);
     int yPos = HIWORD(lParam);
-    NAMESPACE::onMouseButtonPressed(xPos,yPos,LIBSL_MIDDLE_BUTTON,LIBSL_BUTTON_DOWN);
-                       } return 0;
-  case WM_MBUTTONUP: {
+    NAMESPACE::onMouseButtonPressed(xPos, yPos, LIBSL_MIDDLE_BUTTON, LIBSL_BUTTON_DOWN);
+  } return 0;
+
+  case WM_MBUTTONUP:
+  {
     int xPos = LOWORD(lParam);
     int yPos = HIWORD(lParam);
     NAMESPACE::onMouseButtonPressed(xPos,yPos,LIBSL_MIDDLE_BUTTON,LIBSL_BUTTON_UP);
-                     } return 0;
+  } return 0;
 
-  case WM_RBUTTONDOWN: {
+  case WM_RBUTTONDOWN:
+  {
     int xPos = LOWORD(lParam);
     int yPos = HIWORD(lParam);
     NAMESPACE::onMouseButtonPressed(xPos,yPos,LIBSL_RIGHT_BUTTON,LIBSL_BUTTON_DOWN);
-                       } return 0;
-  case WM_RBUTTONUP: {
+  } return 0;
+
+  case WM_RBUTTONUP:
+  {
     int xPos = LOWORD(lParam);
     int yPos = HIWORD(lParam);
     NAMESPACE::onMouseButtonPressed(xPos,yPos,LIBSL_RIGHT_BUTTON,LIBSL_BUTTON_UP);
-                     } return 0;
+  } return 0;
 
-  case WM_MOUSEWHEEL: {
-    NAMESPACE::onMouseWheel( GET_WHEEL_DELTA_WPARAM(wParam) );
-                     } return 0;
+  case WM_MOUSEWHEEL:
+  {
+    NAMESPACE::onMouseWheel(GET_WHEEL_DELTA_WPARAM(wParam));
+  } return 0;
 
   case WM_SIZE:
+  {
     s_ScreenW = LOWORD(lParam);
     s_ScreenH = HIWORD(lParam);
-    NAMESPACE::onReshape(s_ScreenW,s_ScreenH);
-    return 0;
+    NAMESPACE::onReshape(s_ScreenW, s_ScreenH);
+  } return 0;
+
+  case WM_DROPFILES:
+  {
+    HDROP drop = HDROP(wParam);
+    uint nfiles = DragQueryFile(drop, 0xFFFFFFFF, NULL, 0);
+    char** files = new char*[nfiles];
+    // fill in the file names
+    for (uint i = 0; i < nfiles; i++) {
+      WCHAR file[MAX_PATH];
+      DragQueryFile(drop, i, file, MAX_PATH);
+      files[i] = new char[MAX_PATH];
+      size_t nchar = 0;
+      wcstombs_s(&nchar, files[i], MAX_PATH, file, _TRUNCATE);
+    }
+    // pass on to simpleui
+    NAMESPACE::onDragDrop(nfiles, (const char**)files);
+    // release file names and everything else
+    for (uint i = 0; i < nfiles; i++) { delete files[i]; }
+    DragFinish(drop);
+    delete files;
+  } return 0;
 
   default:
     return DefWindowProc( hWnd, message, wParam, lParam );
@@ -425,12 +455,12 @@ void NAMESPACE::init(
   DWORD exStyle = 0;
   if (fullscreen) {
     style = WS_POPUP | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;	// Windows Style
-    exStyle = WS_EX_APPWINDOW;								// Window Extended Style
+    exStyle = WS_EX_APPWINDOW | WS_EX_ACCEPTFILES;				// Window Extended Style
     // ShowCursor(FALSE);	// Hide Mouse Pointer
   } else {
     // create main window
     style = frameLess ? (WS_POPUP) : (WS_CAPTION | WS_POPUPWINDOW | /*WS_BORDER |*/ WS_SIZEBOX | WS_MAXIMIZEBOX | WS_MINIMIZEBOX);
-    exStyle = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
+    exStyle = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE | WS_EX_ACCEPTFILES;
   }
   style |= CS_OWNDC;
 
@@ -442,7 +472,7 @@ void NAMESPACE::init(
   rc.left = before.left;
 
   s_hWnd = CreateWindowEx(
-    0,
+    exStyle,
     L"SimpleUI::GL", toUnicode(title),
     style,
     rc.left, rc.top,
@@ -465,7 +495,7 @@ void NAMESPACE::init(
 
 #ifdef OPENGLCORE
   HWND hWnd = CreateWindowEx(
-    0,
+    exStyle,
     L"SimpleUI::GL", toUnicode(title),
     style, rc.left, rc.top,
     rc.right - rc.left, rc.bottom - rc.top,
