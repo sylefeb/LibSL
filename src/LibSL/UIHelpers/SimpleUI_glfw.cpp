@@ -115,9 +115,9 @@ static void glfwMouseButton(GLFWwindow* window, int glfw_button, int glfw_action
 static void glfwMouseWheel(GLFWwindow* window, double x, double y)
 {
 #ifdef EMSCRIPTEN
-  NAMESPACE::onMouseWheel(-y);
+  NAMESPACE::onMouseWheel(-40 * y);
 #else
-  NAMESPACE::onMouseWheel(y);
+  NAMESPACE::onMouseWheel(40 * y);
 #endif
 }
 
