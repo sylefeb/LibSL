@@ -130,7 +130,7 @@ using namespace LibSL::Errors;
 using namespace LibSL::System::Types;
 using namespace LibSL::System::Time;
 using namespace LibSL::System::File;
-// using namespace LibSL::System;     // DO NOT include System due to collisions with X11
+// using namespace LibSL::System;       // DO NOT include System due to collisions with X11
 using namespace LibSL::CppHelpers;
 using namespace LibSL::Memory::Array;
 using namespace LibSL::Memory::Pointer;
