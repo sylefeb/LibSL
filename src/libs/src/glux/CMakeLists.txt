@@ -18,7 +18,7 @@ FIND_PACKAGE(OpenGL)
 FIND_PACKAGE(GLUT)
 
 IF( NOT PERL_FOUND )
-MESSAGE(STATUS  "Perl not found - skipping source regeneration.")
+MESSAGE(SEND_ERROR "Perl not found - skipping source regeneration.")
 ENDIF( NOT PERL_FOUND )
 
 IF(NOT EMSCRIPTEN)
