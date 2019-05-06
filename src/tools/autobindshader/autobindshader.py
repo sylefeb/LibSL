@@ -24,7 +24,7 @@ if len(sys.argv) < 2:
 	sys.exit()
 
 print(sys.argv[1])
-shader  = re.search( '(\w*)\.\w+' , sys.argv[1] ).group(1)
+shader  = re.search( '(\w*)\.\w+$' , sys.argv[1] ).group(1)
 path	= re.search( '(.*)\.\w+' , sys.argv[1] ).group(1)
 if sys.platform.startswith('win32'):
 	path	= path.replace('/','\\')
