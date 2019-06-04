@@ -139,7 +139,7 @@ namespace GPUMesh {
         glBufferSubDataARB(GL_ARRAY_BUFFER_ARB,
           _mesh.offsets[i],
           storage.m_Attributes[i].size(),
-          &(storage.m_Attributes[i].front()));
+          (storage.m_Attributes[i].empty() ? nullptr : &(storage.m_Attributes[i].front())));
       }
       glBindBufferARB(GL_ARRAY_BUFFER_ARB,0);
       glBindVertexArray(0);
