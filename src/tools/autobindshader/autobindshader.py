@@ -39,7 +39,8 @@ print(' [AutoBindShader] - v0.21 - ' + now.strftime("%Y-%m-%d %H:%M") + ' <' + s
 
 fcpp	= open(shader+".h","w")
 
-allUniforms   = []  # GLSL / HLSL
+allUniforms   = dict()  # GLSL / HLSL
+# use a dictionnary to prevent uniform encapsulated in ifdef to
 allDefaults   = {}  # Default settings
 allTechniques = []  # HLSL
 allTweaks	 = []  # Tweaks for AntTweakBar
@@ -73,7 +74,8 @@ def parseVars( fname, notweak ) :
 					# print(var.group(0))
 					# print(var.group(1))
 					# print(var.group(2))
-					allUniforms.append( var )
+					allUniforms[var.group(2)] = var # only store once uniforms to handle ifdef 
+					#TODO if already present check that type are compatible (group(1))
 					if var.group(3) != None:
 							print(' [AutoBindShader] \'{0}\' is an array of size \'{1}\''.format(var.group(2),var.group(3)) )
 					if var.group(4) != None:
@@ -281,14 +283,14 @@ fcpp.write('	return gs; }\n')
 
 # init parameters
 fcpp.write('void initParameters(LibSL::GLHelpers::GL{0}& shader,bool firstInit) {{\n'.format(className));
-for v in allUniforms:
-	fcpp.write('		  {0}.init( shader , "{1}" );\n'.format(v.group(2),v.group(2)))
+for key, val in allUniforms.items():
+	fcpp.write('		  {0}.init( shader , "{1}" );\n'.format(val.group(2),val.group(2)))
 # inital values
 fcpp.write('		  if ( firstInit ) {\n');
 fcpp.write('			shader.begin();\n');
-for v in allUniforms:
-	if v.group(4) != None:
-		fcpp.write('			{0}.set( ({1}){2} );\n'.format(v.group(2),shaderType2CppType(v.group(1)),v.group(4)))
+for key, val in allUniforms.items():
+	if val.group(4) != None:
+		fcpp.write('			{0}.set( ({1}){2} );\n'.format(val.group(2),shaderType2CppType(val.group(1)),val.group(4)))
 fcpp.write('			shader.end();\n');
 fcpp.write('		  }\n');
 fcpp.write('}\n');
@@ -300,8 +302,8 @@ for v in allDefines.keys():
 	fcpp.write('			' + v + ' = false;\n' )
 fcpp.write('			}\n')
 # access to uniforms
-for v in allUniforms:
-	fcpp.write('		LibSL::GLHelpers::GLParameter ' + v.group(2) + '; /// ' + v.group(1) + '\n' )
+for key, val in allUniforms.items(): # if uniform in ifdef the commented 'type' might be wrong
+	fcpp.write('		LibSL::GLHelpers::GLParameter ' + val.group(2) + '; /// ' + val.group(1) + '\n' )
 # access to defines
 for v in allDefines.keys():
 	fcpp.write('		bool		' + v + ';\n' )
