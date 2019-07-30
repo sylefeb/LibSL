@@ -8,11 +8,15 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Drawing.Drawing2D;
 
 namespace LibSL_sharp
 {
   public partial class SlidingPanel : UserControl
   {
+    public enum e_TitleDirectionality { TTB = 0, BTT = 1 };
+    public enum e_TitlePosition { Top = 0, Bottom = 1 };
+
     static private int m_BorderWidth = 25;
     private Control m_Parent = null;
 
@@ -37,6 +41,8 @@ namespace LibSL_sharp
     private int m_FoldSpeed = 10;   // pixels per second
     private string m_Title = "No title";
     private Font m_Font = new Font("Arial", 12);
+    private e_TitleDirectionality m_TitleDirectionality = e_TitleDirectionality.TTB;
+    private e_TitlePosition m_TitlePosition = e_TitlePosition.Top;
     private SlidingPanel m_Sibling = null;
     private int m_FoldPos = 0;
     private int m_UnfoldPos = 0;
@@ -54,6 +60,18 @@ namespace LibSL_sharp
     { 
       get { return m_Title; }
       set { if (m_Title != value) { m_Title = value; Refresh(); } } 
+    }
+
+    public e_TitleDirectionality TitleDirectionality
+    {
+      get { return m_TitleDirectionality; }
+      set { if (m_TitleDirectionality != value) { m_TitleDirectionality = value; Refresh(); } }
+    }
+
+    public e_TitlePosition TitlePosition
+    {
+      get { return m_TitlePosition; }
+      set { if (m_TitlePosition != value) { m_TitlePosition = value; Refresh(); } }
     }
 
     public Brush BorderBrush
@@ -353,8 +371,30 @@ namespace LibSL_sharp
       e.Graphics.DrawRectangle(Pens.White, rect);
       Font drawFont = new Font("Arial", 12);
       StringFormat drawFormat = new StringFormat();
-      drawFormat.FormatFlags = StringFormatFlags.DirectionVertical;
-      e.Graphics.DrawString(m_Title, m_Font, Brushes.White, pos, 0, drawFormat);
+      // X centered
+      drawFormat.LineAlignment = StringAlignment.Center;
+      GraphicsState state = e.Graphics.Save();
+      e.Graphics.ResetTransform();
+      // Vertical directionality
+      if (m_TitleDirectionality == e_TitleDirectionality.TTB) e.Graphics.RotateTransform( 90);
+      if (m_TitleDirectionality == e_TitleDirectionality.BTT) e.Graphics.RotateTransform(-90);
+      // Vertical position
+      float yPos = 0;
+      if (m_TitlePosition == e_TitlePosition.Top) yPos = 1;
+      if (m_TitlePosition == e_TitlePosition.Bottom) yPos = Height;
+      e.Graphics.TranslateTransform(pos + m_BorderWidth / 2, yPos, MatrixOrder.Append);
+      // Vertical directionality and position
+
+      if ((m_TitlePosition == e_TitlePosition.Top && m_TitleDirectionality == e_TitleDirectionality.TTB) || (m_TitlePosition == e_TitlePosition.Bottom && m_TitleDirectionality == e_TitleDirectionality.BTT))
+      {
+        drawFormat.Alignment = StringAlignment.Near;
+      }
+      if ((m_TitlePosition == e_TitlePosition.Top && m_TitleDirectionality == e_TitleDirectionality.BTT) || (m_TitlePosition == e_TitlePosition.Bottom && m_TitleDirectionality == e_TitleDirectionality.TTB))
+      {
+        drawFormat.Alignment = StringAlignment.Far;
+      }
+      e.Graphics.DrawString(m_Title, m_Font, Brushes.White, 0, 0, drawFormat);
+      e.Graphics.Restore(state);
     }
 
     private void SlidingPanel_EnabledChanged(object sender, EventArgs e)
