@@ -134,6 +134,14 @@ Find_Package(GLUT)
 
 ################################################################################
 
+# SL: This ended up being necessary due to an odd behavior of Find_Package(OpenGL)
+#     returning 'nul' on Emscripten...
+if (OPENGL_LIBRARIES STREQUAL "nul")
+set(OPENGL_LIBRARIES "")
+endif ()
+
+################################################################################
+
 IF (WIN32)
 
 ########################################
@@ -227,7 +235,6 @@ ENDIF()
   debug 	${LIBSL_LIBRARY_DIR}/glux-d.lib
   debug 	${LIBSL_LIBRARY_DIR}/AntTweakBar-d.lib
   ${OPENGL_LIBRARIES}
-  ${GLU_LIBRARIES}
   )
 
 ########################################
@@ -265,7 +272,6 @@ SET(LIBSL_GL4_LIBRARIES
   debug 	${LIBSL_LIBRARY_DIR}/glux-d.lib
   debug 	${LIBSL_LIBRARY_DIR}/AntTweakBar-d.lib
   ${OPENGL_LIBRARIES}
-  ${GLU_LIBRARIES}
   )
 
 IF (NOT TARGET LibSL_gl4)
@@ -303,7 +309,6 @@ SET(LIBSL_GL4CORE_LIBRARIES
   debug 	${LIBSL_LIBRARY_DIR}/glux-d.lib
   debug 	${LIBSL_LIBRARY_DIR}/AntTweakBar-d.lib
   ${OPENGL_LIBRARIES}
-  ${GLU_LIBRARIES}
   )
 
 IF (NOT TARGET LibSL_gl4core)
@@ -478,11 +483,11 @@ ELSE (WIN32)
 ########################################
 	SET(LIBSL_LIBRARIES         "${LIBSL_LIBRARY_DIR}/libLibSL.a;${LIBSL_LIBRARY_DIR}/libjpeg.a;${LIBSL_LIBRARY_DIR}/libpng.a;${LIBSL_LIBRARY_DIR}/libzlib.a;${LIBSL_LIBRARY_DIR}/libloki.a;${LIBSL_LIBRARY_DIR}/lib3ds.a;${LIBSL_LIBRARY_DIR}/libtinyxml.a;${LIBSL_LIBRARY_DIR}/libhashlibpp.a;${LIBSL_LIBRARY_DIR}/libqhull.a")
 
-	SET(LIBSL_GL_LIBRARIES      "${LIBSL_LIBRARY_DIR}/libLibSL_gl.a;${LIBSL_LIBRARY_DIR}/libglux.a;${LIBSL_LIBRARY_DIR}/libAntTweakBar.a" ${OPENGL_LIBRARIES} ${GLU_LIBRARIES} ${GLUT_LIBRARIES})
+	SET(LIBSL_GL_LIBRARIES      "${LIBSL_LIBRARY_DIR}/libLibSL_gl.a;${LIBSL_LIBRARY_DIR}/libglux.a;${LIBSL_LIBRARY_DIR}/libAntTweakBar.a" ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
 
-	SET(LIBSL_GL4_LIBRARIES     "${LIBSL_LIBRARY_DIR}/libLibSL_gl4.a;${LIBSL_LIBRARY_DIR}/libglux.a;${LIBSL_LIBRARY_DIR}/libAntTweakBar.a" ${OPENGL_LIBRARIES} ${GLU_LIBRARIES} ${GLUT_LIBRARIES})
+	SET(LIBSL_GL4_LIBRARIES     "${LIBSL_LIBRARY_DIR}/libLibSL_gl4.a;${LIBSL_LIBRARY_DIR}/libglux.a;${LIBSL_LIBRARY_DIR}/libAntTweakBar.a" ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
 
-	SET(LIBSL_GL4CORE_LIBRARIES     "${LIBSL_LIBRARY_DIR}/libLibSL_gl4core.a;${LIBSL_LIBRARY_DIR}/libglux.a;${LIBSL_LIBRARY_DIR}/libAntTweakBar.a" ${OPENGL_LIBRARIES} ${GLU_LIBRARIES} ${GLUT_LIBRARIES})
+	SET(LIBSL_GL4CORE_LIBRARIES     "${LIBSL_LIBRARY_DIR}/libLibSL_gl4core.a;${LIBSL_LIBRARY_DIR}/libglux.a;${LIBSL_LIBRARY_DIR}/libAntTweakBar.a" ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
 
 	SET(LIBSL_LINALG_LIBRARIES  "${LIBSL_LIBRARY_DIR}/libLibSL_linalg.a;${LIBSL_LIBRARY_DIR}/libnl.a")
 
@@ -554,14 +559,12 @@ IF (NOT TARGET LibSL_gl)
     AntTweakBar
     ${LIBSL_LIBRARY_DIR}/libglux.a
     ${OPENGL_LIBRARIES}
-    ${GLU_LIBRARIES}
     ${GLUT_LIBRARIES}
     )
   ELSE (NOT EMSCRIPTEN)
     SET_PROPERTY(TARGET LibSL_gl PROPERTY IMPORTED_LINK_INTERFACE_LIBRARIES
     LibSL
     ${OPENGL_LIBRARIES}
-    ${GLU_LIBRARIES}
     ${GLUT_LIBRARIES}
     )
   ENDIF (NOT EMSCRIPTEN)  
@@ -582,7 +585,6 @@ IF (NOT TARGET LibSL_gl4)
 	AntTweakBar
 	${LIBSL_LIBRARY_DIR}/libglux.a
 	${OPENGL_LIBRARIES}
-	${GLU_LIBRARIES}
 	${GLUT_LIBRARIES}
   )
   SET_PROPERTY(TARGET LibSL_gl4 PROPERTY INTERFACE_COMPILE_DEFINITIONS
@@ -604,7 +606,6 @@ IF (NOT TARGET LibSL_gl4core)
 	AntTweakBar
 	${LIBSL_LIBRARY_DIR}/libglux.a
 	${OPENGL_LIBRARIES}
-	${GLU_LIBRARIES}
 	${GLUT_LIBRARIES}
   )
   SET_PROPERTY(TARGET LibSL_gl4core PROPERTY INTERFACE_COMPILE_DEFINITIONS
