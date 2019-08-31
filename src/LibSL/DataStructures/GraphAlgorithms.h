@@ -154,7 +154,7 @@ namespace LibSL {
           }
           if (_visited.empty()) {
             _visited.erase();
-            _visited.allocate(g.nodes().size());
+            _visited.allocate((int)g.nodes().size());
             _visited.fill(false);
           }
           _component.clear();
