@@ -1,6 +1,3 @@
-
-/// INDEV
-
 #pragma once
 
 #include <LibSL/LibSL.h>
@@ -136,7 +133,7 @@ namespace AutoBindShader {
       m_FirstInit = true;
       m_WriteShaderFiles = false;
     }
-    LibSL::GLHelpers::GLShader& shader()                  { return m_Shader;  }
+    LibSL::GLHelpers::GLCompute& shader()                  { return m_Shader;  }
     void    setWriteShaderFiles(bool b) { m_WriteShaderFiles = b; }
 
     void	  begin() { m_Shader.begin(); T_Precompiled::commitTweaks(); }
