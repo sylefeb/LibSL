@@ -737,7 +737,7 @@ set(ZLIB_INSTALL_LIBRARIES zlib)
 # Example binaries
 #============================================================================
 
-option(ZLIB_ENABLE_TESTS "Build test binaries" ON)
+option(ZLIB_ENABLE_TESTS "Build test binaries" OFF)
 if (ZLIB_ENABLE_TESTS)
     enable_testing()
     macro(configure_test_executable target)
@@ -816,3 +816,15 @@ if (ZLIB_ENABLE_TESTS)
 endif()
 
 FEATURE_SUMMARY(WHAT ALL INCLUDE_QUIET_PACKAGES)
+
+SET_TARGET_PROPERTIES(zlib PROPERTIES DEBUG_POSTFIX "-d")
+SET_TARGET_PROPERTIES(zlib PROPERTIES VERSION "1.2.3")
+
+INSTALL(TARGETS zlib
+  RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/bin
+  LIBRARY DESTINATION ${CMAKE_SOURCE_DIR}/lib
+  ARCHIVE DESTINATION ${CMAKE_SOURCE_DIR}/lib
+)
+IF(NOT WIN32)
+INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/libzlib.a" DESTINATION ${CMAKE_SOURCE_DIR}/lib)
+ENDIF(NOT WIN32)
