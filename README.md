@@ -23,7 +23,14 @@ Former students have suffered LibSL and went as far as contributing to it:
 * Christian Eisenacher (image filtering, PCA)
 * Matthäus Chajdas (voxel stuff, of course :), he also inspired the cmake build, the use of sqlite, etc. ) 
 * Jérémie Dumas (many improvements, in particular to tuples)
-    
+
+More recently, several colleagues and students provided corrections and new features:
+* Salim Perchy
+* Cédric Zanni
+* Jimmy Etienne
+* Thibault Tricard
+* Vincent Tavernier
+
 # Compiling LibSL:
 
 ## Windows:

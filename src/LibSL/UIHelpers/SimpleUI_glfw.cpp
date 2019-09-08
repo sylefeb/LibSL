@@ -235,6 +235,11 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_FALSE);
 #endif
 
+  // set a default title
+  if (title == NULL) {
+    title = "LibSL::SimpleUI (GLFW)";
+  }
+
   // window creation
   if (fullscreen) {
     GLFWmonitor* monitor = glfwGetPrimaryMonitor();
