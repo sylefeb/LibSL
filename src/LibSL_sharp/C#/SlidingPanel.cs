@@ -380,8 +380,9 @@ namespace LibSL_sharp
       if (m_TitleDirectionality == e_TitleDirectionality.BTT) e.Graphics.RotateTransform(-90);
       // Vertical position
       float yPos = 0;
-      if (m_TitlePosition == e_TitlePosition.Top) yPos = 1;
-      if (m_TitlePosition == e_TitlePosition.Bottom) yPos = Height;
+      float yMargin = 2;
+      if (m_TitlePosition == e_TitlePosition.Top) yPos = 1 + yMargin;
+      if (m_TitlePosition == e_TitlePosition.Bottom) yPos = Height - yMargin;
       e.Graphics.TranslateTransform(pos + m_BorderWidth / 2, yPos, MatrixOrder.Append);
       // Vertical directionality and position
 
