@@ -338,7 +338,7 @@ namespace LibSL  {
         */
       };
 
-      #ifdef WIN32 // This is due to an incompatibility btw Visual C and g++ // TODO FIXME
+#ifdef WIN32 // This is due to an incompatibility btw Visual C and g++ // TODO FIXME
 
       /*!
 
@@ -389,7 +389,7 @@ namespace LibSL  {
 
         void erase() { if (!Pointer::isNull()) { delete (Pointer::raw()); (*this) = NULL; } }
 
-        operator t_RawPointer()            { return (raw()); }
+        operator typename Pointer::t_RawPointer() { return (raw()); }
         operator T_Type * const ()   const { return (raw()); }
       };
 
