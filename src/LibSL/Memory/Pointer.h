@@ -255,17 +255,20 @@ namespace LibSL  {
 
         t_RawPointer m_RawPointer;
 
+      protected:
+
+        // specialized classes will define the behaviour of the constructor from raw pointer
+        Pointer(const t_RawPointer& raw) : t_Transfer()
+        {
+          m_RawPointer = raw;
+          t_Transfer::initFrom(&m_RawPointer);
+        }
+
       public:
 
         Pointer() : t_Transfer()
         {
           m_RawPointer = NULL;
-        }
-
-        Pointer(const t_RawPointer& raw) : t_Transfer()
-        {
-          m_RawPointer = raw;
-          t_Transfer::initFrom(&m_RawPointer);
         }
 
         Pointer(const Pointer& ptr) : t_Transfer()
