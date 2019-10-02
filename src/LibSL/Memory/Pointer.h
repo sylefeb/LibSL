@@ -254,11 +254,9 @@ namespace LibSL  {
 
         typedef P_Transfer<T_Type> t_Transfer;
 
-      private:
+      protected:
 
         t_RawPointer m_RawPointer;
-
-      protected:
 
         // specialized classes will define the behaviour of the constructor from raw pointer
         Pointer(const t_RawPointer& raw) : t_Transfer(raw)
