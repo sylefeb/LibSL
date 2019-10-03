@@ -119,7 +119,6 @@ namespace LibSL  {
       {
       public:
 
-//        std::atomic<T_CounterType> *m_Counter;
         T_CounterType *m_Counter;
 
         TransferRefCount()
@@ -131,7 +130,6 @@ namespace LibSL  {
         {
           if (ptr != NULL) {
             // allocate a new counter initialized to 1
-            // m_Counter = new std::atomic<T_CounterType>(1);
             m_Counter = new T_CounterType(1);
           } else {
             m_Counter = NULL;
@@ -338,7 +336,7 @@ namespace LibSL  {
         */
       };
 
-      #ifdef WIN32 // This is due to an incompatibility btw Visual C and g++ // TODO FIXME
+#ifdef WIN32 // This is due to an incompatibility btw Visual C and g++ // TODO FIXME
 
       /*!
 
@@ -389,7 +387,7 @@ namespace LibSL  {
 
         void erase() { if (!Pointer::isNull()) { delete (Pointer::raw()); (*this) = NULL; } }
 
-        operator t_RawPointer()            { return (raw()); }
+        operator typename Pointer::t_RawPointer() { return (raw()); }
         operator T_Type * const ()   const { return (raw()); }
       };
 
