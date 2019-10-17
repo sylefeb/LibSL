@@ -50,7 +50,7 @@ GLUX_LOAD(GL_ARB_draw_instanced)
 #include "GPUMesh_GL_types.h"
 #include "GPUMesh_primitives.h"
 
-#define BUFFER_OFFSET(o) (((char *)NULL) + o)
+#define BUFFER_OFFSET(o) ((reinterpret_cast<char*>(static_cast<size_t>(o))) )
 
 #if defined(EMSCRIPTEN) | defined(ANDROID)
 #define GL_ARRAY_BUFFER_ARB GL_ARRAY_BUFFER
