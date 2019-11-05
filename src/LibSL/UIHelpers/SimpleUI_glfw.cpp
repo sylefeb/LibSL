@@ -39,6 +39,15 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #endif
 #include <GLFW/glfw3.h>
 
+#if ! (defined(EMSCRIPTEN) | defined(ANDROID))
+#ifdef OPENGL_DEBUG
+//TODO do that correctly in CMake and co
+#include <GL_VERSION_4_3.h>
+GLUX_REQUIRE(GL_VERSION_4_3);
+#endif
+#endif
+
+
 //---------------------------------------------------------------------------
 // GLFW implementation
 //---------------------------------------------------------------------------
@@ -216,6 +225,24 @@ static void glfwMainLoop()
   glfwRender();
 }
 
+#if ! (defined(EMSCRIPTEN) | defined(ANDROID))
+#ifdef OPENGL_DEBUG
+static void openGLErrorCallback( GLenum source, GLenum type, GLuint id, GLenum severity,
+                                 GLsizei length, const GLchar *msg, const void *data )
+{
+  std::cerr << "[GL debug] "
+//            << "Type: "     << getStringForType(type).c_str ()
+//            << "Source: "   << getStringForSource(source ).c_str()
+            << "ID: "       << id
+//            << "Severity: " << getStringForSeverity(severity ).c_str())
+            << "\n";
+  // see OpenGL Insight for getter functions
+
+  std::cerr << "[GL debug] message : " << msg << std::endl;
+}
+#endif
+#endif
+
 void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int argc, bool frameLess, bool hidden, bool fullscreen)
 {
   glfwInit();
@@ -233,6 +260,13 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
   // a version 1.0 context, which is the default for these hints.
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_FALSE);
+#endif
+
+#if ! (defined(EMSCRIPTEN) | defined(ANDROID))
+#ifdef OPENGL_DEBUG
+  //TODO do that correctly in CMake and co
+  glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true );
+#endif
 #endif
 
   // set a default title
@@ -273,6 +307,13 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
   glfwSetWindowPos(glfw_window, 0, 1);
   // opengl context
   glfwMakeContextCurrent(glfw_window);
+
+#if ! (defined(EMSCRIPTEN) | defined(ANDROID))
+#ifdef OPENGL_DEBUG
+  glDebugMessageCallback( openGLErrorCallback, NULL );
+  glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); // to activate in order to track source of errors
+#endif
+#endif
 
   glfwSetErrorCallback(glfwError);
   glfwSetMouseButtonCallback(glfw_window, glfwMouseButton);
