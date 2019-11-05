@@ -53,7 +53,7 @@ GLUX_LOAD(GL_ARB_vertex_array_object)
 #include "GPUMesh_GL_funcs.h"
 #include "GPUMesh_primitives.h"
 
-#define BUFFER_OFFSET(o) (((char *)NULL) + o)
+#define BUFFER_OFFSET(o) ((reinterpret_cast<char*>(static_cast<size_t>(o))) )
 
 namespace LibSL {
 namespace GPUMesh {
