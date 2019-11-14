@@ -588,7 +588,7 @@ namespace LibSL {
     }
 
     template<class T_Type, int T_N>
-    float length(const Tuple<T_Type,T_N>& t)
+    T_Type length(const Tuple<T_Type,T_N>& t)
     {
       return (sqrt((float)sqLength(t)));
     }
