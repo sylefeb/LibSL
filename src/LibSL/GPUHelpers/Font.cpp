@@ -332,7 +332,7 @@ void NAMESPACE::copyToBuffer(const char *s)
     s_Buf.erase();
     s_Buf.allocate(l);
   }
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
   strcpy_s(s_Buf.raw(),s_Buf.size(),s);
 #else
   strncpy(s_Buf.raw(),s,s_Buf.size());
@@ -380,7 +380,7 @@ void NAMESPACE::printStringN(float x,float y,float t,const char *s,int num,uint 
   m4x4f m = translationMatrix(V3F(x,y,0));
   int line = 0;
   char *next = NULL;
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
   subs       = strtok_s(s_Buf.raw(),"\n",&next);
 #else
   subs       = strtok(s_Buf.raw(),"\n");
@@ -403,7 +403,7 @@ void NAMESPACE::printStringN(float x,float y,float t,const char *s,int num,uint 
       }
       line++;
       m = translationMatrix(V3F(x, y - t * line, 0));
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
     } while ((subs=strtok_s(NULL,"\n",&next)) != NULL);
 #else
     } while ((subs=strtok(NULL,"\n")) != NULL);
@@ -447,7 +447,7 @@ void NAMESPACE::printStringNeed(float t ,const char *s,float *w,float *h)
   *h         = 0.0;
   *w         = 0.0;
   char *next = NULL;
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
   subs       = strtok_s(s_Buf.raw(),"\n",&next);
 #else
   subs       = strtok(s_Buf.raw(),"\n");
@@ -464,7 +464,7 @@ void NAMESPACE::printStringNeed(float t ,const char *s,float *w,float *h)
         *w = wtmp;
       }
     }
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
     while ((subs=strtok_s(NULL,"\n",&next)) != NULL);
 #else
     while ((subs=strtok(NULL,"\n")) != NULL);

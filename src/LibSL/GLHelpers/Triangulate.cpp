@@ -59,7 +59,7 @@ using namespace std;
 #include <GL/glu.h>
 #endif
 #ifndef _GLUfuncptr
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
 typedef GLvoid(CALLBACK *_GLUfuncptr)(void);
 #else
 typedef GLvoid(*_GLUfuncptr)(void);

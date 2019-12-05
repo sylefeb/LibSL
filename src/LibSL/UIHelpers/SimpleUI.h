@@ -118,15 +118,11 @@ namespace LibSL {
       LIBSL_DLL uint screenWidth();
       LIBSL_DLL uint screenHeight();
 
-#ifndef WIN32
-      LIBSL_DLL void showCursor(bool show);
-#endif
-
       LIBSL_DLL void showCursor(bool show);
       LIBSL_DLL void setAlwaysRefresh(bool r);
       LIBSL_DLL void refresh();
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
       LIBSL_DLL void setCustomCallbackMsgProc(WNDPROC);
       LIBSL_DLL HWND getHWND();
 #endif

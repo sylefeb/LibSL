@@ -55,7 +55,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 
 using namespace LibSL::System::Types;
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
 #endif
 

@@ -39,7 +39,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 
 #ifndef ANDROID
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
 #endif
 
@@ -360,7 +360,8 @@ void NAMESPACE::trackballOnMouseButtonPressed(uint x,uint y,uint button,uint fla
 #ifdef USE_GLUT
   s_ShiftDown = glutGetModifiers() & GLUT_ACTIVE_SHIFT;
 #endif
-#ifndef WIN32
+#if defined(_WIN32) || defined(_WIN64)
+#else
   if (!s_Freezed) s_Trackball.setForceZoom(s_ShiftDown); // SL: disabled for release as there remains a bug where this becomes sticky
 #endif
   if (flags & LIBSL_BUTTON_DOWN) {
@@ -676,7 +677,7 @@ uint NAMESPACE::screenHeight()
 
 //---------------------------------------------------------------------------
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
 
 void NAMESPACE::setCustomCallbackMsgProc(WNDPROC proc)
 {

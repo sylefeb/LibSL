@@ -176,7 +176,7 @@ bool operator<(const LibSL::System::File::t_FileTime& a, const LibSL::System::Fi
 #define LIBSL_WHEEL_UP      8
 #define LIBSL_WHEEL_DOWN   16
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
 #define SC_F1       59
 #define SC_CTRL     29
 #define SC_SHIFT    42
@@ -184,7 +184,7 @@ bool operator<(const LibSL::System::File::t_FileTime& a, const LibSL::System::Fi
 
 // ------------------------------------------------------
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
 // ------------------------------------------------------
 /// Windows depedent definitions
 #define LIBSL_PRINTF_ATTR

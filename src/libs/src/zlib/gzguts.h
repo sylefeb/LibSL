@@ -34,7 +34,7 @@
 # include "zlib-ng.h"
 #endif
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
 #  include <stddef.h>
 #endif
 
