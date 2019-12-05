@@ -70,9 +70,7 @@ uint glut_to_LibSL_scancode(uchar key,uint sc)
   case GLUT_KEY_HOME:         return LIBSL_KEY_HOME;
   case GLUT_KEY_END:          return LIBSL_KEY_END;
   case GLUT_KEY_INSERT:       return LIBSL_KEY_INSERT;
-#ifndef EMSCRIPTEN
-  case GLUT_KEY_DELETE:       return LIBSL_KEY_DELETE;
-#endif
+  case 111:                   return LIBSL_KEY_DELETE;
   case 112:                   return LIBSL_KEY_SHIFT;
   case 114:                   return LIBSL_KEY_CTRL;
   case 116:                   return LIBSL_KEY_ALT;

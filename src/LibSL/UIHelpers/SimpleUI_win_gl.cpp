@@ -156,7 +156,7 @@ static LRESULT CALLBACK SimpleUI_gl_WndProc(HWND hWnd, UINT message, WPARAM wPar
     GetKeyboardState(keyboardState);
     char charvalue[2];
     int toasc = ToAsciiEx((uint)wParam, scancode, keyboardState, (LPWORD)&charvalue[0], 0, GetKeyboardLayout(0));
-    if (toasc == 1 && charvalue[0] != 8 /*backspace*/) {
+    if (toasc == 1 && charvalue[0] != 8 /*backspace*/ && charvalue[0] != 9 /*tab*/) {
       //std::cerr << "charvalue = " << (int)charvalue[0] << std::endl;
       NAMESPACE::onKeyPressed(charvalue[0]);
     } else if (lsc > 0) {
