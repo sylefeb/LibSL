@@ -55,10 +55,6 @@ INSTALL(TARGETS glux
   ARCHIVE DESTINATION ${CMAKE_SOURCE_DIR}/lib
 )
 
-IF(NOT WIN32)
-INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/libglux.a" DESTINATION ${CMAKE_SOURCE_DIR}/lib)
-ENDIF(NOT WIN32)
-
 IF( NOT GLUT_FOUND )
 
 MESSAGE(STATUS "glut not found (only needed for samples, not for glux itself)")
