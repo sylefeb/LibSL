@@ -1752,7 +1752,7 @@ namespace Loki
 ///  specialization of std::less for SmartPtr
 ///  \ingroup SmartPointerGroup
 ////////////////////////////////////////////////////////////////////////////////
-
+/*
 namespace std
 {
     template
@@ -1773,6 +1773,6 @@ namespace std
         { return less<T*>()(GetImpl(lhs), GetImpl(rhs)); }
     };
 }
-
+*/
 #endif // end file guardian
 
