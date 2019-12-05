@@ -310,7 +310,7 @@ sub write_h_header()
 // 
 // Sylvain Lefebvre - 2002-2014 - Sylvain.Lefebvre\@inria.fr
 // --------------------------------------------------------
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
 #  include <windows.h>
 #endif
 #ifdef __APPLE__
@@ -335,7 +335,7 @@ sub write_h_header()
 #endif
 
 #undef  GL_GLEXT_PROTOTYPES
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
 #  include \"glux_glext.h\"
 #  include \"glux_wglext.h\"
 #else
@@ -367,12 +367,12 @@ GLUX_NEW_PLUGIN($ext)
     if ($ext=~/WGL/)
     {
 	print $OUT "// --------------------------------------------------------\n";
-	print $OUT "#ifdef WIN32\n";
+	print $OUT "#if defined(_WIN32) || defined(_WIN64)\n";
     }
     elsif ($ext=~/GLX/)
     {
 	print $OUT "// --------------------------------------------------------\n";
-	print $OUT "#if !(defined WIN32 || defined __APPLE__ || defined EMSCRIPTEN)\n";
+	print $OUT "#if !(defined WIN32 || defined(_WIN64) || defined __APPLE__ || defined EMSCRIPTEN)\n";
     }
 
     # print $OUT "// --------------------------------------------------------\n";
@@ -508,11 +508,11 @@ sub write_cpp_header()
 ";
     if ($ext=~/WGL/)
     {
-	  print $OUT "#ifdef WIN32\n";
+	  print $OUT "#if defined(_WIN32) || defined(_WIN64)\n";
     }
     elsif ($ext=~/GLX/)
     {
-  	  print $OUT "#if !(defined WIN32 || defined __APPLE__ || defined EMSCRIPTEN)\n";
+  	  print $OUT "#if !(defined(_WIN32) || defined(_WIN64) || defined __APPLE__ || defined EMSCRIPTEN)\n";
     }
     my $extnfo=$exts{$ext};
     my ($tbl0,$tbl1,$tbl2,$tbl3,$extcond)=@$extnfo;
@@ -579,7 +579,7 @@ sub write_cpp_fake()
 		print $OUT "  if (!plugin->isAvailable()) { \n";
 		print $OUT "    #ifndef GLUX_NO_OUTPUT\n";
 		print $OUT "    std::cerr << \"[FAIL] $ext (required)\" << std::endl;\n";
-		print $OUT "    #ifdef WIN32\n";
+		print $OUT "    #if defined(_WIN32) || defined(_WIN64)\n";
     	print $OUT "    MessageBox(NULL,\"[FAIL] $ext (required)\",\"gluX - Fatal error\",MB_OK | MB_ICONSTOP);\n";
 		print $OUT "    #endif\n";
 		print $OUT "    #endif\n";
@@ -805,7 +805,7 @@ sub write_glux_ext_defs_header()
 #ifndef __GLUX_EXT_DEFS__
 #define __GLUX_EXT_DEFS__
 // --------------------------------------------------------
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
 #include <stddef.h>
 #else
@@ -832,11 +832,11 @@ sub write_glux_ext_defs_header()
 	my ($defstbl,$fctstbl,$typstbl,$supltbl)=@$extnfo;
 	if ($ext =~ /WGL/)
 	{
-	    print $OUT "# ifdef WIN32\n";
+	    print $OUT "# if defined(_WIN32) || defined(_WIN64)\n";
 	}
 	elsif ($ext =~ /GLX/)
 	{
-	    print $OUT "# if !(defined WIN32 || defined __APPLE__)\n";
+	    print $OUT "# if !(defined(_WIN32) || defined(_WIN64) || defined __APPLE__)\n";
 	}
 	else
 	{
@@ -862,11 +862,11 @@ sub write_glux_ext_defs_header()
 	    #print $OUT "#ifndef $ext\n";
 	    if ($ext =~ /WGL/)
 	    {
-		  print $OUT "# ifdef WIN32\n";
+		  print $OUT "# if defined(_WIN32) || defined(_WIN64)\n";
 	    }
 	    elsif ($ext =~ /GLX/)
 	    {
-		  print $OUT "# if !(defined WIN32 || defined __APPLE__)\n";
+		  print $OUT "# if !(defined(_WIN32) || defined(_WIN64) || defined __APPLE__)\n";
 	    }
 	    foreach my $supp (@$supltbl)
 	    {
@@ -905,11 +905,11 @@ sub write_glux_load_all_header()
     {
 	if ($ext=~/WGL/)
 	{
-	    print $OUT "#ifdef WIN32\n";
+	    print $OUT "#if defined(_WIN32) || defined(_WIN64)\n";
 	}
 	elsif ($ext=~/GLX/)
 	{
-	    print $OUT "#if !(defined WIN32 || defined __APPLE__)\n";
+	    print $OUT "#if !(defined(_WIN32) || defined(_WIN64) || defined __APPLE__)\n";
 	}
 
 	print $OUT " GLUX_LOAD(".$ext.");\n";
