@@ -1,0 +1,7 @@
+*.h
+*.cpp
+!glux_load_all.h
+!gluxLoader.cpp
+!gluxLoader.h
+!gluxPlugin.cpp
+!gluxPlugin.h
