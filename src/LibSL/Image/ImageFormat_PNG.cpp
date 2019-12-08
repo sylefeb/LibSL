@@ -78,7 +78,7 @@ NAMESPACE::ImageFormat_PNG::ImageFormat_PNG()
 
 //---------------------------------------------------------------------------
 
-NAMESPACE::Image *NAMESPACE::ImageFormat_PNG::load(const char *name, char* metatxt, uint metatxt_size) const
+NAMESPACE::Image *NAMESPACE::ImageFormat_PNG::load(const char *name, std::map<std::string, std::string>& _key_value_text) const
 {
   FILE *file;
 	fopen_s(&file, name, "rb");
@@ -111,17 +111,12 @@ NAMESPACE::Image *NAMESPACE::ImageFormat_PNG::load(const char *name, char* metat
     throw Fatal("ImageFormat_PNG::load - palette not supported (%s)",name);
   //  if (color_type == PNG_COLOR_TYPE_GRAY)
   //    png_set_gray_to_rgb(png_ptr);
-  if (metatxt) {
-    metatxt[0] = '\0';
-    png_text *text = nullptr;
-    int       num_text = 0;
-    png_get_text(png_ptr, info_ptr, &text, &num_text);
-    if (num_text > 0) {
-      ForIndex(t, num_text) {
-        if (!strcmp(text[t].key, "libsl")) {
-          strncpy(metatxt, text[t].text, metatxt_size);
-        }
-      }
+  png_text* text = nullptr;
+  int       num_text = 0;
+  png_get_text(png_ptr, info_ptr, &text, &num_text);
+  if (num_text > 0) {
+    ForIndex(t, num_text) {
+      _key_value_text.insert(std::make_pair(std::string(text[t].key), std::string(text[t].text)));
     }
   }
   Array<unsigned char> tmp;
@@ -161,7 +156,7 @@ NAMESPACE::Image *NAMESPACE::ImageFormat_PNG::load(const char *name, char* metat
 
 //---------------------------------------------------------------------------
 
-void NAMESPACE::ImageFormat_PNG::save(const char *fname,const NAMESPACE::Image *img, const char* metatxt = nullptr, uint metatxt_size = 0) const
+void NAMESPACE::ImageFormat_PNG::save(const char *fname,const NAMESPACE::Image *img, const std::map<std::string, std::string>& key_value_text) const
 {
   // makes sure Tuple have the correct size (load scheme relies on pointers)
   sl_assert(sizeof(ImageRGB::t_Pixel) == sizeof(ImageRGB::t_Pixel::t_Element)*ImageRGB::t_Pixel::e_Size);
@@ -191,13 +186,17 @@ void NAMESPACE::ImageFormat_PNG::save(const char *fname,const NAMESPACE::Image *
 	       PNG_INTERLACE_NONE,
 	       PNG_COMPRESSION_TYPE_BASE,
 	       PNG_FILTER_TYPE_DEFAULT);
-  if (metatxt) {
-    png_text text;
-    text.compression = PNG_TEXT_COMPRESSION_zTXt;
-    text.key  = "libsl";
-    text.text = (char*)metatxt;
-    text.text_length = (int)metatxt_size;
-    png_set_text(png_ptr, info_ptr, &text, 1);
+  if (!key_value_text.empty()) {
+    Array<png_text> text(key_value_text.size());
+    int i = 0;
+    for (auto kv : key_value_text) {
+      text[i].compression = PNG_TEXT_COMPRESSION_zTXt;
+      text[i].key  = (char*)kv.first.c_str();
+      text[i].text = (char*)kv.second.c_str();
+      text[i].text_length = (int)kv.second.length();
+      i++;
+    }
+    png_set_text(png_ptr, info_ptr, text.raw(), text.size());
   }
   // set max compression
   png_set_compression_level(png_ptr, 9);
@@ -223,14 +222,16 @@ void NAMESPACE::ImageFormat_PNG::save(const char *fname,const NAMESPACE::Image *
 
 void NAMESPACE::ImageFormat_PNG::save(const char *fname, const NAMESPACE::Image *img) const
 {
-  save(fname, img, nullptr, 0);
+  std::map<std::string, std::string> key_value_text;
+  save(fname, img, key_value_text);
 }
 
 //---------------------------------------------------------------------------
 
 Image* NAMESPACE::ImageFormat_PNG::load(const char *fname) const
 {
-  return load(fname,nullptr,0);
+  std::map<std::string, std::string> key_value_text;
+  return load(fname, key_value_text);
 }
 
 

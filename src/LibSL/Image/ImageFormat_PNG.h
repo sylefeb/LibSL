@@ -47,6 +47,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 
 #include <LibSL/Image/Image.h>
 
+#include <map>
+
 namespace LibSL {
   namespace Image {
 
@@ -59,8 +61,8 @@ namespace LibSL {
       Image      *load(const char *)                const;
       const char *signature()                       const {return "png";}
 
-      void        save(const char*, const Image*, const char* metatxt, uint metatxt_size) const;
-      Image*      load(const char*, char* metatxt, uint metatxt_size)                     const;
+      void        save(const char*, const Image*, const std::map<std::string,std::string>& key_value_text) const;
+      Image*      load(const char*, std::map<std::string, std::string>& _key_value_text)                   const;
     };
 
   } //namespace LibSL::Image
