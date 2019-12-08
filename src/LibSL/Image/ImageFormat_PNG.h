@@ -54,9 +54,13 @@ namespace LibSL {
     {
     public:
       ImageFormat_PNG();
+
       void        save(const char *,const Image *)  const;
       Image      *load(const char *)                const;
       const char *signature()                       const {return "png";}
+
+      void        save(const char*, const Image*, const char* metatxt, uint metatxt_size) const;
+      Image*      load(const char*, char* metatxt, uint metatxt_size)                     const;
     };
 
   } //namespace LibSL::Image

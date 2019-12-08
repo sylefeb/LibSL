@@ -78,7 +78,7 @@ NAMESPACE::ImageFormat_PNG::ImageFormat_PNG()
 
 //---------------------------------------------------------------------------
 
-NAMESPACE::Image *NAMESPACE::ImageFormat_PNG::load(const char *name) const
+NAMESPACE::Image *NAMESPACE::ImageFormat_PNG::load(const char *name, char* metatxt, uint metatxt_size) const
 {
   FILE *file;
 	fopen_s(&file, name, "rb");
@@ -97,7 +97,6 @@ NAMESPACE::Image *NAMESPACE::ImageFormat_PNG::load(const char *name) const
   png_infop info_ptr = png_create_info_struct(png_ptr);
   png_infop end_info = png_create_info_struct(png_ptr);
   png_init_io(png_ptr, file);
-
   png_read_info(png_ptr, info_ptr);
   uint w         = png_get_image_width(png_ptr,info_ptr);
   uint h         = png_get_image_height(png_ptr,info_ptr);
@@ -112,7 +111,19 @@ NAMESPACE::Image *NAMESPACE::ImageFormat_PNG::load(const char *name) const
     throw Fatal("ImageFormat_PNG::load - palette not supported (%s)",name);
   //  if (color_type == PNG_COLOR_TYPE_GRAY)
   //    png_set_gray_to_rgb(png_ptr);
-
+  if (metatxt) {
+    metatxt[0] = '\0';
+    png_text *text = nullptr;
+    int       num_text = 0;
+    png_get_text(png_ptr, info_ptr, &text, &num_text);
+    if (num_text > 0) {
+      ForIndex(t, num_text) {
+        if (!strcmp(text[t].key, "libsl")) {
+          strncpy(metatxt, text[t].text, metatxt_size);
+        }
+      }
+    }
+  }
   Array<unsigned char> tmp;
   tmp.allocate(h*w*ncomp);
   Array<png_bytep> rowptrs;
@@ -150,8 +161,7 @@ NAMESPACE::Image *NAMESPACE::ImageFormat_PNG::load(const char *name) const
 
 //---------------------------------------------------------------------------
 
-
-void NAMESPACE::ImageFormat_PNG::save(const char *fname,const NAMESPACE::Image *img) const
+void NAMESPACE::ImageFormat_PNG::save(const char *fname,const NAMESPACE::Image *img, const char* metatxt = nullptr, uint metatxt_size = 0) const
 {
   // makes sure Tuple have the correct size (load scheme relies on pointers)
   sl_assert(sizeof(ImageRGB::t_Pixel) == sizeof(ImageRGB::t_Pixel::t_Element)*ImageRGB::t_Pixel::e_Size);
@@ -166,8 +176,9 @@ void NAMESPACE::ImageFormat_PNG::save(const char *fname,const NAMESPACE::Image *
   FILE *file;
 	fopen_s(&file, fname, "wb");
 
-  if (file == NULL)
-    throw Fatal("Unable to save %s",fname);
+  if (file == NULL) {
+    throw Fatal("Unable to save %s", fname);
+  }
 
   png_structp png_ptr  = png_create_write_struct(PNG_LIBPNG_VER_STRING,0,0,0);
   png_infop   info_ptr = png_create_info_struct(png_ptr);
@@ -180,6 +191,14 @@ void NAMESPACE::ImageFormat_PNG::save(const char *fname,const NAMESPACE::Image *
 	       PNG_INTERLACE_NONE,
 	       PNG_COMPRESSION_TYPE_BASE,
 	       PNG_FILTER_TYPE_DEFAULT);
+  if (metatxt) {
+    png_text text;
+    text.compression = PNG_TEXT_COMPRESSION_zTXt;
+    text.key  = "libsl";
+    text.text = (char*)metatxt;
+    text.text_length = (int)metatxt_size;
+    png_set_text(png_ptr, info_ptr, &text, 1);
+  }
   // set max compression
   png_set_compression_level(png_ptr, 9);
 
@@ -199,5 +218,20 @@ void NAMESPACE::ImageFormat_PNG::save(const char *fname,const NAMESPACE::Image *
   png_destroy_write_struct(&png_ptr, &info_ptr);
   fclose(file);
 }
+
+//---------------------------------------------------------------------------
+
+void NAMESPACE::ImageFormat_PNG::save(const char *fname, const NAMESPACE::Image *img) const
+{
+  save(fname, img, nullptr, 0);
+}
+
+//---------------------------------------------------------------------------
+
+Image* NAMESPACE::ImageFormat_PNG::load(const char *fname) const
+{
+  return load(fname,nullptr,0);
+}
+
 
 //---------------------------------------------------------------------------
