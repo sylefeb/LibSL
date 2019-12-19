@@ -130,7 +130,13 @@ namespace LibSL {
         m_Num ++;
       }
 
-      uint               operator[](int n)        { return (m_Counters[n]); }
+      uint operator[](int n)  { return (m_Counters[n]); }
+
+      void clear()
+      {
+        m_Num = 0;
+        m_Counters.clear();
+      }
 
     };
 
