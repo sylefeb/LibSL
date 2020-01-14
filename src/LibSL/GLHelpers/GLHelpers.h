@@ -106,6 +106,7 @@ using namespace LibSL::System::Types;
 #include "GL_ARB_shader_atomic_counters.h"
 #include "GL_ARB_compute_shader.h"
 #include "GL_ARB_copy_buffer.h"
+#include "GL_ARB_compute_variable_group_size.h"
 #include "GL_VERSION_3_0.h"
 #include "GL_VERSION_3_1.h"
 #include "GL_VERSION_3_2.h"
@@ -565,6 +566,9 @@ namespace LibSL {
 			void init(GLuint shader);
 
 			void run(const LibSL::Math::v3i& numGroups);
+#if OPENGL4
+			void run(const LibSL::Math::v3i& numGroups, const LibSL::Math::v3i& groupSize);
+#endif
 
 			void terminate();
 
