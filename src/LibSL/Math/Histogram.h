@@ -127,14 +127,13 @@ namespace LibSL {
       void printAsTex(std::ostream& _out, std::string title = "", std::string x_label = "", std::string y_label = "")
       {
         std::string h_values = "";
-        uint y_max = 0;
+        float y_max = 0.0f;
         for (std::map<int, unsigned int>::const_iterator I = m_Counters.begin(); I != m_Counters.end(); I++) {
           y_max = max(y_max, (*I).second);
           h_values = h_values + " (" + std::to_string((*I).first) + ", " + std::to_string((*I).second) +  ") ";
         }
-        y_max = ((y_max + y_max * 0.05f) + 50) / 100 * 100;
+        y_max = ((y_max + y_max * 0.05f) + 50.0f) / 100.0f * 100.0f;
         y_max = std::ceil(y_max);
-
         
         _out << "\\documentclass[border=3mm, tikz, preview]{standalone}" << std::endl;
         _out << "\\usepackage{pgfplots}" << std::endl;
