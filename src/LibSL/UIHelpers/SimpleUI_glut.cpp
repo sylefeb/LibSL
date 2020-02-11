@@ -75,6 +75,7 @@ uint glut_to_LibSL_scancode(uchar key,uint sc)
   case 114:                   return LIBSL_KEY_CTRL;
   case 116:                   return LIBSL_KEY_ALT;
   case 120:                   return LIBSL_KEY_BK_SPACE;
+  case 32:                    return LIBSL_KEY_SPACE;
   }
   switch (key)
   {
