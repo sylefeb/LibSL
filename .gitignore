@@ -1,15 +1,12 @@
-## Ignore LibSL builded files
+## Ignore LibSL build files
 
-# libs files
+# output binary files
 src/libs/
 
-# LibSL perl-generated Visual Studio project files
-*.csproj
-
-# LibSL perl-generated files & locations
+# LibSL CMake generated files & locations
 src/LibSL/LibSL.config.h
 src/LibSL/LibSL_gl.config.h
 
-# LibSL_sharp perl-generated files & locations
+# LibSL_sharp build files & locations
 src/LibSL_sharp/C#/bin/
 src/LibSL_sharp/C#/obj/
