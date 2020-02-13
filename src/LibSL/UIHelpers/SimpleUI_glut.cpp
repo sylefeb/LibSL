@@ -75,12 +75,15 @@ uint glut_to_LibSL_scancode(uchar key,uint sc)
   case 114:                   return LIBSL_KEY_CTRL;
   case 116:                   return LIBSL_KEY_ALT;
   case 120:                   return LIBSL_KEY_BK_SPACE;
+  case 32:                    return LIBSL_KEY_SPACE;
+  case 27:                    return LIBSL_KEY_ESC;
   }
   switch (key)
   {
   case '\t': return LIBSL_KEY_TAB;
-  case 27: return LIBSL_KEY_ESC;
-  case 8: return LIBSL_KEY_BK_SPACE;
+  case 27:   return LIBSL_KEY_ESC;
+  case 8:    return LIBSL_KEY_BK_SPACE;
+  case 32:   return LIBSL_KEY_SPACE;
   }
   return 0;
 }
@@ -152,7 +155,7 @@ static void glutKeyboardSpecialUp(int k, int x, int y)
 {
   int code = 0;
   code = glut_to_LibSL_scancode(0,k);
-  NAMESPACE::onScanCodeUnpressed(code = glut_to_LibSL_scancode(0,k));
+  NAMESPACE::onScanCodeUnpressed(code);
 }
 
 static void glutRender()

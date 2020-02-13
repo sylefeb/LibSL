@@ -172,6 +172,7 @@ namespace LibSL {
 #define LIBSL_KEY_TAB       26
 #define LIBSL_KEY_BK_SPACE  28
 #define LIBSL_KEY_ESC       27
+#define LIBSL_KEY_SPACE     32
 #define LIBSL_KEY_DELETE    127
 
 //---------------------------------------------------------------------------
