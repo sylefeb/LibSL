@@ -99,7 +99,7 @@ static void CALLBACK edgeFlagCallBack(void *userData,GLboolean)
 {
 }
 
-static void CALLBACK errorCallback(void *userData,GLenum err)
+static void CALLBACK errorCallback(GLenum err,void *userData)
 {
   // cerr << "errorCallback" << endl;
   t_triangulate_nfo *nfo = (t_triangulate_nfo*)userData;
