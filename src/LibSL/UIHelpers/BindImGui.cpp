@@ -478,7 +478,7 @@ static void bindMouseButtonPressed(uint x, uint y, uint button, uint flags)
 
 static void bindKeyPressed(uchar key)
 {
-  std::cerr << "[BindImGui] bindKeypressed " << (int)key << std::endl;
+  // std::cerr << "[BindImGui] bindKeypressed " << (int)key << std::endl;
   ImGuiIO& io = ImGui::GetIO();
   io.AddInputCharacter((unsigned short)key);
   io.KeysDown[key] = true;
@@ -489,7 +489,7 @@ static void bindKeyPressed(uchar key)
 
 static void bindKeyUnpressed(uchar key)
 {
-  std::cerr << "[BindImGui] bindKeyUnpressed " << (int)key << std::endl;
+  // std::cerr << "[BindImGui] bindKeyUnpressed " << (int)key << std::endl;
   ImGuiIO& io = ImGui::GetIO();
   io.KeysDown[key] = false;
   if (!io.WantCaptureKeyboard) {
@@ -499,7 +499,7 @@ static void bindKeyUnpressed(uchar key)
 
 static void bindScanCodePressed(uint sc)
 {
-  std::cerr << "[BindImGui] bindScanCodePressed " << sc << std::endl;
+  // std::cerr << "[BindImGui] bindScanCodePressed " << sc << std::endl;
   ImGuiIO& io = ImGui::GetIO();
   io.KeysDown[sc] = true;
   if (!io.WantCaptureKeyboard) {
@@ -509,7 +509,7 @@ static void bindScanCodePressed(uint sc)
 
 static void bindScanCodeUnpressed(uint sc)
 {
-  std::cerr << "[BindImGui] bindScanCodeUnpressed " << sc << std::endl;
+  // std::cerr << "[BindImGui] bindScanCodeUnpressed " << sc << std::endl;
   ImGuiIO& io = ImGui::GetIO();
   io.KeysDown[sc] = false;
   if (!io.WantCaptureKeyboard) {
