@@ -59,10 +59,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 # include <fcntl.h>
 # include <dirent.h>
 # include <unistd.h>
-#else
-# include <windows.h>
-# include <psapi.h>
-# include <shlwapi.h>
 #endif
 
 // ------------------------------------------------------
