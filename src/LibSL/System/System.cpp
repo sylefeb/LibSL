@@ -52,9 +52,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 # include <sys/time.h>
 # include <sys/stat.h>
 # include <sys/types.h>
-#include <fcntl.h>
-#include <dirent.h>
-#include <unistd.h>
+# include <fcntl.h>
+# include <dirent.h>
+# include <unistd.h>
 #else
 # include <windows.h>
 # include <psapi.h>
@@ -188,7 +188,11 @@ void    NAMESPACE::File::createDirectory(const char *path)
 #ifdef WIN32
   CreateDirectoryA(path,NULL);
 #else
+  #ifdef __MINGW32__
+  mkdir(path);
+  #else
   mkdir(path,S_IRUSR|S_IWUSR|S_IXUSR);
+  #endif
 #endif
 }
 
@@ -279,6 +283,9 @@ void NAMESPACE::Process::sleep(uint msec)
 
 const char *NAMESPACE::Application::executablePath()
 {
+#ifdef __MINGW32__
+  return "/"; // TODO: better option? readlink is not defined there...
+#else
 #ifdef EMSCRIPTEN
   return "/";
 #endif
@@ -339,6 +346,7 @@ const char *NAMESPACE::Application::executablePath()
 #endif
 #endif
   return (appPath);
+#endif
 }
 
 // ------------------------------------------------------
