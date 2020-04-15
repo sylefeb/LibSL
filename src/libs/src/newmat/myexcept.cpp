@@ -76,7 +76,7 @@ void BaseException::AddMessage(const char* a_what)
    {
       int l = (int)strlen(a_what); int r = LastOne - SoFar;
       if (l < r) { 
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
         strcpy_s(what_error+SoFar, l, a_what); 
 #else
         strcpy(what_error + SoFar, a_what);
@@ -85,7 +85,7 @@ void BaseException::AddMessage(const char* a_what)
       }
       else if (r > 0)
       {
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
         strncpy_s(what_error + SoFar, r, a_what, _TRUNCATE);
 #else
          strncpy(what_error+SoFar, a_what, r);

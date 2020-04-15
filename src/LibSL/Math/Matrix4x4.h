@@ -60,7 +60,7 @@ namespace LibSL {
 
 #define LibSL__Math__M(IJ) const T_Type& m##IJ=(*this)[_##IJ]; // helper to map matrix entries to mij variables
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
 #define LIBSL_PUBLIC_CLASS __declspec(dllexport)
 #else
 #define LIBSL_PUBLIC_CLASS /*__attribute__((visibility("default")))*/

@@ -23,6 +23,7 @@ namespace LibSL {
 class LIBSL_DLL StyleManager {
 public:
 
+  // CZ 2019-17-10 : update required to manage DLLs properly
 
   static StyleManager* get() {
     if (!m_singleton) {
@@ -84,6 +85,24 @@ static void SplitEnumArgs(const char* _szArgs, std::string _Array[], int _nMax)
     nIdx++;
   }
 };
+
+/**
+ * @brief The StyleHandle class push/pop style based
+ * on the lifetime of the handle
+ */
+class StyleHandle
+{
+public:
+  StyleHandle(const char* context)
+  {
+    StyleManager::get()->push(context);
+  }
+  ~StyleHandle()
+  {
+    StyleManager::get()->pop();
+  }
+};
+
 // This will to define an enum that is wrapped in a namespace of the same name along with ToString(), FromString(), and COUNT
 #define DECLARE_ENUM(ename, ...) \
     namespace ename { \

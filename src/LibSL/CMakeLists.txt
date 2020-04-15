@@ -180,6 +180,7 @@ SET(LIBSL_GL_HEADERS
  	UIHelpers/BindImGui.h
 	UIHelpers/StyleManager.h
   ../libs/src/imgui/imgui.h
+  ../libs/src/imgui/misc/cpp/imgui_stdlib.h
   )
 
 SET(LIBSL_GL_SOURCE
@@ -200,6 +201,7 @@ SET(LIBSL_GL_SOURCE
 	UIHelpers/BindImGui.cpp
 	UIHelpers/StyleManager.cpp
   ../libs/src/imgui/imgui.cpp
+  ../libs/src/imgui/misc/cpp/imgui_stdlib.cpp
   ../libs/src/imgui/imgui_draw.cpp
   ../libs/src/imgui/imgui_widgets.cpp
 )
@@ -213,6 +215,7 @@ SET(LIBSL_GL4_HEADERS
  	UIHelpers/BindImGui.h
 	UIHelpers/StyleManager.h
   ../libs/src/imgui/imgui.h
+  ../libs/src/imgui/misc/cpp/imgui_stdlib.h
   )
 
 SET(LIBSL_GL4_SOURCE
@@ -233,6 +236,7 @@ SET(LIBSL_GL4_SOURCE
 	UIHelpers/BindAntTweakBar.cpp
  	UIHelpers/BindImGui.cpp
   ../libs/src/imgui/imgui.cpp
+  ../libs/src/imgui/misc/cpp/imgui_stdlib.cpp
   ../libs/src/imgui/imgui_draw.cpp
   ../libs/src/imgui/imgui_widgets.cpp
 )
@@ -245,6 +249,7 @@ SET(LIBSL_GL4CORE_HEADERS
  	UIHelpers/BindImGui.h
 	UIHelpers/StyleManager.h
   ../libs/src/imgui/imgui.h
+  ../libs/src/imgui/misc/cpp/imgui_stdlib.h
   )
 
 SET(LIBSL_GL4CORE_SOURCE
@@ -264,6 +269,7 @@ SET(LIBSL_GL4CORE_SOURCE
 	UIHelpers/BindAntTweakBar.cpp
  	UIHelpers/BindImGui.cpp
   ../libs/src/imgui/imgui.cpp
+  ../libs/src/imgui/misc/cpp/imgui_stdlib.cpp
   ../libs/src/imgui/imgui_draw.cpp
   ../libs/src/imgui/imgui_widgets.cpp
 )

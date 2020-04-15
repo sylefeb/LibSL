@@ -66,7 +66,7 @@ ERROR_____either_OPENGL_or_DIRECT3D_must_be_defined__not_both _;
 #include <LibSL/LibSL.h>
 #endif
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
 #endif
 

@@ -46,9 +46,10 @@ knowledge of the CeCILL-C license and that you accept its terms.
 
 uint glut_to_LibSL_scancode(uchar key,uint sc)
 {
-  //std::cout << "glut_to_LibSL_scancode k=" << (int)key << " sc=" << sc << std::endl;
+  // std::cerr << "glut_to_LibSL_scancode k=" << (int)key << " sc=" << sc << std::endl;
   switch (sc)
   {
+  case 0:                     break;
   case GLUT_KEY_F1:           return LIBSL_KEY_F1;
   case GLUT_KEY_F2:           return LIBSL_KEY_F2;
   case GLUT_KEY_F3:           return LIBSL_KEY_F3;
@@ -70,19 +71,23 @@ uint glut_to_LibSL_scancode(uchar key,uint sc)
   case GLUT_KEY_HOME:         return LIBSL_KEY_HOME;
   case GLUT_KEY_END:          return LIBSL_KEY_END;
   case GLUT_KEY_INSERT:       return LIBSL_KEY_INSERT;
-#ifndef EMSCRIPTEN
-  case GLUT_KEY_DELETE:       return LIBSL_KEY_DELETE;
-#endif
+  case 111:                   return LIBSL_KEY_DELETE;
   case 112:                   return LIBSL_KEY_SHIFT;
   case 114:                   return LIBSL_KEY_CTRL;
   case 116:                   return LIBSL_KEY_ALT;
   case 120:                   return LIBSL_KEY_BK_SPACE;
+  case 27:                    return LIBSL_KEY_ESC;
+  case 32:                    return LIBSL_KEY_SPACE;
+  case 13:                    return LIBSL_KEY_ENTER;
+  default:
+    std::cerr << "glut_to_LibSL_scancode, scan code has no mapping (k=" << (int)key << " sc=" << sc << ")" << std::endl;
   }
+  // keys to transform into scancodes
   switch (key)
   {
   case '\t': return LIBSL_KEY_TAB;
-  case 27: return LIBSL_KEY_ESC;
-  case 8: return LIBSL_KEY_BK_SPACE;
+  case 27:   return LIBSL_KEY_ESC;
+  case 8:    return LIBSL_KEY_BK_SPACE;
   }
   return 0;
 }
@@ -123,7 +128,7 @@ static void glutMotion(int x,int y)
 
 static void glutKeyboard(uchar k, int x, int y)
 {
-//  std::cout << "glutKeyboard '" << k << "'" << std::endl;
+  // std::cerr << "glutKeyboard '" << k << "'" << std::endl;
   uint sc = glut_to_LibSL_scancode(k,0);
   if (sc) {
     NAMESPACE::onScanCodePressed(sc);
@@ -144,7 +149,7 @@ static void glutKeyboardUp (uchar k, int x, int y)
 
 static void glutKeyboardSpecial(int k, int x, int y)
 {
-//  std::cout << "glutKeyboardSpecial '" << k << "'" << std::endl;
+  // std::cerr << "glutKeyboardSpecial '" << k << "'" << std::endl;
   uint code = 0;
   code = glut_to_LibSL_scancode(0,k);
   NAMESPACE::onScanCodePressed(code);
@@ -154,7 +159,7 @@ static void glutKeyboardSpecialUp(int k, int x, int y)
 {
   int code = 0;
   code = glut_to_LibSL_scancode(0,k);
-  NAMESPACE::onScanCodeUnpressed(code = glut_to_LibSL_scancode(0,k));
+  NAMESPACE::onScanCodeUnpressed(code);
 }
 
 static void glutRender()

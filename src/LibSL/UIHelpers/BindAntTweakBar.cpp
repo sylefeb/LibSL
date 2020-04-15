@@ -36,7 +36,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #include "LibSL.precompiled.h"
 //---------------------------------------------------------------------------
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
 #include <Windows.h>
 #endif
 
@@ -48,7 +48,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 
 #define NAMESPACE LibSL::UIHelpers::SimpleUI
 
-#ifdef WIN32 // ---------------------------------------
+#if defined(_WIN32) || defined(_WIN64) // ---------------------------------------
 
 static LRESULT CALLBACK bindWin32Event(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {

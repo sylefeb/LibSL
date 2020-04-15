@@ -22,7 +22,7 @@ std::set<std::string>  g_glux__glExtensions;
 
 // -------------------------------------------------------- 
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
 #include <windows.h> 
 // typedef of wglGetExtensionsStringARB
 typedef const char * (APIENTRYP t_wglGetExtensionsStringARB) (HDC hdc);
@@ -91,7 +91,7 @@ void glux::init(int flags,const char *profile)
     strout << "OpenGL should be initialized before calling gluxInit() !" << endl;
 #ifndef GLUX_NO_OUTPUT  
     cerr << strout.str() << endl;
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
     MessageBox(NULL,strout.str().c_str(),"gluX - Fatal error",MB_OK | MB_ICONSTOP);
 #endif
 #endif
@@ -125,7 +125,7 @@ void glux::init(int flags,const char *profile)
     strout << "-=-=-=-=-=-=-=-=-=-=-=-=-" << endl << endl << endl;
   }
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
   // read wgl extension string (if possible)
   t_wglGetExtensionsStringARB __wglGetExtensionsStringARB;
   __wglGetExtensionsStringARB = (t_wglGetExtensionsStringARB)GLUX_LOAD_PROC("wglGetExtensionsStringARB");
@@ -161,7 +161,7 @@ void glux::init(int flags,const char *profile)
 
   if (!all_ok) {
     strout << "Failed to load at least one required extension !" << endl;
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
     MessageBox(NULL,strout.str().c_str(),"Sorry, gluX cannot find required extensions",MB_OK | MB_ICONSTOP);
 #else
     cerr << strout.str() << endl;
@@ -219,7 +219,7 @@ bool glux::validateExtension(const pair<string,gluxPlugin*>& ext,int flags,
           << "Extension " << ext.first 
           << " not supported." << endl << endl;
         strout << strout.str() << endl;
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
         MessageBox(NULL,strout.str().c_str(),"Sorry, gluX cannot find required extensions",MB_OK | MB_ICONSTOP);
 #else
         cerr << strout.str() << endl;
