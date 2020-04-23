@@ -4,7 +4,7 @@ PROJECT(AntTweakBar)
 
 FIND_PACKAGE(OpenGL)
 
-IF(WIN32)
+IF(WIN32 AND NOT MINGW)
 
 SET(ATB_SOURCES
 #  src/LoadOGLCore.cpp
