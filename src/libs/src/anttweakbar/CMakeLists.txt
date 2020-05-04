@@ -69,7 +69,7 @@ SET(ATB_HEADERS
   src/TwPrecomp.h
 )
 
-ENDIF(WIN32)
+ENDIF()
 
 IF(MINGW)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
