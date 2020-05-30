@@ -529,8 +529,7 @@ namespace LibSL  {
         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,rt.fbo);
 #if /*!defined(EMSCRIPTEN) &&*/ !defined(ANDROID)
         bool is_depth = (GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::isdepth != 0);
-        if (!is_depth)
-        {
+        if (!is_depth) {
           if (rt.numtargets > 0) {
             GLenum drawbuffers[32];
             ForIndex(i, 32) {
