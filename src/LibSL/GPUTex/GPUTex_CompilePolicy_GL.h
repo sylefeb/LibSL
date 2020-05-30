@@ -317,6 +317,10 @@ namespace LibSL  {
 #define ADD_DEPTH   1
 #define ADD_STENCIL 1
 
+#ifdef EMSCRIPTEN
+#define glDrawBuffersARB glDrawBuffers
+#endif
+
       /// Create 2D render target
       ///   - num render targets are created (enables multiple render targets).
       ///   - in OpenGL a render target always has an associated depth buffer
@@ -328,7 +332,7 @@ namespace LibSL  {
         typename T_APIPolicy::t_HandleRT2D handle;
         handle.depth_rb   = 0;
         handle.stencil_rb = 0;
-#if !defined(EMSCRIPTEN) && !defined(ANDROID)
+#if /*!defined(EMSCRIPTEN) &&*/ !defined(ANDROID)
         int maxRenterTargets = 0;
         glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS_EXT, &maxRenterTargets);
         sl_assert(num <uint(maxRenterTargets) && num > 0);
@@ -524,7 +528,7 @@ namespace LibSL  {
       static void bindRenderTarget2D(const typename T_APIPolicy::t_HandleRT2D& rt)
       {
         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,rt.fbo);
-        #if !defined(EMSCRIPTEN) && !defined(ANDROID)
+        #if /*!defined(EMSCRIPTEN) &&*/ !defined(ANDROID)
         bool is_depth = (GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::isdepth != 0);
         if (!is_depth)
         {
