@@ -117,6 +117,9 @@ GLUX_LOAD(GL_EXT_texture3D)
 #define GL_FRAMEBUFFER_COMPLETE_EXT GL_FRAMEBUFFER_COMPLETE
 #define GL_FRAMEBUFFER_UNSUPPORTED_EXT GL_FRAMEBUFFER_UNSUPPORTED
 #endif
+#ifdef EMSCRIPTEN
+#define glDrawBuffersARB glDrawBuffers
+#endif
 #endif
 
 // ------------------------------------------------------
@@ -317,10 +320,6 @@ namespace LibSL  {
 #define ADD_DEPTH   1
 #define ADD_STENCIL 1
 
-#ifdef EMSCRIPTEN
-#define glDrawBuffersARB glDrawBuffers
-#endif
-
       /// Create 2D render target
       ///   - num render targets are created (enables multiple render targets).
       ///   - in OpenGL a render target always has an associated depth buffer
@@ -440,10 +439,10 @@ namespace LibSL  {
           // -> attach everything together
           glBindFramebufferEXT     (GL_FRAMEBUFFER_EXT , handle.fbo);
           glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT , GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, handle.textures[0], 0);
-          #if !defined(EMSCRIPTEN) && !defined(ANDROID)
+#if /*!defined(EMSCRIPTEN) &&*/ !defined(ANDROID)
           glDrawBuffer(GL_NONE);
           glReadBuffer(GL_NONE);
-          #endif
+#endif
           //          GLenum drawbuffers = GL_DEPTH_ATTACHMENT_EXT;
           //          glDrawBuffersARB(1,&drawbuffers);
         }
@@ -528,26 +527,24 @@ namespace LibSL  {
       static void bindRenderTarget2D(const typename T_APIPolicy::t_HandleRT2D& rt)
       {
         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,rt.fbo);
-        #if /*!defined(EMSCRIPTEN) &&*/ !defined(ANDROID)
+#if /*!defined(EMSCRIPTEN) &&*/ !defined(ANDROID)
         bool is_depth = (GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::isdepth != 0);
         if (!is_depth)
         {
-          if (rt.numtargets > 0)
-          {
+          if (rt.numtargets > 0) {
             GLenum drawbuffers[32];
-            ForIndex(i, 32)
+            ForIndex(i, 32) {
               drawbuffers[i] = GL_COLOR_ATTACHMENT0_EXT + i;
+            }
             glDrawBuffersARB(rt.numtargets,drawbuffers);
           }
-        }
-        else
-        {
+        } else {
           glDrawBuffer(GL_NONE);
           glReadBuffer(GL_NONE);
           //GLenum drawbuffers = GL_DEPTH_ATTACHMENT_EXT;
           //glDrawBuffersARB(1,&drawbuffers);
         }
-        #endif
+#endif
       }
 
 
