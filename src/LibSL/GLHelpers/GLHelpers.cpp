@@ -866,6 +866,17 @@ void NAMESPACE::GLCompute::run(const v3i& numGroups)
 	glDispatchCompute(numGroups[0],numGroups[1],numGroups[2]);
 }
 
+#if OPENGL4
+void NAMESPACE::GLCompute::run(const v3i& numGroups, const v3i& groupSize)
+{
+    authorize();
+	if (!m_Active)
+		throw GLException("GLCompute::run - must be enclosed in-between begin/end calls");
+	glDispatchComputeGroupSizeARB(numGroups[0],numGroups[1],numGroups[2],
+				      groupSize[0],groupSize[1],groupSize[2]);
+}
+#endif
+
 // -----------------------------------------------------
 
 #endif
