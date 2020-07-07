@@ -94,6 +94,10 @@ namespace LibSL {
         m_RenderMesh->instantiate(count);
       }
 
+      GLuint VAO()
+      {
+        return m_RenderMesh->descriptor().uiVA;
+      }
     };
 
   } //namespace LibSL::Mesh

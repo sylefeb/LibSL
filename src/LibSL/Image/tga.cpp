@@ -450,7 +450,7 @@ t_image_nfo *ReadTGAFile(const char *filename)
   texinfo->pixels = new uchar[texinfo->width * texinfo->height * (texinfo->depth/8)];
   if (!texinfo->pixels)
   {
-    free (texinfo);
+    delete (texinfo);
     return NULL;
   }
 
@@ -541,9 +541,7 @@ t_image_nfo *ReadTGAFile(const char *filename)
   }
 
   /* No longer need colormap data */
-  if (colormap) {
-    delete[] (colormap);
-  }
+  delete[] (colormap);
 
   fclose (fp);
   return texinfo;

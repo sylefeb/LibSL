@@ -124,7 +124,7 @@ namespace LibSL {
         }
       }
 
-      void printAsTex(std::ostream& _out, std::string title = "", std::string x_label = "", std::string y_label = "")
+      void printAsTex(std::ostream& _out, const char* title = "", const char* x_label = "", const char* y_label = "")
       {
         std::string h_values = "";
         float y_max = 0.0f;
@@ -139,8 +139,8 @@ namespace LibSL {
         _out << "\\usepackage{pgfplots}" << std::endl;
         _out << "\\begin{document}" << std::endl;
         _out << "\\begin{tikzpicture}" << std::endl;
-        _out << LibSL::CppHelpers::sprint("\\begin{axis}[title={%s}, ", title.c_str());
-        _out << LibSL::CppHelpers::sprint("xlabel={%s}, ylabel={%s}, ", x_label.c_str(), y_label.c_str());
+        _out << LibSL::CppHelpers::sprint("\\begin{axis}[title={%s}, ", title);
+        _out << LibSL::CppHelpers::sprint("xlabel={%s}, ylabel={%s}, ", x_label, y_label);
         _out << LibSL::CppHelpers::sprint("ymax=%d, ", y_max);
         _out << "ymin = 0, enlarge x limits = true, ";
         _out << "minor y tick num = 5, area style]" << std::endl;

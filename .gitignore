@@ -1,2 +1,13 @@
+## Ignore LibSL build files
+
+# output binary files
 build/
-*.config.h
+src/libs/
+
+# LibSL CMake generated files & locations
+src/LibSL/LibSL.config.h
+src/LibSL/LibSL_gl.config.h
+
+# LibSL_sharp build files & locations
+src/LibSL_sharp/C#/bin/
+src/LibSL_sharp/C#/obj/
