@@ -187,7 +187,7 @@ void NAMESPACE::ImageFormat_PNG::save(const char *fname,const NAMESPACE::Image *
 	       PNG_COMPRESSION_TYPE_BASE,
 	       PNG_FILTER_TYPE_DEFAULT);
   if (!key_value_text.empty()) {
-    Array<png_text> text(key_value_text.size());
+    Array<png_text> text(static_cast<uint>(key_value_text.size()));
     int i = 0;
     for (auto kv : key_value_text) {
       text[i].compression = PNG_TEXT_COMPRESSION_zTXt;

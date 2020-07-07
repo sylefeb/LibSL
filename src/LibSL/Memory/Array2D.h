@@ -254,8 +254,7 @@ namespace LibSL  {
       };
 
 
-#if defined(_WIN32) || defined(_WIN64) // This is due to an incompatibility btw Visual C and g++ // TODO FIXME
-      // assumes WIN32 means Visual C++
+#ifdef _MSC_VER // This is due to an incompatibility btw Visual C and g++ // TODO FIXME
 
       /*!
 

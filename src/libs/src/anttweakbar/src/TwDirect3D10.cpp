@@ -306,7 +306,7 @@ int CTwGraphDirect3D10::Init()
         {
             s_ErrorMsg[errOffset++] = ':';
             s_ErrorMsg[errOffset++] = '\n';
-            errLen = min(errors->GetBufferSize(), ERR_MSG_MAX_LEN-errOffset-2);
+            errLen = min((unsigned int)errors->GetBufferSize(), ERR_MSG_MAX_LEN-errOffset-2);
             strncpy(s_ErrorMsg+errOffset, static_cast<char *>(errors->GetBufferPointer()), errLen);
             errors->Release();
             errors = NULL;

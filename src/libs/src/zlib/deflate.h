@@ -371,8 +371,8 @@ void ZLIB_INTERNAL flush_pending(PREFIX3(streamp) strm);
 # define zng_tr_tally_dist(s, distance, length, flush) \
   { unsigned char len = (unsigned char)(length); \
     uint16_t dist = (uint16_t)(distance); \
-    s->sym_buf[s->sym_next++] = dist; \
-    s->sym_buf[s->sym_next++] = dist >> 8; \
+    s->sym_buf[s->sym_next++] = (unsigned char)dist; \
+    s->sym_buf[s->sym_next++] = (unsigned char)(dist >> 8); \
     s->sym_buf[s->sym_next++] = len; \
     dist--; \
     s->dyn_ltree[zng_length_code[len]+LITERALS+1].Freq++; \

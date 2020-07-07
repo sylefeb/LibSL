@@ -220,7 +220,9 @@ NAMESPACE::TriangleMesh *NAMESPACE::MeshFormat_OBJ::load(const char *fname) cons
 						else                  { vnfo[id_nrm] --; }
 					}
 				}
-				sl_assert( nface < N_FACE_MAX );
+				if (nface >= N_FACE_MAX) {
+					throw Fatal("[MeshFormat_OBJ::load] - unsupported number of faces %d (max. %d)", nface + 1, N_FACE_MAX);
+				}
 				face[ nface ++ ] = vnfo;
 				char nextc = parser.readChar(false);
 				if ( nextc == '\n' ) {
