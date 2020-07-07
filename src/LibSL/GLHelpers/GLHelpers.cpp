@@ -835,8 +835,9 @@ void NAMESPACE::GLCompute::terminate()
 
 void NAMESPACE::GLCompute::authorize() const
 {
-  if (m_Shader==0)
+  if (m_Shader==0) {
     throw GLException("GLCompute::authorize - shader used without having been initialized !");
+  }
 }
 
 // -----------------------------------------------------
@@ -861,8 +862,9 @@ void NAMESPACE::GLCompute::end()
 void NAMESPACE::GLCompute::run(const v3i& numGroups)
 {
     authorize();
-	if (!m_Active)
+	if (!m_Active) {
 		throw GLException("GLCompute::run - must be enclosed in-between begin/end calls");
+  }
 	glDispatchCompute(numGroups[0],numGroups[1],numGroups[2]);
 }
 
@@ -870,8 +872,9 @@ void NAMESPACE::GLCompute::run(const v3i& numGroups)
 void NAMESPACE::GLCompute::run(const v3i& numGroups, const v3i& groupSize)
 {
     authorize();
-	if (!m_Active)
+	if (!m_Active) {
 		throw GLException("GLCompute::run - must be enclosed in-between begin/end calls");
+  }
 	glDispatchComputeGroupSizeARB(numGroups[0],numGroups[1],numGroups[2],
 				      groupSize[0],groupSize[1],groupSize[2]);
 }
