@@ -1,6 +1,7 @@
 ## Ignore LibSL build files
 
 # output binary files
+build/
 src/libs/
 
 # LibSL CMake generated files & locations
