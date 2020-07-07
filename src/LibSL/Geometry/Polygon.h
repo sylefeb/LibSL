@@ -215,7 +215,7 @@ namespace LibSL {
         counts[0] = counts[1] = counts[2] = 0;
         i = 0;
         for (;i<numpt;i++) {
-          dt         = dot( m_Pts[i],p.n() ) - p.d();
+          dt         = dot(LibSL::Math::Tuple<float, T_NumDim>(m_Pts[i]),p.n() ) - p.d();
           dists[i]   = dt;
           if (dt  > LIBSL_POLYGON_ON_EPSILON) {
             sides[i] = LIBSL_POLYGON_SIDE_FRONT;
