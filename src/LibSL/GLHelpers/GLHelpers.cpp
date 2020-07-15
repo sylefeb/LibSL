@@ -868,7 +868,6 @@ void NAMESPACE::GLCompute::run(const v3i& numGroups)
 	glDispatchCompute(numGroups[0],numGroups[1],numGroups[2]);
 }
 
-#if OPENGL4
 void NAMESPACE::GLCompute::run(const v3i& numGroups, const v3i& groupSize)
 {
     authorize();
@@ -878,7 +877,6 @@ void NAMESPACE::GLCompute::run(const v3i& numGroups, const v3i& groupSize)
 	glDispatchComputeGroupSizeARB(numGroups[0],numGroups[1],numGroups[2],
 				      groupSize[0],groupSize[1],groupSize[2]);
 }
-#endif
 
 // -----------------------------------------------------
 

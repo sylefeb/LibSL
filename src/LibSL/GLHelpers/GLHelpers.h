@@ -566,9 +566,7 @@ namespace LibSL {
 			void init(GLuint shader);
 
 			void run(const LibSL::Math::v3i& numGroups);
-#if OPENGL4
 			void run(const LibSL::Math::v3i& numGroups, const LibSL::Math::v3i& groupSize);
-#endif
 
 			void terminate();
 
