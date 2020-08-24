@@ -78,7 +78,7 @@ namespace LibSL {
         m_Message[length] = '\0';
       }
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
 #pragma warning(push)
 #pragma warning(disable: 4793) // see https://msdn.microsoft.com/en-us/library/dby9t00y(v=vs.120).aspx
 #endif
@@ -92,7 +92,7 @@ namespace LibSL {
 
       const char *message() const {return (m_Message);}
     };
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
 #pragma warning(pop)
 #endif
 

@@ -119,7 +119,7 @@ void NAMESPACE::MeshFormat_proc::loadModelOriginsFromMap(const char *fname,map<s
           parser.reachChar('\"');
           string v = parser.readString("\"");
           if (p == "origin") {
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
             sscanf_s(v.c_str(),"%f %f %f",&origin[0],&origin[1],&origin[2]);
 #else
             sscanf  (v.c_str(),"%f %f %f",&origin[0],&origin[1],&origin[2]);

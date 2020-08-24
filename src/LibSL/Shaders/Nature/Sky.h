@@ -53,7 +53,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #include <LibSL/CgHelpers/CgHelpers.h>
 #include <LibSL/Math/Vertex.h>
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
 #endif
 

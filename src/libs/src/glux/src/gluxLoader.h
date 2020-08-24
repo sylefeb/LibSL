@@ -21,6 +21,12 @@
 
 // --------------------------------------------------------
 
+#if defined(_WIN32) || defined(_WIN64)
+#include <windows.h>
+#endif
+
+// --------------------------------------------------------
+
 #define GLUX_NOT_LOADED   -1
 #define GLUX_NOT_AVAILABLE 0
 #define GLUX_NOT_DEVL      0

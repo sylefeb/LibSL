@@ -14,7 +14,7 @@ using namespace glux;
 // Load proc address
 // -------------------------------------------------------- 
 
-#ifdef WIN32 
+#if defined(_WIN32) || defined(_WIN64)
 
 # include <windows.h>
 void* GLUX_LOAD_PROC(const char *name)

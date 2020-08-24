@@ -71,7 +71,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #endif // OPENGL
 
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
 #include <windowsx.h>
 #endif
@@ -146,7 +146,7 @@ NAMESPACE::f_onDragDrop           NAMESPACE::onDragDrop           = defaultOnDra
 
 //---------------------------------------------------------------------------
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
 
 static WNDPROC SimpleUI_Custom_WndProc = NULL;
 

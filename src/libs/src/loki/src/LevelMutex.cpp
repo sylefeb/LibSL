@@ -20,7 +20,7 @@
 
 // ----------------------------------------------------------------------------
 
-#if (!defined(__CYGWIN__) || (defined(__CYGWIN__) && __GNUC__ > 3)) && !defined(__APPLE__)
+#if (!defined(__CYGWIN__) || (defined(__CYGWIN__) && __GNUC__ > 3)) && !defined(__APPLE__) && !defined(__MINGW32__)
 
 #include <loki/LevelMutex.h>
 

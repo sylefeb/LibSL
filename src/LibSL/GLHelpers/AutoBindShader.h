@@ -140,6 +140,7 @@ namespace AutoBindShader {
     void	  end()	  { m_Shader.end();   }
 
     void	  run(const LibSL::Math::v3i& numGroups)	{ m_Shader.run(numGroups); }
+    void	  run(const LibSL::Math::v3i& numGroups, const LibSL::Math::v3i& groupSize)	{ m_Shader.run(numGroups, groupSize); }
 
 #ifdef TW_INCLUDED
     TwBar *makeTwBar() { return T_Precompiled::makeTwBar(this); }

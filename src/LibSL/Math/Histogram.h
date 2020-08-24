@@ -124,13 +124,46 @@ namespace LibSL {
         }
       }
 
+      void printAsTex(std::ostream& _out, const char* title = "", const char* x_label = "", const char* y_label = "")
+      {
+        std::string h_values = "";
+        float y_max = 0.0f;
+        for (std::map<int, unsigned int>::const_iterator I = m_Counters.begin(); I != m_Counters.end(); I++) {
+          y_max = max(y_max, (*I).second);
+          h_values = h_values + " (" + std::to_string((*I).first) + ", " + std::to_string((*I).second) +  ") ";
+        }
+        y_max = ((y_max + y_max * 0.05f) + 50.0f) / 100.0f * 100.0f;
+        y_max = std::ceil(y_max);
+        
+        _out << "\\documentclass[border=3mm, tikz, preview]{standalone}" << std::endl;
+        _out << "\\usepackage{pgfplots}" << std::endl;
+        _out << "\\begin{document}" << std::endl;
+        _out << "\\begin{tikzpicture}" << std::endl;
+        _out << LibSL::CppHelpers::sprint("\\begin{axis}[title={%s}, ", title);
+        _out << LibSL::CppHelpers::sprint("xlabel={%s}, ylabel={%s}, ", x_label, y_label);
+        _out << LibSL::CppHelpers::sprint("ymax=%d, ", y_max);
+        _out << "ymin = 0, enlarge x limits = true, ";
+        _out << "minor y tick num = 5, area style]" << std::endl;
+        _out << "\\addplot+[mark = none, ybar] coordinates ";
+        _out << LibSL::CppHelpers::sprint("{%s};", h_values.c_str()) << std::endl;
+        _out << "\\end{axis}" << std::endl;
+        _out << "\\end{tikzpicture}" << std::endl;
+        _out << "\\end{document}" << std::endl;
+      }
+
       void operator <<(const uint& key)
       {
         m_Counters[key] ++;
         m_Num ++;
       }
 
-      uint               operator[](int n)        { return (m_Counters[n]); }
+      uint operator[](int n)  { return (m_Counters[n]); }
+
+      void clear()
+      {
+        m_Num = 0;
+        m_Counters.clear();
+      }
 
     };
 

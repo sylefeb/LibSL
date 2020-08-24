@@ -124,7 +124,7 @@ namespace LibSL {
       LIBSL_DLL void init(HWND hwnd,LPDIRECT3DDEVICE9 device);
 #endif
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
       LIBSL_DLL void setCustomCallbackMsgProc(WNDPROC);
 #endif
     } //namespace LibSL::UIHelpers::TrackballUI

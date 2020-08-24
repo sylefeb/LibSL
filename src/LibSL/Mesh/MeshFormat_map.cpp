@@ -124,7 +124,7 @@ NAMESPACE::TriangleMesh *NAMESPACE::MeshFormat_map::load(const char *fname) cons
           parser.reachChar('\"');
           string v = parser.readString("\"");
           if (p == "origin") {
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
             sscanf_s(v.c_str(),"%f %f %f",&origin[0],&origin[1],&origin[2]);
 #else
             sscanf(v.c_str(),"%f %f %f",&origin[0],&origin[1],&origin[2]);

@@ -206,7 +206,7 @@ void NAMESPACE::pop() {
 }
 
 ImVec4 NAMESPACE::getColor(const std::string context, const std::string rule) {
-  ImVec4 color;
+    ImVec4 color;
   if (styleSheetCol.find(context) != styleSheetCol.end()) {
     std::vector<std::pair<std::string, ImVec4> > list = styleSheetCol.at(context);
 

@@ -17,6 +17,10 @@ FIND_PACKAGE(Perl)
 FIND_PACKAGE(OpenGL)
 FIND_PACKAGE(GLUT)
 
+IF(MINGW)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
+ENDIF(MINGW)
+
 IF( NOT PERL_FOUND )
 MESSAGE(SEND_ERROR "Perl not found - skipping source regeneration.")
 ENDIF( NOT PERL_FOUND )

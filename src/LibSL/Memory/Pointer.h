@@ -84,8 +84,8 @@ namespace LibSL  {
       template <typename T_Type> class TransferAddress
       {
       public:
-        TransferAddress()         {}
-        TransferAddress(T_Type *) {}
+        TransferAddress()           {}
+        void initFrom(T_Type** ptr) {}
         void transferFrom(
           T_Type                       **dst,
           const TransferAddress<T_Type> *policy_src,
@@ -101,8 +101,8 @@ namespace LibSL  {
       template <typename T_Type> class TransferClone
       {
       public:
-        TransferClone()         {}
-        TransferClone(T_Type *) {}
+        TransferClone()             {}
+        void initFrom(T_Type** ptr) {}
         void transferFrom(
           T_Type                     **dst,
           const TransferClone<T_Type> *policy_src,
@@ -126,9 +126,9 @@ namespace LibSL  {
           m_Counter = NULL;
         }
 
-        TransferRefCount(T_Type *ptr)
+        void initFrom(T_Type** ptr)
         {
-          if (ptr != NULL) {
+          if (*ptr != NULL) {
             // allocate a new counter initialized to 1
             m_Counter = new T_CounterType(1);
           } else {
@@ -215,7 +215,6 @@ namespace LibSL  {
       {
       public:
         TransferRefCountUInt()            : TransferRefCount<T_Type,uint,(1u<<31)>() {}
-        TransferRefCountUInt(T_Type *ptr) : TransferRefCount<T_Type,uint,(1u<<31)>(ptr) {}
       };
 
       template <typename T_Type>
@@ -223,7 +222,6 @@ namespace LibSL  {
       {
       public:
         TransferRefCountUShort()            : TransferRefCount<T_Type,ushort,65535>() {}
-        TransferRefCountUShort(T_Type *ptr) : TransferRefCount<T_Type,ushort,65535>(ptr) {}
       };
 
       template <typename T_Type>
@@ -231,7 +229,6 @@ namespace LibSL  {
       {
       public:
         TransferRefCountUChar()            : TransferRefCount<T_Type,uchar,255>() {}
-        TransferRefCountUChar(T_Type *ptr) : TransferRefCount<T_Type,uchar,255>(ptr) {}
       };
 
       /*!
@@ -261,9 +258,10 @@ namespace LibSL  {
       protected:
 
         // specialized classes will define the behaviour of the constructor from raw pointer
-        Pointer(const t_RawPointer& raw) : t_Transfer(raw)
+        Pointer(const t_RawPointer& raw) : t_Transfer()
         {
           m_RawPointer = raw;
+          t_Transfer::initFrom(&m_RawPointer);
         }
 
       public:
@@ -336,7 +334,7 @@ namespace LibSL  {
         */
       };
 
-#ifdef WIN32 // This is due to an incompatibility btw Visual C and g++ // TODO FIXME
+#ifdef _MSC_VER // This is due to an incompatibility btw Visual C and g++ // TODO FIXME
 
       /*!
 

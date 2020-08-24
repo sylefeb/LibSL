@@ -134,7 +134,7 @@ namespace LibSL {
           const T_EdgeTester&                            follow = T_EdgeTester(),
           const T_NodeTester&                            accept = T_NodeTester())
         {
-          LibSL::Memory::Array::Array<bool> visited(g.nodes().size());
+          LibSL::Memory::Array::Array<bool> visited((int)g.nodes().size());
           visited   .fill(false);
           _component.clear();
           findConnectedComponentContaining(g,node,visited,_component,follow,accept);

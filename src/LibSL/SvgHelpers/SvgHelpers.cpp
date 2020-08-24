@@ -106,6 +106,7 @@ void NAMESPACE::Svg::setProperties(std::string strokeColor, std::string fillColo
 
 void NAMESPACE::Svg::startPath()
 {
+  sl_assert(m_File.is_open());
   m_File << "<path \n";
   m_File << "style=\"fill:"<<m_FillColor<<";fill-rule:nonzero;stroke:" << m_StrokeColor << ";stroke-width:" << m_StrokeWidth << "px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1\"\n";
   m_File << "d=\"M ";
@@ -115,6 +116,7 @@ void NAMESPACE::Svg::startPath()
 
 void NAMESPACE::Svg::addPoint(float x,float y)
 {
+  sl_assert(m_File.is_open());
   v3f t = m_Trsf.mulPoint(v3f(x, y, 0.0f));
   m_File << t[0] << ',' << t[1] << ' ';
 }
@@ -123,6 +125,7 @@ void NAMESPACE::Svg::addPoint(float x,float y)
 
 void NAMESPACE::Svg::endPath(bool open)
 {
+  sl_assert(m_File.is_open());
   if (!open) {
     m_File << "Z ";
   }
@@ -134,6 +137,7 @@ void NAMESPACE::Svg::endPath(bool open)
 
 void NAMESPACE::Svg::startPolygon()
 {
+  sl_assert(m_File.is_open());
   m_File << "<path \n";
   m_File << "style=\"fill:" << m_FillColor << ";fill-rule:nonzero;stroke:" << m_StrokeColor << ";stroke-width:" << m_StrokeWidth << "px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1\"\n";
   m_File << "d=\"";
@@ -141,6 +145,7 @@ void NAMESPACE::Svg::startPolygon()
 
 void NAMESPACE::Svg::startPolygonPath()
 {
+  sl_assert(m_File.is_open());
   m_File << "M ";
 }
 
@@ -148,6 +153,7 @@ void NAMESPACE::Svg::startPolygonPath()
 
 void NAMESPACE::Svg::endPolygonPath()
 {
+  sl_assert(m_File.is_open());
   m_File << "Z ";
 }
 
@@ -155,6 +161,7 @@ void NAMESPACE::Svg::endPolygonPath()
 
 void NAMESPACE::Svg::endPolygon()
 {
+  sl_assert(m_File.is_open());
   m_File << "\"\n";
   m_File << "/>\n";
 }
@@ -163,6 +170,7 @@ void NAMESPACE::Svg::endPolygon()
 
 void NAMESPACE::Svg::addCircle(float x, float y,float r)
 {
+  sl_assert(m_File.is_open());
   v3f t = m_Trsf.mulPoint(v3f(x, y, 0.0f));
   m_File << "<circle \
     style=\"fill:"<<m_FillColor<<";fill-rule:evenodd;stroke:"<<m_StrokeColor<<";stroke-width:"<<m_StrokeWidth<<"px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1\"\n\
@@ -173,6 +181,7 @@ void NAMESPACE::Svg::addCircle(float x, float y,float r)
 
 void NAMESPACE::Svg::addText(float x, float y, const char *txt)
 {
+  sl_assert(m_File.is_open());
   v3f t = m_Trsf.mulPoint(v3f(x, y, 0.0f));
   m_File << "<text \
     style=\"fill:"<<m_FillColor<<";\"\n\
@@ -185,11 +194,12 @@ void NAMESPACE::Svg::addText(float x, float y, const char *txt)
 
 NAMESPACE::Svg::~Svg()
 {
-  m_File << "\
+  if (m_File.is_open()) {
+    m_File << "\
 </g>\n\
 </svg>\n\
 ";
-  //m_File.close();
+  }
 }
 
 // ------------------------------------------------------

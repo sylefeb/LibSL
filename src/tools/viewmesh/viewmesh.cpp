@@ -267,7 +267,7 @@ int main(int argc, char **argv)
     } else {
       fp_code = loadFileIntoString(adaptPath(sprint("%s\\viewmesh.fp",System::Application::executablePath())));
     }
-    g_glShader.init(vp_code.c_str(),fp_code.c_str(),NULL,"[viewmesh]");
+    g_glShader.init(vp_code.c_str(),fp_code.c_str(),NULL);
     g_glShader.setStrict(false);
 
     if (argc < 3) {

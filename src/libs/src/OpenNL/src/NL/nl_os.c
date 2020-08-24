@@ -45,7 +45,7 @@
 #include <NL/nl_private.h>
 
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
 #else
 #include <sys/types.h>
@@ -89,7 +89,7 @@ void nl_should_not_have_reached(const char* file, int line) {
 /************************************************************************************/
 /* Timing */
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
 NLdouble nlCurrentTime() {
     return (NLdouble)GetTickCount() / 1000.0 ;
 }

@@ -59,7 +59,7 @@ using namespace std;
 #include <GL/glu.h>
 #endif
 #ifndef _GLUfuncptr
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
 typedef GLvoid(CALLBACK *_GLUfuncptr)(void);
 #else
 typedef GLvoid(*_GLUfuncptr)(void);
@@ -99,7 +99,7 @@ static void CALLBACK edgeFlagCallBack(void *userData,GLboolean)
 {
 }
 
-static void CALLBACK errorCallback(void *userData,GLenum err)
+static void CALLBACK errorCallback(GLenum err,void *userData)
 {
   // cerr << "errorCallback" << endl;
   t_triangulate_nfo *nfo = (t_triangulate_nfo*)userData;
