@@ -131,6 +131,8 @@ using namespace LibSL::System::Types;
 #endif
 #endif
 #endif
+#else
+#include <GL/glext.h>
 #endif // EMSCRIPTEN
 
 #include <iostream>
