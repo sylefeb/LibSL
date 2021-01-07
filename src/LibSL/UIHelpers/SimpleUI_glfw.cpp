@@ -1,4 +1,4 @@
-/* --------------------------------------------------------------------
+﻿/* --------------------------------------------------------------------
 Author: Sylvain Lefebvre    sylvain.lefebvre@sophia.inria.fr
 
                   Simple Library for Graphics (LibSL)
@@ -41,7 +41,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 
 #if ! (defined(EMSCRIPTEN) | defined(ANDROID))
 #ifdef OPENGL_DEBUG
-//TODO do that correctly in CMake and co
 #include <GL_VERSION_4_3.h>
 GLUX_REQUIRE(GL_VERSION_4_3);
 #endif
@@ -231,13 +230,8 @@ static void openGLErrorCallback( GLenum source, GLenum type, GLuint id, GLenum s
                                  GLsizei length, const GLchar *msg, const void *data )
 {
   std::cerr << "[GL debug] "
-//            << "Type: "     << getStringForType(type).c_str ()
-//            << "Source: "   << getStringForSource(source ).c_str()
             << "ID: "       << id
-//            << "Severity: " << getStringForSeverity(severity ).c_str())
             << "\n";
-  // see OpenGL Insight for getter functions
-
   std::cerr << "[GL debug] message : " << msg << std::endl;
 }
 #endif
@@ -264,7 +258,6 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
 
 #if ! (defined(EMSCRIPTEN) | defined(ANDROID))
 #ifdef OPENGL_DEBUG
-  //TODO do that correctly in CMake and co
   glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true );
 #endif
 #endif
@@ -311,7 +304,9 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
 #if ! (defined(EMSCRIPTEN) | defined(ANDROID))
 #ifdef OPENGL_DEBUG
   glDebugMessageCallback( openGLErrorCallback, NULL );
+#if 0
   glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); // to activate in order to track source of errors
+#endif
 #endif
 #endif
 
