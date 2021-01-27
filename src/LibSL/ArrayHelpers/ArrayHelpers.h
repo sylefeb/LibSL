@@ -56,13 +56,13 @@ knowledge of the CeCILL-C license and that you accept its terms.
 namespace LibSL {
 	namespace ArrayHelpers {
 
-    void pack(const uchar *data, uint sz, Array<uchar>& _packed);
-    void unpack(const uchar *data, uint sz, Array<uchar>& _unpacked);
+    void pack(const uchar *data, uint sz, LibSL::Memory::Array::Array<uchar>& _packed);
+    void unpack(const uchar *data, uint sz, LibSL::Memory::Array::Array<uchar>& _unpacked);
 
     std::string base64_encode(const uchar* buf, uint bufLen);
-    void        base64_decode(std::string const& encoded_string, Array<uchar>& _decoded);
+    void        base64_decode(std::string const& encoded_string, LibSL::Memory::Array::Array<uchar>& _decoded);
     std::string base64_encode(const uchar* buf, uint bufLen, const std::string& base64_chars);
-    void        base64_decode(std::string const& encoded_string, Array<uchar>& _decoded, const std::string& base64_chars);
+    void        base64_decode(std::string const& encoded_string, LibSL::Memory::Array::Array<uchar>& _decoded, const std::string& base64_chars);
 
 
   } //namespace LibSL::ArrayHelpers
