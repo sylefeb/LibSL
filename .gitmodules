@@ -1,4 +1,4 @@
 [submodule "imgui"]
 	path = src/libs/src/imgui
 	url = https://github.com/ocornut/imgui.git
-	branch = v1.72b
+	branch = v1.72b # version tag to use
