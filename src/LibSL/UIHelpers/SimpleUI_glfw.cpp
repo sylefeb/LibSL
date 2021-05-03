@@ -252,7 +252,7 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
   // While there is no way to ask the driver for a context of the highest
   // supported version, GLFW will attempt to provide this when you ask for
   // a version 1.0 context, which is the default for these hints.
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_FALSE);
 #endif
 
