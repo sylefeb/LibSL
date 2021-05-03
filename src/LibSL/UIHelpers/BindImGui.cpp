@@ -251,6 +251,11 @@ static void ImGui_ImplSimpleUI_RenderDrawLists(ImDrawData* draw_data)
   glViewport(last_viewport[0], last_viewport[1], (GLsizei)last_viewport[2], (GLsizei)last_viewport[3]);
 }
 
+static void ImGui_ImplSimpleUI_RenderDrawData(ImDrawData* draw_data)
+{
+  ImGui_ImplSimpleUI_RenderDrawLists(draw_data);
+}
+
 static const char* ImGui_ImplSimpleUI_GetClipboardText(void* user_data)
 {
   return "[clipboard not implemented]";
@@ -563,7 +568,7 @@ void NAMESPACE::initImGui()
   ImGui_generic_init();
 
   ImGuiIO& io = ::ImGui::GetIO();
-  io.RenderDrawListsFn  = ImGui_ImplSimpleUI_RenderDrawLists;
+  //io.RenderDrawListsFn  = ImGui_ImplSimpleUI_RenderDrawLists;
   io.SetClipboardTextFn = ImGui_ImplSimpleUI_SetClipboardText;
   io.GetClipboardTextFn = ImGui_ImplSimpleUI_GetClipboardText;
 
@@ -579,6 +584,12 @@ void NAMESPACE::terminateImGui()
   ImGui_ImplSimpleUI_InvalidateDeviceObjects();
 
   ::ImGui::DestroyContext();
+}
+
+void NAMESPACE::renderImgui()
+{
+  ::ImGui::Render();
+  ImGui_ImplSimpleUI_RenderDrawData(ImGui::GetDrawData());
 }
 
 
