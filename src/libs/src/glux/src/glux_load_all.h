@@ -705,6 +705,7 @@
  GLUX_LOAD(GLX_NV_video_capture)
 #endif
  GLUX_LOAD(GL_ARB_draw_instanced)
+ GLUX_LOAD(GL_ARB_base_instance)
  GLUX_LOAD(GL_PGI_misc_hints)
  GLUX_LOAD(GL_SGIX_resample)
  GLUX_LOAD(GL_ARB_fragment_coord_conventions)

@@ -172,6 +172,13 @@ namespace GPUMesh {
       unbind();
     }
 
+    void     instantiate(uint count, uint base)
+    {
+      bind();
+      compile_policy::instantiate(m_Mesh, count, base);
+      unbind();
+    }
+
     bool isEmpty() const { return m_Empty; }
 
     /// advanced methods

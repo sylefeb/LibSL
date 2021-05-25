@@ -43,9 +43,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #include "GL_ARB_vertex_buffer_object.h"
 #include "GL_ARB_vertex_array_object.h"
 #include "GL_ARB_draw_instanced.h"
+#include "GL_ARB_base_instance.h"
 GLUX_LOAD(GL_ARB_vertex_buffer_object)
 GLUX_LOAD(GL_ARB_vertex_array_object)
 GLUX_LOAD(GL_ARB_draw_instanced)
+GLUX_LOAD(GL_ARB_base_instance)
 #endif
 
 #include <LibSL/Mesh/VertexFormat.h>
@@ -295,6 +297,11 @@ namespace GPUMesh {
       glDrawArraysInstancedARB(m.iPrimType, 0, m.iVertices, count);
     }
 
+    static void     instantiate(const mesh_descriptor& m, uint count, uint base)
+    {
+      glDrawArraysInstancedBaseInstanceARB(m.iPrimType, 0, m.iVertices, count, base);
+    }
+
   };
 
 
@@ -416,6 +423,11 @@ namespace GPUMesh {
     static void     instantiate(const mesh_descriptor& m, uint count)
     {
       glDrawElementsInstancedARB(m.iPrimType, m.iIndices, GLTypes<T_IndexType>::gl_define, NULL, count);
+    }
+
+    static void     instantiate(const mesh_descriptor& m, uint count, uint base)
+    {
+      glDrawElementsInstancedBaseInstanceARB(m.iPrimType, m.iIndices, GLTypes<T_IndexType>::gl_define, NULL, count, base);
     }
 
   };
