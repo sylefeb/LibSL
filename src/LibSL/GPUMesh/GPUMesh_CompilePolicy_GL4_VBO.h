@@ -299,7 +299,7 @@ namespace GPUMesh {
 
     static void     instantiate(const mesh_descriptor& m, uint count, uint base)
     {
-      glDrawArraysInstancedBaseInstanceARB(m.iPrimType, 0, m.iVertices, count, base);
+      glDrawArraysInstancedBaseInstance(m.iPrimType, 0, m.iVertices, count, base);
     }
 
   };
@@ -427,7 +427,7 @@ namespace GPUMesh {
 
     static void     instantiate(const mesh_descriptor& m, uint count, uint base)
     {
-      glDrawElementsInstancedBaseInstanceARB(m.iPrimType, m.iIndices, GLTypes<T_IndexType>::gl_define, NULL, count, base);
+      glDrawElementsInstancedBaseInstance(m.iPrimType, m.iIndices, GLTypes<T_IndexType>::gl_define, NULL, count, base);
     }
 
   };
