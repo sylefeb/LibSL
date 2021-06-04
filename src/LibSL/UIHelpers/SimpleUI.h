@@ -112,15 +112,17 @@ namespace LibSL {
         const char *title=NULL,
         char **argv=NULL,int argc=0,
         bool frameLess=false,bool hidden=false,bool fullscreen=false);
-      LIBSL_DLL void loop();
-      LIBSL_DLL void exit();
-      LIBSL_DLL void shutdown();
-      LIBSL_DLL uint screenWidth();
-      LIBSL_DLL uint screenHeight();
+      LIBSL_DLL void  loop();
+      LIBSL_DLL void  exit();
+      LIBSL_DLL void  shutdown();
+      LIBSL_DLL uint  screenWidth();
+      LIBSL_DLL uint  screenHeight();
+      LIBSL_DLL void  setMouseWheelScale(float scale);
+      LIBSL_DLL float mouseWheelScale();
 
-      LIBSL_DLL void showCursor(bool show);
-      LIBSL_DLL void setAlwaysRefresh(bool r);
-      LIBSL_DLL void refresh();
+      LIBSL_DLL void  showCursor(bool show);
+      LIBSL_DLL void  setAlwaysRefresh(bool r);
+      LIBSL_DLL void  refresh();
 
 #if defined(_WIN32) || defined(_WIN64)
       LIBSL_DLL void setCustomCallbackMsgProc(WNDPROC);

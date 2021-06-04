@@ -161,10 +161,11 @@ void NAMESPACE::setCustomCallbackMsgProc(WNDPROC wProc)
 // Common implementation
 //---------------------------------------------------------------------------
 
-static uint s_ScreenW = 0;
-static uint s_ScreenH = 0;
-static bool s_AlwaysRefresh = true;
-static bool s_FullScreen    = false;
+static uint s_ScreenW          = 0;
+static uint s_ScreenH          = 0;
+static bool s_AlwaysRefresh    = true;
+static bool s_FullScreen       = false;
+static float s_MouseWheelScale = 0.01f;
 
 uint NAMESPACE::screenWidth()
 {
@@ -179,6 +180,16 @@ uint NAMESPACE::screenHeight()
 void NAMESPACE::setAlwaysRefresh(bool r)
 {
   s_AlwaysRefresh = r;
+}
+
+void NAMESPACE::setMouseWheelScale(float scale)
+{
+  s_MouseWheelScale = scale;
+}
+
+LIBSL_DLL float NAMESPACE::mouseWheelScale()
+{
+  return s_MouseWheelScale;
 }
 
 //---------------------------------------------------------------------------
