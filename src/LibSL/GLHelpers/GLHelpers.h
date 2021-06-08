@@ -316,10 +316,6 @@ namespace LibSL {
 			void setArray(const v4i   *pv,int size);
 			void setArray(const v4u   *pv,int size);
 
-#ifdef OPENGL4
-			void set(const GLBuffer& buf);
-#endif
-
 		};
 
 		class GLProtectViewport
