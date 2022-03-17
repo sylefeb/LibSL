@@ -204,6 +204,7 @@ SET(LIBSL_GL_SOURCE
   ../libs/src/imgui/misc/cpp/imgui_stdlib.cpp
   ../libs/src/imgui/imgui_draw.cpp
   ../libs/src/imgui/imgui_widgets.cpp
+	../libs/src/imgui/imgui_tables.cpp
 )
 
 SET(LIBSL_GL4_HEADERS
@@ -239,6 +240,7 @@ SET(LIBSL_GL4_SOURCE
   ../libs/src/imgui/misc/cpp/imgui_stdlib.cpp
   ../libs/src/imgui/imgui_draw.cpp
   ../libs/src/imgui/imgui_widgets.cpp
+	../libs/src/imgui/imgui_tables.cpp
 )
 
 SET(LIBSL_GL4CORE_HEADERS
@@ -272,6 +274,7 @@ SET(LIBSL_GL4CORE_SOURCE
   ../libs/src/imgui/misc/cpp/imgui_stdlib.cpp
   ../libs/src/imgui/imgui_draw.cpp
   ../libs/src/imgui/imgui_widgets.cpp
+	../libs/src/imgui/imgui_tables.cpp
 )
 
 CreateSourceGroups("Header files" src "${LIBSL_GL_HEADERS}")
