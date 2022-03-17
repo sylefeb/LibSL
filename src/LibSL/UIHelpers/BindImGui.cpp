@@ -439,6 +439,8 @@ static void bindOnRender()
   ImGui_ImplSimpleUI_NewFrame();
 
   if (prevOnRender) prevOnRender();
+
+  ImGui_ImplSimpleUI_RenderDrawLists(ImGui::GetDrawData());
 }
 
 static void bindMouseMotion(uint x, uint y)
@@ -563,9 +565,14 @@ void NAMESPACE::initImGui()
   ImGui_generic_init();
 
   ImGuiIO& io = ::ImGui::GetIO();
-  io.RenderDrawListsFn  = ImGui_ImplSimpleUI_RenderDrawLists;
+  //io.RenderDrawListsFn  = ImGui_ImplSimpleUI_RenderDrawLists;
   io.SetClipboardTextFn = ImGui_ImplSimpleUI_SetClipboardText;
   io.GetClipboardTextFn = ImGui_ImplSimpleUI_GetClipboardText;
+
+#ifdef IMGUI_HAS_DOCK
+  io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+#endif // IMGUI_HAS_DOCK
+
 
   ForIndex(i, IM_ARRAYSIZE(io.KeysDown)) {
     io.KeysDown[i] = false;
