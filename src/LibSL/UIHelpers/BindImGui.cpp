@@ -144,9 +144,8 @@ static int          g_MouseY = 0;
 // This is the main rendering function that you have to implement and provide to ImGui (via setting up 'RenderDrawListsFn' in the ImGuiIO structure)
 // If text or lines are blurry when integrating ImGui in your engine:
 // - in your Render function, try translating your projection matrix by (0.5f,0.5f) or (0.375f,0.375f)
-static void ImGui_ImplSimpleUI_RenderDrawLists()
+static void ImGui_ImplSimpleUI_RenderDrawLists(ImDrawData* draw_data)
 {
-  ImDrawData* draw_data = ImGui::GetDrawData();
   // Avoid rendering when minimized, scale coordinates for retina displays (screen coordinates != framebuffer coordinates)
   ImGuiIO& io = ::ImGui::GetIO();
   int fb_width = (int)(io.DisplaySize.x * io.DisplayFramebufferScale.x);
@@ -441,7 +440,7 @@ static void bindOnRender()
 
   if (prevOnRender) prevOnRender();
 
-  ImGui_ImplSimpleUI_RenderDrawLists();
+  ImGui_ImplSimpleUI_RenderDrawLists(ImGui::GetDrawData());
 }
 
 static void bindMouseMotion(uint x, uint y)
@@ -569,6 +568,11 @@ void NAMESPACE::initImGui()
   //io.RenderDrawListsFn  = ImGui_ImplSimpleUI_RenderDrawLists;
   io.SetClipboardTextFn = ImGui_ImplSimpleUI_SetClipboardText;
   io.GetClipboardTextFn = ImGui_ImplSimpleUI_GetClipboardText;
+
+#ifdef IMGUI_HAS_DOCK
+  io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+#endif // IMGUI_HAS_DOCK
+
 
   ForIndex(i, IM_ARRAYSIZE(io.KeysDown)) {
     io.KeysDown[i] = false;
