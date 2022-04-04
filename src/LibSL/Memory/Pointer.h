@@ -356,7 +356,7 @@ namespace LibSL  {
         explicit AutoPtr(const typename Pointer<T_Type, CheckValid, TransferRefCountUInt>::t_RawPointer& raw) : Pointer<T_Type, CheckValid, TransferRefCountUInt>(raw)  { }
 #endif
 
-        AutoPtr(const AutoPtr& ptr) : Pointer(ptr)  { }
+        AutoPtr(const AutoPtr& ptr) : Pointer<T_Type, CheckValid, TransferRefCountUInt>(ptr) { }
 
         template <typename T_Type2>
         explicit AutoPtr(const AutoPtr<T_Type2>& ptr) : Pointer(ptr) { }

@@ -35,7 +35,7 @@
 # $DateTime: 2012/02/21 22:41:40 $$Author: bbarber $
 
 project(qhull)
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.14)
 
 # Define qhull_VERSION in CMakeLists.txt, Makefile, qhull-exports.def, qhull_p-exports.def, and qhull-warn.pri
 string(REGEX REPLACE ".* ([0-9]+) .*"
