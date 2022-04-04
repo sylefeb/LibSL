@@ -87,11 +87,7 @@ namespace LibSL {
         m_Maxs = -std::numeric_limits<T_Type>::max();
       }
 
-      AAB(const AAB& aab)
-      {
-        m_Mins = aab.m_Mins;
-        m_Maxs = aab.m_Maxs;
-      }
+      AAB(const AAB& aab) = default;
 
       AAB(const t_Vertex& mins,const t_Vertex& maxs)
       {
@@ -238,6 +234,24 @@ namespace LibSL {
       return r;
     }
 
+    template<typename T_Type>
+    inline static AAB<3,T_Type> operator*(const LibSL::Math::Matrix4x4<T_Type>& tr, const AAB<3,T_Type>& bx)
+    {
+      using vec3 = LibSL::Math::Tuple<T_Type, 3>;
+
+      AAB<3,T_Type> bbox;
+      if (!bx.empty()) {
+        bbox.addPoint(tr.mulPoint(vec3(bx.minCorner()[0], bx.minCorner()[1], bx.minCorner()[2])));
+        bbox.addPoint(tr.mulPoint(vec3(bx.minCorner()[0], bx.minCorner()[1], bx.maxCorner()[2])));
+        bbox.addPoint(tr.mulPoint(vec3(bx.minCorner()[0], bx.maxCorner()[1], bx.minCorner()[2])));
+        bbox.addPoint(tr.mulPoint(vec3(bx.minCorner()[0], bx.maxCorner()[1], bx.maxCorner()[2])));
+        bbox.addPoint(tr.mulPoint(vec3(bx.maxCorner()[0], bx.minCorner()[1], bx.minCorner()[2])));
+        bbox.addPoint(tr.mulPoint(vec3(bx.maxCorner()[0], bx.minCorner()[1], bx.maxCorner()[2])));
+        bbox.addPoint(tr.mulPoint(vec3(bx.maxCorner()[0], bx.maxCorner()[1], bx.minCorner()[2])));
+        bbox.addPoint(tr.mulPoint(vec3(bx.maxCorner()[0], bx.maxCorner()[1], bx.maxCorner()[2])));
+      }
+      return bbox;
+    }
 
   } //namespace LibSL::Geometry
 } //namespace LibSL

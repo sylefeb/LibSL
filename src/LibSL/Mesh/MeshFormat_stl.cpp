@@ -158,10 +158,10 @@ NAMESPACE::TriangleMesh *NAMESPACE::MeshFormat_stl::loadASCII(const char *fname)
 NAMESPACE::TriangleMesh *NAMESPACE::MeshFormat_stl::loadBinary(const char *fname) const
 {
   LIBSL_BEGIN;
-  FILE *f = NULL;
+  FILE *f = nullptr;
   // open file
 	fopen_s(&f, fname, "rb");
-  if (f == NULL) {
+  if (f == nullptr) {
     throw Fatal("[MeshFormat_stl::load] - cannot open file '%s'",fname);
   }
   // read first characters
@@ -203,10 +203,10 @@ NAMESPACE::TriangleMesh *NAMESPACE::MeshFormat_stl::loadBinary(const char *fname
 NAMESPACE::TriangleMesh *NAMESPACE::MeshFormat_stl::load(const char *fname) const
 {
 	LIBSL_BEGIN;
-	FILE *f = NULL;
+  FILE *f = nullptr;
 	// open file
 	fopen_s(&f, fname, "rb");
-	if (f == NULL) {
+  if (f == nullptr) {
 		throw Fatal("[MeshFormat_stl::load] - cannot open file '%s'",fname);
 	}
 	// read first characters
@@ -214,7 +214,7 @@ NAMESPACE::TriangleMesh *NAMESPACE::MeshFormat_stl::load(const char *fname) cons
 	// done with file for now
 
 	// call proper function
-  NAMESPACE::TriangleMesh *mesh = NULL;
+  NAMESPACE::TriangleMesh *mesh = nullptr;
   //skip header
   fread(header,sizeof(char),80,f);
   // read number of triangles
@@ -256,9 +256,9 @@ void NAMESPACE::MeshFormat_stl::save(const char *fname,const NAMESPACE::Triangle
   // TODO/FIXME This assumes a vertex format compatible with MeshFormat_stl at a raw level
   //            *very* dangerous. Use a vertex attribute accessor!
 
-  FILE *f = NULL;
+  FILE *f = nullptr;
 	fopen_s(&f, fname, "wb");
-  if (f == NULL) {
+  if (f == nullptr) {
     throw Fatal("[MeshFormat_stl::save] - cannot open file '%s' for writing",fname);
   }
   // header

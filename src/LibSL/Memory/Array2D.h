@@ -59,7 +59,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #include <LibSL/CppHelpers/CppHelpers.h>
 #include <LibSL/System/Types.h>
 #include <LibSL/Math/Tuple.h>
-using namespace LibSL::System::Types;
+//using namespace LibSL::System::Types;
 
 #include "LibSL/Memory/Array.h"
 

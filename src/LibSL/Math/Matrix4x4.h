@@ -114,12 +114,8 @@ namespace LibSL {
         }
 
         //! Matrix from Tuple
-        Matrix4x4(const Matrix4x4& t) : Tuple<T_Type,16>(t)
-        {
-          ForIndex(n,16) {
-            (*this)[n]=t[n];
-          }
-        }
+        Matrix4x4(const Matrix4x4& t) = default;
+        Matrix4x4& operator=(const Matrix4x4& t) = default;
 
         //! Matrix from quaternion, scaling and translation
         Matrix4x4(const Quaternion<T_Type>& q,const Tuple<T_Type,3>& s,const Tuple<T_Type,3>& t)

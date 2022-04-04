@@ -131,7 +131,7 @@ ReadTGA16bits (FILE *fp, t_image_nfo *texinfo)
   for (i = 0; i < texinfo->width * texinfo->height; ++i)
   {
     /* Read color word */
-    color = fgetc (fp) + (fgetc (fp) << 8);
+    color = static_cast<unsigned short>(fgetc (fp) + (fgetc (fp) << 8));
 
     /* Convert BGR to RGB */
     texinfo->pixels[(i * 3) + 0] = (uchar)(((color & 0x7C00) >> 10) << 3);
@@ -247,13 +247,13 @@ ReadTGA16bitsRLE (FILE *fp, t_image_nfo *texinfo)
   while (ptr < texinfo->pixels + (texinfo->width * texinfo->height) * 3)
   {
     /* Read first byte */
-    packet_header = fgetc (fp);
+    packet_header = static_cast<uchar>(fgetc (fp));
     size = 1 + (packet_header & 0x7f);
 
     if (packet_header & 0x80)
     {
       /* Run-length packet */
-      color = fgetc (fp) + (fgetc (fp) << 8);
+      color = static_cast<unsigned short>(fgetc (fp) + (fgetc (fp) << 8));
 
       for (i = 0; i < size; ++i, ptr += 3)
       {
@@ -267,7 +267,7 @@ ReadTGA16bitsRLE (FILE *fp, t_image_nfo *texinfo)
       /* Non run-length packet */
       for (i = 0; i < size; ++i, ptr += 3)
       {
-        color = fgetc (fp) + (fgetc (fp) << 8);
+        color = static_cast<unsigned short>(fgetc (fp) + (fgetc (fp) << 8));
 
         ptr[0] = (uchar)(((color & 0x7C00) >> 10) << 3);
         ptr[1] = (uchar)(((color & 0x03E0) >>  5) << 3);
@@ -431,12 +431,12 @@ t_image_nfo *ReadTGAFile(const char *filename)
   FILE *fp;
   t_image_nfo *texinfo;
   struct tga_header_t header;
-  uchar *colormap = NULL;
+  uchar *colormap = nullptr;
 	fopen_s(&fp, filename, "rb");
   if (!fp)
   {
     fprintf (stderr, "error: couldn't open \"%s\"!\n", filename);
-    return NULL;
+    return nullptr;
   }
 
   /* Read header */
@@ -451,7 +451,7 @@ t_image_nfo *ReadTGAFile(const char *filename)
   if (!texinfo->pixels)
   {
     delete (texinfo);
-    return NULL;
+    return nullptr;
   }
 
   /* Read color map */
@@ -536,7 +536,7 @@ t_image_nfo *ReadTGAFile(const char *filename)
     fprintf (stderr, "error: unknown TGA image type %i!\n", header.image_type);
     delete[] (texinfo->pixels);
     delete   (texinfo);
-    texinfo = NULL;
+    texinfo = nullptr;
     break;
   }
 

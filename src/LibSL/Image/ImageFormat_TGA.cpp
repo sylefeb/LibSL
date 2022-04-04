@@ -84,13 +84,13 @@ NAMESPACE::ImageFormat_TGA::ImageFormat_TGA()
 NAMESPACE::Image* NAMESPACE::ImageFormat_TGA::load(const char* name) const
 {
   t_image_nfo* tga = ReadTGAFile(name);
-  if (tga == NULL) {
+  if (tga == nullptr) {
     throw Fatal("ImageFormat_TGA::load - Sorry, cannot open file '%s'", name);
   }
   // read image data
   uint w = tga->width;
   uint h = tga->height;
-  Image* img = NULL;
+  Image* img = nullptr;
   if (tga->depth == 24) {
     // create image
     ImageRGB* rgb = new ImageRGB(w, h);
@@ -144,12 +144,12 @@ void NAMESPACE::ImageFormat_TGA::save(const char* name, const NAMESPACE::Image* 
   const ImageRGBA* rgba = dynamic_cast<const ImageRGBA*>(img);
   const ImageRGB* rgb = dynamic_cast<const ImageRGB*>(img);
   const ImageL8* lum = dynamic_cast<const ImageL8*>(img);
-  if (rgba == NULL && rgb == NULL && lum == NULL) {
+  if (rgba == nullptr && rgb == nullptr && lum == nullptr) {
     throw Fatal("ImageFormat_TGA::save - Cannot save this format in file '%s'", name);
   }
-  FILE* f = NULL;
+  FILE* f = nullptr;
   fopen_s(&f, name, "wb");
-  if (f == NULL) {
+  if (f == nullptr) {
     throw Fatal("ImageFormat_TGA::save - Sorry, cannot open file '%s'", name);
   }
   struct tga_header_t h;
@@ -166,9 +166,9 @@ void NAMESPACE::ImageFormat_TGA::save(const char* name, const NAMESPACE::Image* 
   h.cm_depth = 0;
   h.x_origin = 0;
   h.y_origin = 0;
-  h.width = img->w();
-  h.height = img->h();
-  h.pixel_depth = img->numComp() * 8;
+  h.width            = static_cast<short>(img->w());
+  h.height           = static_cast<short>(img->h());
+  h.pixel_depth      = static_cast<uchar>(img->numComp()) * 8;
   h.image_descriptor = (1 << 5);
   fwrite(&h, sizeof(struct tga_header_t), 1, f);
   const uchar* data = img->raw();

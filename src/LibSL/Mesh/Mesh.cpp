@@ -67,13 +67,13 @@ using namespace std;
 //---------------------------------------------------------------------------
 
 // Mesh format manager unique instance
-NAMESPACE::TriangleMeshFormatManager *NAMESPACE::TriangleMeshFormatManager::s_Manager=NULL;
+NAMESPACE::TriangleMeshFormatManager *NAMESPACE::TriangleMeshFormatManager::s_Manager=nullptr;
 
 //---------------------------------------------------------------------------
 
 NAMESPACE::TriangleMeshFormatManager *NAMESPACE::TriangleMeshFormatManager::getUniqueInstance()
 {
-  if (s_Manager == NULL) {
+  if (s_Manager == nullptr) {
     s_Manager = new TriangleMeshFormatManager();
   }
   return (s_Manager);
@@ -140,7 +140,7 @@ NAMESPACE::TriangleMesh *NAMESPACE::loadTriangleMesh(const char *fname)
   NAMESPACE::TriangleMeshFormatManager&
     manager=(*NAMESPACE::TriangleMeshFormatManager::getUniqueInstance());
   const char *pos=strrchr(fname,'.');
-  if (pos == NULL) {
+  if (pos == nullptr) {
     LIBSL_FATAL_ERROR_WITH_ARGS("TriangleMesh - Cannot determine file type ('%s')",fname);
   }
   return (manager.getPlugin(pos+1)->load(fname));
@@ -153,7 +153,7 @@ void NAMESPACE::saveTriangleMesh(const char *fname,const NAMESPACE::TriangleMesh
   NAMESPACE::TriangleMeshFormatManager&
     manager=(*NAMESPACE::TriangleMeshFormatManager::getUniqueInstance());
   const char *pos=strrchr(fname,'.');
-  if (pos == NULL) {
+  if (pos == nullptr) {
     LIBSL_FATAL_ERROR_WITH_ARGS("TriangleMesh - Cannot determine file type ('%s')",fname);
   }
   manager.getPlugin(pos+1)->save(fname,mesh);
@@ -197,10 +197,10 @@ void NAMESPACE::TriangleMesh::scaleToUnitCube(float scale,bool center)
 		posAt(p) = (posAt(p) - bx.minCorner()) / maxd;
   }
   if (center) {
-		v3 center = ((bx.maxCorner() - bx.minCorner()) / 2.0f) / maxd;
+    v3 centre = ((bx.maxCorner() - bx.minCorner()) / 2.0f) / maxd;
     ForIndex(p,numVertices()) {
 			// To center of unit cube
-			posAt(p) += v3f(0.5f) - center;
+      posAt(p) += v3f(0.5f) - centre;
     }
   }
   m_BBoxComputed = false;
@@ -240,7 +240,7 @@ const AABox& NAMESPACE::TriangleMesh::bbox()
 
 //---------------------------------------------------------------------------
 
-void NAMESPACE::TriangleMesh::mergeVertices(float radius,uint gridsz)
+void NAMESPACE::TriangleMesh::mergeVertices(float radius,uint)
 {
   int        numv = (int)numVertices();
 
@@ -303,7 +303,7 @@ void NAMESPACE::TriangleMesh::mergeVertices(float radius,uint gridsz)
   // reorder vertices and truncate vertex array
   Array<uint> order(uint(used.size()));
   Array<uint> rank (numv);
-  rank.fill(-1);
+  rank.fill(static_cast<uint>(-1));
   uint n = 0;
   for(set<uint>::iterator I=used.begin() ; I!=used.end() ; I++) {
     order[n]    = (*I);

@@ -71,7 +71,9 @@ void sl_assert_func(bool b, const char *expr, const char *file, int line)
 // ------------------------------------------------------
 
 static char    s_StrSingle[TEMP_STR_SIZE];
+#if defined(_WIN32) || defined(_WIN64) // TODO: the following must be moved in System/Platform
 static wchar_t s_StrUnicode[TEMP_STR_SIZE];
+#endif
 
 // ------------------------------------------------------
 
@@ -229,7 +231,7 @@ void NAMESPACE::Console::progressTextUpdate(uint cur)
     uint h  = ( tm/(1000*60*60));
     uint m  = ((tm/(1000*60)) % 60);
     uint s  = ((tm/1000)      % 60);
-    uint ms = tm % 1000;
+//    uint ms = tm % 1000;
 #if defined(_WIN32) || defined(_WIN64) 
     SetConsoleCursorPosition(GetStdHandle(STD_ERROR_HANDLE), s_ProgressTextCursorNfo.dwCursorPosition);
     std::cerr << sprint("%.2f%%\t (", percent);
@@ -262,7 +264,7 @@ void NAMESPACE::Console::progressTextEnd()
   uint h  = ( tm/(1000*60*60));
   uint m  = ((tm/(1000*60)) % 60);
   uint s  = ((tm/1000)      % 60);
-  uint ms = tm % 1000;
+//  uint ms = tm % 1000;
 #if defined(_WIN32) || defined(_WIN64)
   SetConsoleCursorPosition(GetStdHandle(STD_ERROR_HANDLE), s_ProgressTextCursorNfo.dwCursorPosition);
   std::cerr << sprint("done in ");
@@ -330,7 +332,7 @@ void NAMESPACE::Console::pushCursor()
 {
 }
 
-void NAMESPACE::Console::popCursor(bool clearLines)
+void NAMESPACE::Console::popCursor(bool /*clearLines*/)
 {
 }
 

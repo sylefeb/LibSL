@@ -216,13 +216,13 @@ namespace LibSL {
     class VertexContainer : public T_VertexData
     {
     public:
-      enum { requiresMVF  = 0 };
+      enum { requiresMVF  = false };
       enum { size_of      = sizeof(T_VertexData) };
-      void                     init(MVF *mvf)         {  }
+      void                     init(MVF *)         {  }
       T_VertexData            *getRawData()           { return  static_cast<      T_VertexData *>(this); }
       const T_VertexData      *getRawData()     const { return  static_cast<const T_VertexData *>(this); }
-      const TriangleMesh::v3&  getPos(MVF *mvf) const { return  this->pos; }
-      TriangleMesh::v3&        getPos(MVF *mvf)       { return  this->pos; }
+      const TriangleMesh::v3&  getPos(MVF *) const { return  this->pos; }
+      TriangleMesh::v3&        getPos(MVF *)       { return  this->pos; }
 
       VertexContainer()                          { }
       VertexContainer(const T_VertexData& v)     { *static_cast<T_VertexData *>(this) = v; }
@@ -278,7 +278,7 @@ namespace LibSL {
       {
 		  sl_assert( numvert > 0 );
         m_Vertices  .allocate(numvert);
-        if (t_Vertex::requiresMVF) {
+        if constexpr (t_Vertex::requiresMVF) {
           ForArray(m_Vertices,v) {
             m_Vertices[v].init(m_MVF.raw());
           }
@@ -306,13 +306,13 @@ namespace LibSL {
 
       TriangleMesh_generic(LibSL::Memory::Pointer::AutoPtr<MVF> mvf = LibSL::Memory::Pointer::AutoPtr<MVF>())
       {
-        if (t_Vertex::requiresMVF) { sl_assert(!mvf.isNull()); }
+        if constexpr (t_Vertex::requiresMVF) { sl_assert(!mvf.isNull()); }
         setMvf(mvf);
       }
 
       TriangleMesh_generic(uint numvert, uint numtris, uint numsurfaces = 0, LibSL::Memory::Pointer::AutoPtr<MVF> mvf = LibSL::Memory::Pointer::AutoPtr<MVF>())
       {
-        if (t_Vertex::requiresMVF) { sl_assert(!mvf.isNull()); }
+        if constexpr (t_Vertex::requiresMVF) { sl_assert(!mvf.isNull()); }
         setMvf(mvf);
         // allocate data
         allocate(numvert,numtris,numsurfaces);
@@ -377,7 +377,7 @@ namespace LibSL {
 
       virtual uint              sizeOfVertexData()   const
       {
-        if (t_Vertex::requiresMVF) {
+        if constexpr (t_Vertex::requiresMVF) {
           return mvf()->sizeOf();
         } else {
           return (t_Vertex::size_of);

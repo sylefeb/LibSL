@@ -55,7 +55,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 // ------------------------------------------------------
 
 #include <LibSL/System/Types.h>
-using namespace LibSL::System::Types;
+//using namespace LibSL::System::Types;
 
 namespace LibSL  {
   namespace System {

@@ -52,7 +52,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #include <LibSL/System/Types.h>
 #include <LibSL/Memory/TraceLeaks.h>
 #include <LibSL/Math/Tuple.h>
-using namespace LibSL::System::Types;
+//using namespace LibSL::System::Types;
 
 #include <vector>
 #ifdef max
@@ -89,7 +89,7 @@ namespace LibSL  {
       class CheckNop
       {
       public:
-        enum {PerformCheck = 0};
+        enum {PerformCheck = false};
         static inline void checkAllocation(const void *)  {}
         static inline void checkPointer(const void *)     {}
         static inline void checkAccess(int ,uint)         {}
@@ -99,11 +99,11 @@ namespace LibSL  {
       class CheckAll
       {
       public:
-        enum {PerformCheck = 1};
-        static inline void checkAllocation(const void *p) {if (p==NULL) LIBSL_FATAL_ERROR("Memory::Array - allocation failed");}
-        static inline void checkPointer(const void *p)    {if (p==NULL) LIBSL_FATAL_ERROR("Memory::Array - access violation");}
+        enum {PerformCheck = true};
+        static inline void checkAllocation(const void *p) {if (p==nullptr) LIBSL_FATAL_ERROR("Memory::Array - allocation failed");}
+        static inline void checkPointer(const void *p)    {if (p==nullptr) LIBSL_FATAL_ERROR("Memory::Array - access violation");}
         static inline void checkAccess(int n,uint num)    {if (n < 0 || n >= int(num)) LIBSL_FATAL_ERROR("Memory::Array - access out of bounds");}
-        static inline void checkEmpty(const void *p)      {if (p!=NULL) LIBSL_FATAL_ERROR("Memory::Array - array already initialized");}
+        static inline void checkEmpty(const void *p)      {if (p!=nullptr) LIBSL_FATAL_ERROR("Memory::Array - array already initialized");}
       };
 
       // ===============
@@ -159,14 +159,14 @@ namespace LibSL  {
         {
           m_Size=0;
           m_AllocSize=0;
-          m_Data=NULL;
+          m_Data=nullptr;
         }
 
         Array(uint size)
         {
           m_Size=0;
           m_AllocSize=0;
-          m_Data=NULL;
+          m_Data=nullptr;
           allocate(size);
         }
 
@@ -174,7 +174,7 @@ namespace LibSL  {
         {
           m_Size=0;
           m_AllocSize=0;
-          m_Data=NULL;
+          m_Data=nullptr;
           allocate(vec.size());
           ForIndex(n,vec.size()) {
             if (P_Check::PerformCheck) P_Check::checkAccess(n,m_Size);
@@ -184,7 +184,7 @@ namespace LibSL  {
 
         ~Array(void)
         {
-          if (m_Data != NULL) {
+          if (m_Data != nullptr) {
             delete[] (m_Data);
           }
         }
@@ -192,9 +192,9 @@ namespace LibSL  {
         /// Erase the array
         void erase()
         {
-          if (m_Data != NULL) {
+          if (m_Data != nullptr) {
             delete[] (m_Data);
-            m_Data      = NULL;
+            m_Data      = nullptr;
             m_AllocSize = 0;
             m_Size      = 0;
           }
@@ -204,14 +204,14 @@ namespace LibSL  {
         void allocate(uint size_to_allocate)
         {
           erase();
-          if (P_Check::PerformCheck) P_Check::checkEmpty(m_Data);
+          if constexpr (P_Check::PerformCheck) P_Check::checkEmpty(m_Data);
           m_AllocSize = size_to_allocate;
           m_Size      = size_to_allocate;
           m_Data      = new T_Type[m_AllocSize];
-          if (P_Check::PerformCheck) P_Check::checkAllocation(m_Data);
+          if constexpr (P_Check::PerformCheck) P_Check::checkAllocation(m_Data);
           // init array
           ForIndex(n,int(m_AllocSize)) {
-            if (P_Check::PerformCheck) P_Check::checkAccess(n,m_AllocSize);
+            if constexpr (P_Check::PerformCheck) P_Check::checkAccess(n,m_AllocSize);
             P_Init<T_Type>::initValue(&(m_Data[n]));
           }
         }
@@ -221,11 +221,11 @@ namespace LibSL  {
         {
           m_Size      = 0;
           m_AllocSize = 0;
-          m_Data      = NULL;
+          m_Data      = nullptr;
           if (a.size() > 0) {
             allocate(a.size());
             ForIndex (n,m_Size) {
-              if (P_Check::PerformCheck) P_Check::checkAccess(n,m_Size);
+              if constexpr (P_Check::PerformCheck) P_Check::checkAccess(n,m_Size);
               m_Data[n] = a[n];
             }
           }
@@ -244,7 +244,7 @@ namespace LibSL  {
               m_Size = a.size();      // make size equal, keep allocated memory
             }
             ForIndex (n,m_Size) {
-              if (P_Check::PerformCheck) P_Check::checkAccess(n,m_Size);
+              if constexpr (P_Check::PerformCheck) P_Check::checkAccess(n,m_Size);
               m_Data[n] = a[n];
             }
           }
@@ -255,7 +255,7 @@ namespace LibSL  {
         void fill(const T_Type& value_to_fill_with)
         {
           for (uint n=0;n<m_Size;n++) {
-            if (P_Check::PerformCheck) P_Check::checkAccess(n,m_Size);
+            if constexpr (P_Check::PerformCheck) P_Check::checkAccess(n,m_Size);
             m_Data[n] = value_to_fill_with;
           }
         }
@@ -270,14 +270,14 @@ namespace LibSL  {
         /// Read only access
         const T_Type& operator [](uint n) const
         {
-          if (P_Check::PerformCheck) P_Check::checkAccess(n,m_Size);
+          if constexpr (P_Check::PerformCheck) P_Check::checkAccess(n,m_Size);
           return (m_Data[n]);
         }
 
         /// Read/write access
         T_Type& operator [](uint n)
         {
-          if (P_Check::PerformCheck) P_Check::checkAccess(n,m_Size);
+          if constexpr (P_Check::PerformCheck) P_Check::checkAccess(n,m_Size);
           return (m_Data[n]);
         }
 

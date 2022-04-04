@@ -163,7 +163,7 @@ namespace LibSL {
 		  MVF::e_Binding binding = (MVF::e_Binding)MVF_get_binding<typename MVF_attr::base_attribute>::value;
 		  MVF::e_Type    type    = (MVF::e_Type)   MVF_get_type   <typename MVF_attr::type          >::value;
 		  const Attribute *a = findAttributeByBinding( binding );
-		  if (a == NULL) {
+      if (a == nullptr) {
 		          throw LibSL::Errors::Fatal("MVF::attr - attribute not found in MVF");
 		  }
 		  sl_assert(a->binding == binding);
@@ -187,7 +187,7 @@ namespace LibSL {
 		  MVF::e_Binding binding = (MVF::e_Binding)MVF_get_binding<typename MVF_attr::base_attribute>::value;
 		  MVF::e_Type    type    = (MVF::e_Type)   MVF_get_type   <typename MVF_attr::type          >::value;
 		  const Attribute *a = findAttributeByBinding( binding );
-		  if (a == NULL) {
+      if (a == nullptr) {
 			  return false;
 		  }
 		  sl_assert(a->binding == binding);

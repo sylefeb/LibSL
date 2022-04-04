@@ -148,7 +148,7 @@ namespace LibSL {
       enum { stop = MVF_is_item<Head,Item>::value     };
       enum { next = MVF_offset_item<Tail,Item>::value };
     public:
-      enum { value = (stop == 0) ? ((next == -1) ? -1 : (Head::size_of + next)) : 0 };
+      enum { value = (stop == 0) ? ((next == -1) ? -1 : (static_cast<int>(Head::size_of) + static_cast<int>(next))) : 0 };
     };
 
     // -------------------------------------------------
@@ -210,7 +210,7 @@ namespace LibSL {
     template <class MVF_Dst,class MVF_Src> class ConvertToFormat_rec<MVF_Dst,MVF_Src,Loki::NullType>
     {
     public:
-      ConvertToFormat_rec(uchar *dst,const uchar *src) { }
+      ConvertToFormat_rec(uchar */*dst*/,const uchar */*src*/) { }
     };
 
     template <class MVF_Dst,class MVF_Src,class Head,class Tail> 

@@ -87,7 +87,7 @@ NAMESPACE::Image *NAMESPACE::ImageFormat_JPG::load(const char *name) const
 {
   FILE *infile;
 	fopen_s(&infile, name, "rb");
-  if (infile == NULL)
+  if (infile == nullptr)
     throw Fatal("ImageFormat_JPG::load - cannot open %s",name);
 
   struct jpeg_decompress_struct cinfo;
@@ -155,14 +155,14 @@ void NAMESPACE::ImageFormat_JPG::save(const char *fname,const NAMESPACE::Image *
   const ImageRGBA *rgba = dynamic_cast<const ImageRGBA *>(img);
   const ImageRGB  *rgb  = dynamic_cast<const ImageRGB  *>(img);
   const ImageL8   *l8   = dynamic_cast<const ImageL8   *>(img);
-  if (rgb == NULL && rgba == NULL && l8 == NULL) {
+  if (rgb == nullptr && rgba == nullptr && l8 == nullptr) {
     throw Fatal("ImageFormat_JPG::save - PNG plugin only supports RGB, RGBA, L8 images (while saving '%s')",fname);
   }
   
   FILE *outfile;
 	fopen_s(&outfile, fname, "wb");
   
-  if (outfile == NULL) {
+  if (outfile == nullptr) {
     throw Fatal("ImageFormat_JPG::save - cannot open %s",fname);
   }
   

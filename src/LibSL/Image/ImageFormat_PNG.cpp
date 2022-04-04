@@ -83,15 +83,15 @@ NAMESPACE::Image *NAMESPACE::ImageFormat_PNG::load(const char *name, std::map<st
   FILE *file;
 	fopen_s(&file, name, "rb");
 
-  if (file == NULL) {
+  if (file == nullptr) {
     throw Fatal("ImageFormat_PNG::load - cannot open %s",name);
   }
 
   png_structp png_ptr =
     png_create_read_struct(PNG_LIBPNG_VER_STRING,
-    0, // (png_voidp)user_error_ptr
-    0, // user_error_fn
-    0  // user_warning_fn
+    nullptr, // (png_voidp)user_error_ptr
+    nullptr, // user_error_fn
+    nullptr  // user_warning_fn
     );
 
   png_infop info_ptr = png_create_info_struct(png_ptr);
@@ -164,24 +164,24 @@ void NAMESPACE::ImageFormat_PNG::save(const char *fname,const NAMESPACE::Image *
   const ImageRGBA *rgba = dynamic_cast<const ImageRGBA *>(img);
   const ImageRGB  *rgb  = dynamic_cast<const ImageRGB  *>(img);
   const ImageL8   *l8   = dynamic_cast<const ImageL8   *>(img);
-  if (rgb == NULL && rgba == NULL && l8 == NULL) {
+  if (rgb == nullptr && rgba == nullptr && l8 == nullptr) {
     throw Fatal("ImageFormat_PNG::save - PNG plugin only supports RGB, RGBA, L8 images (while saving '%s')",fname);
   }
 
   FILE *file;
 	fopen_s(&file, fname, "wb");
 
-  if (file == NULL) {
+  if (file == nullptr) {
     throw Fatal("Unable to save %s", fname);
   }
 
-  png_structp png_ptr  = png_create_write_struct(PNG_LIBPNG_VER_STRING,0,0,0);
+  png_structp png_ptr  = png_create_write_struct(PNG_LIBPNG_VER_STRING,nullptr,nullptr,nullptr);
   png_infop   info_ptr = png_create_info_struct(png_ptr);
   png_init_io(png_ptr, file);
   png_set_IHDR(png_ptr, info_ptr, img->w(), img->h(),
 	       8,
-	       (rgb  != NULL)  ? PNG_COLOR_TYPE_RGB
-	       :(rgba != NULL) ? PNG_COLOR_TYPE_RGBA
+         (rgb  != nullptr)  ? PNG_COLOR_TYPE_RGB
+         :(rgba != nullptr) ? PNG_COLOR_TYPE_RGBA
 	       :                 PNG_COLOR_TYPE_GRAY,
 	       PNG_INTERLACE_NONE,
 	       PNG_COMPRESSION_TYPE_BASE,
@@ -204,16 +204,16 @@ void NAMESPACE::ImageFormat_PNG::save(const char *fname,const NAMESPACE::Image *
   png_write_info(png_ptr, info_ptr);
   for (uint j=0;j<img->h();j++)  {
     png_bytep rowptr;
-    if (rgb != NULL) {
+    if (rgb != nullptr) {
       rowptr=(png_bytep)&(rgb->pixels().get(0,j)[0]); // NOTE: this could be dangerous (Tuple might not be byte aligned)
-    } else if (rgba != NULL) {                        //       (see sl_assert above)
+    } else if (rgba != nullptr) {                        //       (see sl_assert above)
       rowptr=(png_bytep)&(rgba->pixels().get(0,j)[0]);// NOTE: same as above
     } else {
       rowptr=(png_bytep)&(l8->pixels().get(0,j)[0]);  // NOTE: same as above
     }
     png_write_row(png_ptr, rowptr);
   }
-  png_write_end(png_ptr, NULL);
+  png_write_end(png_ptr, nullptr);
   png_destroy_write_struct(&png_ptr, &info_ptr);
   fclose(file);
 }

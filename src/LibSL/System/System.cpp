@@ -80,9 +80,9 @@ bool NAMESPACE::File::exists(const char *fname)
 #if defined(_WIN32) || defined(_WIN64)
   return (PathFileExistsA(fname) != 0);
 #else
-  FILE *f = NULL;
+  FILE *f = nullptr;
   f = fopen(fname,"rb");
-  if (f != NULL) {
+  if (f != nullptr) {
     fclose(f);
     return (true);
   } else {
@@ -95,9 +95,9 @@ bool NAMESPACE::File::exists(const char *fname)
 
 long NAMESPACE::File::size(const char *path)
 {
-  FILE *f = NULL;
+  FILE *f = nullptr;
 	fopen_s(&f, path, "rb");
-  sl_assert(f != NULL);
+  sl_assert(f != nullptr);
   fseek(f,0,SEEK_END);
   long fsize = ftell(f);
   fclose(f);
@@ -128,11 +128,11 @@ void NAMESPACE::File::listFiles(const char *path,std::vector<std::string>& _file
   } while (FindNextFileA(find,&current));
 #else
   DIR *dir = opendir(path);
-  if (dir == NULL) {
+  if (dir == nullptr) {
     throw Fatal("File::listFiles - cannot list directory '%s'",path);
   }
-  struct dirent *dp = NULL;
-  while ((dp = readdir(dir)) != NULL) {
+  struct dirent *dp = nullptr;
+  while ((dp = readdir(dir)) != nullptr) {
       struct stat s;
       std::string full = path + std::string(dp->d_name);
       stat(full.c_str(),&s);
@@ -163,11 +163,11 @@ void NAMESPACE::File::listDirectories(const char *path,std::vector<std::string>&
   } while (FindNextFileA(find,&current));
 #else
   DIR *dir = opendir(path);
-  if (dir == NULL) {
+  if (dir == nullptr) {
     throw Fatal("File::listDirectories - cannot list directory '%s'",path);
   }
-  struct dirent *dp = NULL;
-  while ((dp = readdir(dir)) != NULL) {
+  struct dirent *dp = nullptr;
+  while ((dp = readdir(dir)) != nullptr) {
       struct stat s;
       std::string full = path + std::string(dp->d_name);
       stat(full.c_str(),&s);
@@ -184,9 +184,9 @@ void NAMESPACE::File::listDirectories(const char *path,std::vector<std::string>&
 
 void    NAMESPACE::File::createDirectory(const char *path)
 {
-  sl_assert(path != NULL);
+  sl_assert(path != nullptr);
 #if defined(_WIN32) || defined(_WIN64)
-  CreateDirectoryA(path,NULL);
+  CreateDirectoryA(path,nullptr);
 #else
   #ifdef __MINGW32__
   mkdir(path);
@@ -202,7 +202,7 @@ const char *NAMESPACE::File::adaptPath      (const char *path)
 {
   const int N = 2048;
   static char buffer[N];
-  sl_assert(path != NULL);
+  sl_assert(path != nullptr);
   int c = 0;
 #if defined(_WIN32) || defined(_WIN64)
   while (path[c] != '\0') {
@@ -231,8 +231,8 @@ NAMESPACE::File::t_FileTime NAMESPACE::File::timestamp(const char *path)
 #if defined(_WIN32) || defined(_WIN64)
   HANDLE f = CreateFileA(path,
     GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE,
-    NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-  if (f == NULL) {
+    nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+  if (f == nullptr) {
     t_FileTime z;
     memset(&z, 0, sizeof(t_FileTime));
     return z;
@@ -291,7 +291,7 @@ const char *NAMESPACE::Application::executablePath()
 #endif
   static char appPath[1024]=".";
 #if defined(_WIN32) || defined(_WIN64)
-  GetModuleFileNameExA(GetCurrentProcess(),NULL,appPath,1024);
+  GetModuleFileNameExA(GetCurrentProcess(),nullptr,appPath,1024);
   // remove file name
   char *pos = strrchr(appPath,'\\');
   if (pos) {
@@ -372,16 +372,18 @@ NAMESPACE::Time::t_time NAMESPACE::Time::milliseconds()
 #else
 
   struct timeval        now;
+#if defined(_WIN32) || defined(_WIN64) // TODO: the following must be moved in System/Platform
   uint                  ticks;
+#endif
   static struct timeval start;
 
   static bool           init=false;
   if (!init) { // TODO / FIXME move into a global timer init ?
-    gettimeofday(&start, NULL);
+    gettimeofday(&start, nullptr);
     init=true;
   }
 
-  gettimeofday(&now, NULL);
+  gettimeofday(&now, nullptr);
   uint ms=uint((now.tv_sec-start.tv_sec)*1000+(now.tv_usec-start.tv_usec)/1000);
   return (ms);
 
@@ -419,11 +421,11 @@ double NAMESPACE::Time::microseconds()
 
   static bool           init=false;
   if (!init) { // TODO / FIXME move into a global timer init ?
-    gettimeofday(&start, NULL);
+    gettimeofday(&start, nullptr);
     init=true;
   }
 
-  gettimeofday(&now, NULL);
+  gettimeofday(&now, nullptr);
   uint ms=uint((now.tv_sec-start.tv_sec)*1000+(now.tv_usec-start.tv_usec)/1000);
   return (ms);
   */
