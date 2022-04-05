@@ -359,7 +359,7 @@ namespace LibSL  {
         AutoPtr(const AutoPtr& ptr) : Pointer<T_Type, CheckValid, TransferRefCountUInt>(ptr) { }
 
         template <typename T_Type2>
-        explicit AutoPtr(const AutoPtr<T_Type2>& ptr) : Pointer(ptr) { }
+        explicit AutoPtr(const AutoPtr<T_Type2>& ptr) : Pointer<T_Type, CheckValid, TransferRefCountUInt>(ptr) { }
 
         ~AutoPtr() {  }
       };
@@ -375,15 +375,15 @@ namespace LibSL  {
       {
       public:
 
-        SafePtr() : Pointer() { }
+        SafePtr() : Pointer<T_Type, CheckValid, TransferAddress>() { }
 
-        SafePtr(const typename Pointer<T_Type, CheckValid, TransferAddress>::t_RawPointer& raw) : Pointer(raw) { }
+        SafePtr(const typename Pointer<T_Type, CheckValid, TransferAddress>::t_RawPointer& raw) : Pointer<T_Type, CheckValid, TransferAddress>(raw) { }
 
-        SafePtr(const SafePtr& ptr) : Pointer(ptr) { }
+        SafePtr(const SafePtr& ptr) : Pointer<T_Type, CheckValid, TransferAddress>(ptr) { }
 
         ~SafePtr() { /*std::cerr << "~SafePtr\n";*/ }
 
-        void erase() { if (!Pointer::isNull()) { delete (Pointer::raw()); (*this) = nullptr; } }
+        void erase() { if (!Pointer<T_Type, CheckValid, TransferAddress>::isNull()) { delete (Pointer<T_Type, CheckValid, TransferAddress>::raw()); (*this) = nullptr; } }
 
         operator typename Pointer<T_Type, CheckValid, TransferAddress>::t_RawPointer() { return Pointer<T_Type, CheckValid, TransferAddress>::raw(); }
         operator T_Type * const ()   const { return Pointer<T_Type, CheckValid, TransferAddress>::raw(); }
