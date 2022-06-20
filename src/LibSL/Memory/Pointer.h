@@ -344,22 +344,22 @@ namespace LibSL  {
 
 
       template <typename T_Type>
-      class AutoPtr : public Pointer<T_Type,CheckValid,TransferRefCountUInt>
+      class AutoPtr : public LibSL::Memory::Pointer::Pointer<T_Type, LibSL::Memory::Pointer::CheckValid, LibSL::Memory::Pointer::TransferRefCountUInt>
       {
       public:
 
-        AutoPtr() : Pointer<T_Type, CheckValid, TransferRefCountUInt>() { }
+        AutoPtr() : LibSL::Memory::Pointer::Pointer<T_Type, LibSL::Memory::Pointer::CheckValid, LibSL::Memory::Pointer::TransferRefCountUInt>() { }
 
 #ifdef LIBSL_IDKFK // power user only
         AutoPtr(const typename Pointer::t_RawPointer& raw) : Pointer(raw)  { }
 #else
-        explicit AutoPtr(const typename Pointer<T_Type, CheckValid, TransferRefCountUInt>::t_RawPointer& raw) : Pointer<T_Type, CheckValid, TransferRefCountUInt>(raw)  { }
+        explicit AutoPtr(const typename LibSL::Memory::Pointer::Pointer<T_Type, LibSL::Memory::Pointer::CheckValid, LibSL::Memory::Pointer::TransferRefCountUInt>::t_RawPointer& raw) : LibSL::Memory::Pointer::Pointer<T_Type, LibSL::Memory::Pointer::CheckValid, LibSL::Memory::Pointer::TransferRefCountUInt>(raw)  { }
 #endif
 
-        AutoPtr(const AutoPtr& ptr) : Pointer<T_Type, CheckValid, TransferRefCountUInt>(ptr) { }
+        AutoPtr(const AutoPtr& ptr) : LibSL::Memory::Pointer::Pointer<T_Type, LibSL::Memory::Pointer::CheckValid, LibSL::Memory::Pointer::TransferRefCountUInt>(ptr) { }
 
         template <typename T_Type2>
-        explicit AutoPtr(const AutoPtr<T_Type2>& ptr) : Pointer<T_Type, CheckValid, TransferRefCountUInt>(ptr) { }
+        explicit AutoPtr(const AutoPtr<T_Type2>& ptr) : LibSL::Memory::Pointer::Pointer<T_Type, LibSL::Memory::Pointer::CheckValid, LibSL::Memory::Pointer::TransferRefCountUInt>(ptr) { }
 
         ~AutoPtr() {  }
       };
@@ -371,22 +371,22 @@ namespace LibSL  {
       */
 
       template <class T_Type>
-      class SafePtr : public Pointer<T_Type,CheckValid,TransferAddress>
+      class SafePtr : public LibSL::Memory::Pointer::Pointer<T_Type, LibSL::Memory::Pointer::CheckValid, LibSL::Memory::Pointer::TransferAddress>
       {
       public:
 
-        SafePtr() : Pointer<T_Type, CheckValid, TransferAddress>() { }
+        SafePtr() : LibSL::Memory::Pointer::Pointer<T_Type, LibSL::Memory::Pointer::CheckValid, LibSL::Memory::Pointer::TransferAddress>() { }
 
-        SafePtr(const typename Pointer<T_Type, CheckValid, TransferAddress>::t_RawPointer& raw) : Pointer<T_Type, CheckValid, TransferAddress>(raw) { }
+        SafePtr(const typename LibSL::Memory::Pointer::Pointer<T_Type, LibSL::Memory::Pointer::CheckValid, LibSL::Memory::Pointer::TransferAddress>::t_RawPointer& raw) : LibSL::Memory::Pointer::Pointer<T_Type, LibSL::Memory::Pointer::CheckValid, LibSL::Memory::Pointer::TransferAddress>(raw) { }
 
-        SafePtr(const SafePtr& ptr) : Pointer<T_Type, CheckValid, TransferAddress>(ptr) { }
+        SafePtr(const SafePtr& ptr) :LibSL::Memory::Pointer::Pointer<T_Type, LibSL::Memory::Pointer::CheckValid, LibSL::Memory::Pointer::TransferAddress>(ptr) { }
 
         ~SafePtr() { /*std::cerr << "~SafePtr\n";*/ }
 
-        void erase() { if (!Pointer<T_Type, CheckValid, TransferAddress>::isNull()) { delete (Pointer<T_Type, CheckValid, TransferAddress>::raw()); (*this) = nullptr; } }
+        void erase() { if (!LibSL::Memory::Pointer::Pointer<T_Type, LibSL::Memory::Pointer::CheckValid, LibSL::Memory::Pointer::TransferAddress>::isNull()) { delete (LibSL::Memory::Pointer::Pointer<T_Type, LibSL::Memory::Pointer::CheckValid, LibSL::Memory::Pointer::TransferAddress>::raw()); (*this) = nullptr; } }
 
-        operator typename Pointer<T_Type, CheckValid, TransferAddress>::t_RawPointer() { return Pointer<T_Type, CheckValid, TransferAddress>::raw(); }
-        operator T_Type * const ()   const { return Pointer<T_Type, CheckValid, TransferAddress>::raw(); }
+        operator typename LibSL::Memory::Pointer::Pointer<T_Type, LibSL::Memory::Pointer::CheckValid, LibSL::Memory::Pointer::TransferAddress>::t_RawPointer() { return LibSL::Memory::Pointer::Pointer<T_Type, LibSL::Memory::Pointer::CheckValid, LibSL::Memory::Pointer::TransferAddress>::raw(); }
+        operator T_Type * const ()   const { return Pointer<T_Type, LibSL::Memory::Pointer::CheckValid, LibSL::Memory::Pointer::TransferAddress>::raw(); }
       };
 
 #else // g++
