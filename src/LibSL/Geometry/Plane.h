@@ -62,16 +62,16 @@ namespace LibSL {
     \brief Plane
 
     */
-    template <uint T_NumDim>
+    template <uint T_NumDim,typename T_Type=float>
     class Plane
     {
     public:
 
-      typedef LibSL::Math::Tuple<float,T_NumDim> t_Vertex;
+      typedef LibSL::Math::Tuple<T_Type,T_NumDim> t_Vertex;
 
     protected:
 
-      float     m_D;
+      T_Type    m_D;
       t_Vertex  m_N;
 
     public:
@@ -85,7 +85,7 @@ namespace LibSL {
         m_D = dot(m_N,p);
       }
 
-      Plane(float d,const t_Vertex& n)
+      Plane(T_Type d,const t_Vertex& n)
       {
         m_D = d;
         m_N = n;
@@ -102,7 +102,7 @@ namespace LibSL {
         return (m_D * m_N);
       }
 
-      float distance(const t_Vertex& p) const
+      T_Type distance(const t_Vertex& p) const
       {
         return (dot(p,m_N) - m_D);
       }
@@ -112,29 +112,29 @@ namespace LibSL {
         return ( p - dot(p-o(),n()) * n() );
       }
 
-      float intersect(const t_Vertex& origin,const t_Vertex& dir) const
+      T_Type intersect(const t_Vertex& origin,const t_Vertex& dir) const
       {
-        float l = dot(origin,m_N) - m_D;
-        float d = dot(dir   ,m_N);
+        T_Type l = dot(origin,m_N) - m_D;
+        T_Type d = dot(dir   ,m_N);
         if (Math::abs(d) < 1e-10f) {
           return (-1e16f);
         }
-        float t = l / (- d);
+        T_Type t = l / (- d);
         return t;
       }
 
-      bool             isSimilar(const Plane& p,float dist_tolerance = 1e-3f,float nrm_tolerance = 0.1f) const
+      bool             isSimilar(const Plane& p, T_Type dist_tolerance = 1e-3f, T_Type nrm_tolerance = 0.1f) const
       { 
         int s = dot(p.m_N,m_N) >= 0.0 ? 1 : -1;
         return ((dot(p.m_N,m_N) >= 1.0f-nrm_tolerance) && Math::abs(m_D - s*p.m_D) <= dist_tolerance);
       }
 
-      bool             isSimilarAround(const Plane& p,const t_Vertex& pt,float dist_tolerance = 1e-3f,float nrm_tolerance = 0.1f) const
+      bool             isSimilarAround(const Plane& p,const t_Vertex& pt, T_Type dist_tolerance = 1e-3f, T_Type nrm_tolerance = 0.1f) const
       { 
         return ((dot(p.m_N,m_N) >= 1.0f-nrm_tolerance) && Math::abs(distance(pt) - p.distance(pt)) <= dist_tolerance);
       }
 
-      bool             isSimilarAroundNonOriented(const Plane& p,const t_Vertex& pt,float dist_tolerance = 1e-3f,float nrm_tolerance = 0.1f) const
+      bool             isSimilarAroundNonOriented(const Plane& p,const t_Vertex& pt, T_Type dist_tolerance = 1e-3f, T_Type nrm_tolerance = 0.1f) const
       { 
         Plane np = p;
         np.flip();
@@ -147,8 +147,8 @@ namespace LibSL {
         m_N = - m_N;
       }
 
-      float&          d()       {return (m_D);}
-      const float&    d() const {return (m_D);}
+      T_Type&          d()       {return (m_D);}
+      const T_Type&    d() const {return (m_D);}
 
       t_Vertex&       n()       {return (m_N);}
       const t_Vertex& n() const {return (m_N);}

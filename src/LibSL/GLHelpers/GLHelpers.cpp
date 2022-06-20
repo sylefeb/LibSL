@@ -607,16 +607,16 @@ NAMESPACE::GLBuffer::GLBuffer()
   m_Sz     = 0;
 }
 
-NAMESPACE::GLBuffer::GLBuffer(uint sz)
+NAMESPACE::GLBuffer::GLBuffer(uint sz,GLuint buftype)
 {
   m_glId   = 0;
   m_Sz     = 0;
-  init( sz );
+  init(sz, buftype);
 }
 
-NAMESPACE::GLBuffer::GLBuffer(GLBuffer const& buffer)
+NAMESPACE::GLBuffer::GLBuffer(GLBuffer const& buffer, GLuint buftype)
 {
-	init(buffer.size());
+  init(buffer.size(), buftype);
 	copy(buffer);
 }
 
@@ -634,10 +634,11 @@ void NAMESPACE::GLBuffer::forget()
 
 void NAMESPACE::GLBuffer::copy(GLBuffer const& buffer)
 {
+  sl_assert(buffer.type() == m_BufType);
 	if( buffer.size() != size() )
 	{
 		terminate();
-		init(buffer.size());
+		init(buffer.size(), m_BufType);
 	}
 	if( size() != 0 )
 	{
@@ -649,15 +650,16 @@ void NAMESPACE::GLBuffer::copy(GLBuffer const& buffer)
 	}
 }
 
-void NAMESPACE::GLBuffer::init(uint sz)
+void NAMESPACE::GLBuffer::init(uint sz, GLuint buftype)
 {
   LIBSL_GL_CHECK_ERROR;
   sl_assert(m_glId == 0);
-  m_Sz     = sz;
+  m_Sz      = sz;
+  m_BufType = buftype;
 	glGenBuffersARB(1, &m_glId);
-  glBindBufferARB(c_buf_type, m_glId);
-  glBufferDataARB(c_buf_type, sz, NULL, GL_DYNAMIC_DRAW);
-  glBindBufferARB(c_buf_type, 0);
+  glBindBufferARB(m_BufType, m_glId);
+  glBufferDataARB(m_BufType, sz, NULL, GL_DYNAMIC_DRAW);
+  glBindBufferARB(m_BufType, 0);
   LIBSL_GL_CHECK_ERROR;
 }
 
@@ -665,9 +667,9 @@ void NAMESPACE::GLBuffer::resize(uint sz)
 {
   LIBSL_GL_CHECK_ERROR;
   m_Sz     = sz;
-  glBindBufferARB(c_buf_type, m_glId);
-  glBufferDataARB(c_buf_type, sz, NULL, GL_DYNAMIC_DRAW);
-  glBindBufferARB(c_buf_type, 0);
+  glBindBufferARB(m_BufType, m_glId);
+  glBufferDataARB(m_BufType, sz, NULL, GL_DYNAMIC_DRAW);
+  glBindBufferARB(m_BufType, 0);
   LIBSL_GL_CHECK_ERROR;
 }
 
@@ -675,7 +677,7 @@ void NAMESPACE::GLBuffer::terminate()
 {
   if (m_glId != 0) {
     LIBSL_GL_CHECK_ERROR;
-    glBindBufferARB(c_buf_type, 0);
+    glBindBufferARB(m_BufType, 0);
     glDeleteBuffersARB(1,&m_glId);
     LIBSL_GL_CHECK_ERROR;
     m_glId   = 0;
@@ -733,14 +735,14 @@ void NAMESPACE::GLTexBuffer::forget()
 
 void NAMESPACE::GLTexBuffer::init(uint sz)
 {
-  GLBuffer::init(sz);
+  GLBuffer::init(sz, GL_TEXTURE_BUFFER);
   m_glFormat = GL_R32UI;
   createTexture();
 }
 
 void NAMESPACE::GLTexBuffer::init(uint sz, uint format)
 {
-  GLBuffer::init(sz);
+  GLBuffer::init(sz, GL_TEXTURE_BUFFER);
   m_glFormat = format;
   createTexture();
 }

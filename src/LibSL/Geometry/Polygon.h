@@ -54,7 +54,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 
 // ------------------------------------------------------
 
-#define LIBSL_POLYGON_MAX_VERTICES  24     // TODO: template this
+#define LIBSL_POLYGON_MAX_VERTICES  48     // TODO: template this
 #define LIBSL_POLYGON_ON_EPSILON    1e-9
 #define LIBSL_POLYGON_ON            0
 #define LIBSL_POLYGON_FRONT         1
@@ -66,19 +66,17 @@ knowledge of the CeCILL-C license and that you accept its terms.
 
 // ------------------------------------------------------
 
+using namespace LibSL::Math;
+
 namespace LibSL {
   namespace Geometry {
 
-    template <uint T_NumDim,typename T_Vertex>
+    template <uint T_NumDim,typename T_Vertex,typename T_Type=float>
     class Polygon
     {
     protected:
 
-      typedef LibSL::Math::Tuple<float ,T_NumDim> t_fPos;
-      typedef LibSL::Math::Tuple<double,T_NumDim> t_dPos;
-      typedef LibSL::Math::v2f                    v2f;
-      typedef LibSL::Math::v3f                    v3f;
-      typedef LibSL::Math::v3d                    v3d;
+      typedef LibSL::Math::Tuple<T_Type,T_NumDim> t_Pos;
 
     public:
 
@@ -102,7 +100,7 @@ namespace LibSL {
         add(p0); add(p1); add(p2); add(p3);
       }
 
-      Polygon(const LibSL::Geometry::Plane<T_NumDim>& p,float size)
+      Polygon(const LibSL::Geometry::Plane<T_NumDim>& p, T_Type size)
       {
         std::pair<v3f,v3f> uv = frame(p.n());
         T_Vertex p0           = T_Vertex(p.o() - uv.first * size - uv.second * size);
@@ -130,7 +128,7 @@ namespace LibSL {
         ForIndex(i,m_NumPts) {
           ctr = ctr + m_Pts[i];
         }
-        return (ctr / float(m_NumPts));
+        return (ctr / T_Type(m_NumPts));
       }
 
       //! Returns polygon center of mass
@@ -138,7 +136,7 @@ namespace LibSL {
       {
         sl_assert( T_NumDim == 2 ); //// TODO: generalize!
         v2f ctr = 0;
-        float a = 0;
+        T_Type a = 0;
         ForIndex(i,size()) {
           v2f p_i   = vertexAt(i);
           v2f p_ip1 = vertexAt((i+1)%size());
@@ -163,44 +161,44 @@ namespace LibSL {
       }
 
       //! Returns polygon area
-      float area() const
+      T_Type area() const
       {
         if (m_NumPts < 3) {
           return (0);
         }
-        float a = 0;
+        T_Type a = 0;
         for (int i=1;i<int(m_NumPts)-1;i++) {
-          t_fPos u = LibSL::Math::Tuple<float,T_NumDim>((m_Pts[i  ]-m_Pts[0]));
-          t_fPos v = LibSL::Math::Tuple<float,T_NumDim>((m_Pts[i+1]-m_Pts[0]));
-          a       += length(cross(u,v));
+          t_Pos u = LibSL::Math::Tuple<T_Type,T_NumDim>((m_Pts[i  ]-m_Pts[0]));
+          t_Pos v = LibSL::Math::Tuple<T_Type,T_NumDim>((m_Pts[i+1]-m_Pts[0]));
+          a      += length(cross(u,v));
         }
         return (a);
       }
 
       //! Returns polygon normal
-      LibSL::Math::Tuple<float,3> normal() const
+      LibSL::Math::Tuple<T_Type,3> normal() const
       {
         if (m_NumPts < 3) {
-          return v3f(0);
+          return t_Pos(0);
         }
-        v3f p0 = LibSL::Math::Tuple<float,3>(m_Pts[0]);
-        v3f p1 = LibSL::Math::Tuple<float,3>(m_Pts[1]);
-        v3f p2 = LibSL::Math::Tuple<float,3>(m_Pts[2]);
+        t_Pos p0 = LibSL::Math::Tuple<T_Type,3>(m_Pts[0]);
+        t_Pos p1 = LibSL::Math::Tuple<T_Type,3>(m_Pts[1]);
+        t_Pos p2 = LibSL::Math::Tuple<T_Type,3>(m_Pts[2]);
         return normalize_safe(cross(p1-p0,p2-p0));
       }
 
       //! Polygon cut
       int cut(
-        const LibSL::Geometry::Plane<T_NumDim>& p,
+        const LibSL::Geometry::Plane<T_NumDim,T_Type>& p,
         Polygon&     _front,
         Polygon&     _back) const
       {
-        float                 dists[LIBSL_POLYGON_MAX_VERTICES+1];
+        T_Type                dists[LIBSL_POLYGON_MAX_VERTICES+1];
         //int                   ndists;
         int                   sides[LIBSL_POLYGON_MAX_VERTICES+1];
         //int                   nsides;
         int                   counts[3];
-        float                 dt;
+        T_Type                dt;
         int                   numpt = m_NumPts;
         int                   i;
         T_Vertex              p1,p2,pi,pn;
@@ -215,7 +213,7 @@ namespace LibSL {
         counts[0] = counts[1] = counts[2] = 0;
         i = 0;
         for (;i<numpt;i++) {
-          dt         = dot(LibSL::Math::Tuple<float, T_NumDim>(m_Pts[i]), p.n()) - p.d();
+          dt         = dot(LibSL::Math::Tuple<T_Type, T_NumDim>(m_Pts[i]), p.n()) - p.d();
           dists[i]   = dt;
           if (dt  > LIBSL_POLYGON_ON_EPSILON) {
             sides[i] = LIBSL_POLYGON_SIDE_FRONT;
@@ -272,7 +270,7 @@ namespace LibSL {
           // compute cut vertex
           p1  = m_Pts[i];
           p2  = m_Pts[(i+1)%numpt];
-          dt  = float(dists[i]) / float(dists[i]-dists[i+1]);
+          dt  = T_Type(dists[i]) / T_Type(dists[i]-dists[i+1]);
           pn  = p1 + (p2 - p1) * dt;
           _front.add(pn);
           _back .add(pn);
