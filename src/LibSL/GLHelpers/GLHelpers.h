@@ -436,24 +436,24 @@ namespace LibSL {
       GLuint   m_glId;
 			uint     m_Sz;
 
-      static const GLuint c_buf_type = GL_TEXTURE_BUFFER;
+      GLuint   m_BufType = GL_TEXTURE_BUFFER;
 
 		public:
 
 			GLBuffer( );
-			GLBuffer( uint sz );
+			GLBuffer(uint sz, GLuint buftype = GL_TEXTURE_BUFFER);
 			virtual ~GLBuffer();
-			GLBuffer(GLBuffer const& buffer);
+			GLBuffer(GLBuffer const& buffer, GLuint buftype = GL_TEXTURE_BUFFER);
 
       void adopt(GLBuffer const& buffer);
       void forget();
 
 			GLuint glId() const { return m_glId; }
-      GLuint type() const { return c_buf_type; }
-			uint size() const { return m_Sz; }
+      GLuint type() const { return m_BufType; }
+			uint size()   const { return m_Sz; }
 			void copy(GLBuffer const& buffer);
 
-			void init(uint sz);
+			void init(uint sz, GLuint buftype);
 			void resize(uint sz);
 			virtual void terminate();
 
@@ -462,17 +462,17 @@ namespace LibSL {
 			{
 				sl_assert( m_glId != 0 );
 				sl_assert( arr.size()*sizeof(T) <= m_Sz );
-				glBindBufferARB(c_buf_type, m_glId);
-        glBufferSubDataARB(c_buf_type, 0, arr.size()*sizeof(T), arr.raw());
-        glBindBufferARB(c_buf_type, 0);
+				glBindBufferARB(m_BufType, m_glId);
+        glBufferSubDataARB(m_BufType, 0, arr.size()*sizeof(T), arr.raw());
+        glBindBufferARB(m_BufType, 0);
 			}
 			void writeTo (const void *raw,uint nBytes)
 			{
 				sl_assert( m_glId != 0 );
 				sl_assert( nBytes <= m_Sz );
-				glBindBufferARB(c_buf_type, m_glId);
-				glBufferSubDataARB(c_buf_type, 0, nBytes, raw);
-        glBindBufferARB(c_buf_type, 0);
+				glBindBufferARB(m_BufType, m_glId);
+				glBufferSubDataARB(m_BufType, 0, nBytes, raw);
+        glBindBufferARB(m_BufType, 0);
 			}
 
 			template <typename T>
@@ -480,18 +480,18 @@ namespace LibSL {
 			{
 				sl_assert( m_glId != 0 );
 				sl_assert( arr.size()*sizeof(T) <= m_Sz );
-				glBindBufferARB(c_buf_type, m_glId);
-				glGetBufferSubDataARB(c_buf_type,0,arr.size()*sizeof(T),arr.raw());
-        glBindBufferARB(c_buf_type, 0);
+				glBindBufferARB(m_BufType, m_glId);
+				glGetBufferSubDataARB(m_BufType,0,arr.size()*sizeof(T),arr.raw());
+        glBindBufferARB(m_BufType, 0);
 			}
 
 			void readBack(void *raw,uint nBytes)
 			{
 				sl_assert( m_glId != 0 );
 				sl_assert( nBytes <= m_Sz );
-				glBindBufferARB(c_buf_type, m_glId);
-				glGetBufferSubDataARB(c_buf_type,0,nBytes,raw);
-        glBindBufferARB(c_buf_type, 0);
+				glBindBufferARB(m_BufType, m_glId);
+				glGetBufferSubDataARB(m_BufType,0,nBytes,raw);
+        glBindBufferARB(m_BufType, 0);
 			}
 
       template <typename T>
@@ -499,18 +499,18 @@ namespace LibSL {
 			{
 				sl_assert( m_glId != 0 );
 				sl_assert( offset + arr.size()*sizeof(T) <= m_Sz );
-				glBindBufferARB(c_buf_type, m_glId);
-				glGetBufferSubDataARB(c_buf_type,offset,arr.size()*sizeof(T),arr.raw());
-        glBindBufferARB(c_buf_type, 0);
+				glBindBufferARB(m_BufType, m_glId);
+				glGetBufferSubDataARB(m_BufType,offset,arr.size()*sizeof(T),arr.raw());
+        glBindBufferARB(m_BufType, 0);
 			}
 
       void readBackSub(void *raw,uint nBytes,uint offset)
 			{
 				sl_assert( m_glId != 0 );
 				sl_assert( offset + nBytes <= m_Sz );
-				glBindBufferARB(c_buf_type, m_glId);
-				glGetBufferSubDataARB(c_buf_type,offset,nBytes,raw);
-        glBindBufferARB(c_buf_type, 0);
+				glBindBufferARB(m_BufType, m_glId);
+				glGetBufferSubDataARB(m_BufType,offset,nBytes,raw);
+        glBindBufferARB(m_BufType, 0);
 			}
 		};
 

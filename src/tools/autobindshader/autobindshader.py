@@ -12,8 +12,6 @@ import base64;
 #   TODO:  support for ifndef
 #
 
-# secret = 'NP9y6N78DhX6TmGKfAy9lxDHUjMITgm5C81R9d5e3qoT6LKMSYvJ9Z4Ye4yXI9xc'
-
 try:
 	__file__
 except:
