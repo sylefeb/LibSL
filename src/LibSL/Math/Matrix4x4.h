@@ -143,7 +143,7 @@ namespace LibSL {
         }
 
         //! Matrix from vectors
-        Matrix4x4(Tuple<float,3> p,Tuple<float,3> u,Tuple<float,3> v,Tuple<float,3> w)
+        Matrix4x4(Tuple<T_Type,3> p,Tuple<T_Type,3> u,Tuple<T_Type,3> v,Tuple<T_Type,3> w)
         {
           (*this)[_00]=u[0]; (*this)[_10]=v[0]; (*this)[_20]=w[0]; (*this)[_30]=p[0];
           (*this)[_01]=u[1]; (*this)[_11]=v[1]; (*this)[_21]=w[1]; (*this)[_31]=p[1];
