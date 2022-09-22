@@ -94,7 +94,7 @@ namespace LibSL  {
 
     template <typename T_Type,int T_Num> class GL_format;
 
-#ifndef EMSCRIPTEN
+//#ifndef EMSCRIPTEN
 #ifndef ANDROID
     template <> class GL_format<unsigned char,1>
     {
@@ -118,7 +118,7 @@ namespace LibSL  {
             isdepth             = 0};
     };
 #endif
-#endif
+//#endif
 
     template <> class GL_format<unsigned char,3>
     {
