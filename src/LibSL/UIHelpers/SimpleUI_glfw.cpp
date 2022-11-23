@@ -268,7 +268,10 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
   }
 
   // window creation
-  if (fullscreen) {
+  if (hidden) {
+    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+    glfw_window = glfwCreateWindow(256, 256, "", NULL, NULL);
+  } else if (fullscreen) {
     GLFWmonitor* monitor = glfwGetPrimaryMonitor();
     const GLFWvidmode* mode = glfwGetVideoMode(monitor);
     glfwWindowHint(GLFW_RED_BITS, mode->redBits);
