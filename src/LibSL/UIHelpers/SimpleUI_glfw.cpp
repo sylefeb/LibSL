@@ -240,6 +240,7 @@ static void openGLErrorCallback( GLenum source, GLenum type, GLuint id, GLenum s
 void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int argc, bool frameLess, bool hidden, bool fullscreen)
 {
   glfwInit();
+  glfwSetErrorCallback(glfwError);
 
 #ifdef OPENGLCORE
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, LIBSL_OPENGL_MAJOR_VERSION);
@@ -313,7 +314,6 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
 #endif
 #endif
 
-  glfwSetErrorCallback(glfwError);
   glfwSetMouseButtonCallback(glfw_window, glfwMouseButton);
   glfwSetScrollCallback(glfw_window, glfwMouseWheel);
   glfwSetCursorPosCallback(glfw_window, glfwMouseMove);
@@ -338,11 +338,11 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
 
   glEnable(GL_DEPTH_TEST);
 
-  if (hidden) {
-    glfwHideWindow(glfw_window);
-  } else {
-    glfwShowWindow(glfw_window);
-  }
+//  if (hidden) {
+//    glfwHideWindow(glfw_window);
+//  } else {
+//    glfwShowWindow(glfw_window);
+//  }
 }
 
 void NAMESPACE::loop()
