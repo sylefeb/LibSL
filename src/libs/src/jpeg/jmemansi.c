@@ -148,7 +148,7 @@ jpeg_open_backing_store (j_common_ptr cinfo, backing_store_ptr info,
 #ifdef _MSC_VER
 	if (tmpfile_s(&info->temp_file) != 0)
 #else
-	if ( (info->temp_file = tmpfile() == NULL) )
+  if ( (info->temp_file = tmpfile()) == NULL )
 #endif
     ERREXITS(cinfo, JERR_TFILE_CREATE, "");
   info->read_backing_store = read_backing_store;
