@@ -7,6 +7,7 @@ src/libs/
 # LibSL CMake generated files & locations
 src/LibSL/LibSL.config.h
 src/LibSL/LibSL_gl.config.h
+src/LibSL_sharp/C#/LibSL_sharp.csproj
 
 # LibSL_sharp build files & locations
 src/LibSL_sharp/C#/bin/
