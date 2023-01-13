@@ -63,6 +63,12 @@ namespace LibSL {
 
       void        save(const char*, const Image*, const std::map<std::string,std::string>& key_value_text) const;
       Image*      load(const char*, std::map<std::string, std::string>& _key_value_text)                   const;
+
+      // NS 2023-01-12: new interface to save in streams
+      template<typename TChar>
+      void        save(std::basic_ostream<TChar>&,
+                       const Image*,
+                       const std::map<std::string,std::string>& key_value_text) const;
     };
 
   } //namespace LibSL::Image
