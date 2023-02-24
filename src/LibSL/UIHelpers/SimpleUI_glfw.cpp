@@ -337,12 +337,6 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
 #endif
 
   glEnable(GL_DEPTH_TEST);
-
-//  if (hidden) {
-//    glfwHideWindow(glfw_window);
-//  } else {
-//    glfwShowWindow(glfw_window);
-//  }
 }
 
 void NAMESPACE::loop()
