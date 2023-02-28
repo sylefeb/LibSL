@@ -5,7 +5,7 @@ SET(NEWMAT_SOURCES
 bandmat.cpp
 cholesky.cpp
 evalue.cpp
-example.cpp
+#example.cpp
 fft.cpp
 hholder.cpp
 jacobi.cpp
