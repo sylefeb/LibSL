@@ -220,6 +220,99 @@ void NAMESPACE::ImageFormat_PNG::save(const char *fname,const NAMESPACE::Image *
 
 //---------------------------------------------------------------------------
 
+template <typename TChar>
+void write_data_stream(png_structp png_ptr, png_bytep data, png_size_t length)
+{
+  std::basic_ostream<TChar>* stream =
+      reinterpret_cast<std::basic_ostream<TChar>*>(png_get_io_ptr(png_ptr));
+  try {
+    stream->write(reinterpret_cast<TChar*>(data), length);
+  }  catch (const std::ostream::failure& e) {
+    png_error(png_ptr, e.what());
+  }
+}
+template <typename TChar>
+void flush_data_stream(png_structp png_ptr)
+{
+  std::basic_ostream<TChar>* stream =
+      reinterpret_cast<std::basic_ostream<TChar>*>(png_get_io_ptr(png_ptr));
+  try {
+    stream->flush();
+  }  catch (const std::ostream::failure& e) {
+    png_error(png_ptr, e.what());
+  }
+}
+
+template<typename TChar>
+void NAMESPACE::ImageFormat_PNG::save(std::basic_ostream<TChar>& stream,
+                                      const NAMESPACE::Image *img,
+                                      const std::map<std::string,std::string>& key_value_text) const
+{
+
+     // makes sure Tuple have the correct size (load scheme relies on pointers)
+  sl_assert(sizeof(ImageRGB::t_Pixel) == sizeof(ImageRGB::t_Pixel::t_Element)*ImageRGB::t_Pixel::e_Size);
+
+  const ImageRGBA *rgba = dynamic_cast<const ImageRGBA *>(img);
+  const ImageRGB  *rgb  = dynamic_cast<const ImageRGB  *>(img);
+  const ImageL8   *l8   = dynamic_cast<const ImageL8   *>(img);
+
+  png_structp png_ptr  = png_create_write_struct(PNG_LIBPNG_VER_STRING,0,0,0);
+  png_infop   info_ptr = png_create_info_struct(png_ptr);
+  png_set_write_fn(png_ptr, &stream, &write_data_stream<TChar>, &flush_data_stream<TChar>);
+  png_set_IHDR(png_ptr, info_ptr, img->w(), img->h(),
+               8,
+               (rgb  != NULL)  ? PNG_COLOR_TYPE_RGB
+               :(rgba != NULL) ? PNG_COLOR_TYPE_RGBA
+               :                 PNG_COLOR_TYPE_GRAY,
+               PNG_INTERLACE_NONE,
+               PNG_COMPRESSION_TYPE_BASE,
+               PNG_FILTER_TYPE_DEFAULT);
+
+  if (!key_value_text.empty()) {
+    Array<png_text> text(static_cast<uint>(key_value_text.size()));
+    int i = 0;
+    for (const auto& kv : key_value_text) {
+      text[i].compression = PNG_TEXT_COMPRESSION_zTXt;
+      text[i].key  = (char*)kv.first.c_str();
+      text[i].text = (char*)kv.second.c_str();
+      text[i].text_length = (int)kv.second.length();
+      i++;
+    }
+    png_set_text(png_ptr, info_ptr, text.raw(), text.size());
+  }
+  // set max compression
+  png_set_compression_level(png_ptr, 9);
+
+  png_write_info(png_ptr, info_ptr);
+  for (uint j=0;j<img->h();j++)  {
+    png_bytep rowptr;
+    if (rgb != NULL) {
+      rowptr=(png_bytep)&(rgb->pixels().get(0,j)[0]); // NOTE: this could be dangerous (Tuple might not be byte aligned)
+    } else if (rgba != NULL) {                        //       (see sl_assert above)
+      rowptr=(png_bytep)&(rgba->pixels().get(0,j)[0]);// NOTE: same as above
+    } else {
+      rowptr=(png_bytep)&(l8->pixels().get(0,j)[0]);  // NOTE: same as above
+    }
+    png_write_row(png_ptr, rowptr);
+  }
+  png_write_end(png_ptr, NULL);
+  png_destroy_write_struct(&png_ptr, &info_ptr);
+}
+
+template
+void NAMESPACE::ImageFormat_PNG::save<png_byte>(
+    std::basic_ostream<png_byte>& stream,
+    const NAMESPACE::Image *img,
+    const std::map<std::string,std::string>& key_value_text) const;
+
+template
+void NAMESPACE::ImageFormat_PNG::save<std::ostream::char_type>(
+    std::basic_ostream<std::ostream::char_type>& stream,
+    const NAMESPACE::Image *img,
+    const std::map<std::string,std::string>& key_value_text) const;
+
+//---------------------------------------------------------------------------
+
 void NAMESPACE::ImageFormat_PNG::save(const char *fname, const NAMESPACE::Image *img) const
 {
   std::map<std::string, std::string> key_value_text;
