@@ -350,34 +350,28 @@ void NAMESPACE::Trackball::initZoom(uint x, uint y)
 void NAMESPACE::Trackball::updateRotation(uint x, uint y)
 {
   float speed = 3.0f; // *m_Elapsed;
-  float dx = (float((int) x) - float(m_PrevX)) * speed / float(m_Width);
-  float dy = (float((int) y) - float(m_PrevY)) * speed / float(m_Height);
+
+  // compute drag delta
+  float dx = (int(x) - m_PrevX) * speed / m_Width;
+  float dy = (int(y) - m_PrevY) * speed / m_Height;
   m_PrevX = x;
   m_PrevY = y;
-  quatf dr = deltaRotation(dx, dy);
-  m_Rotation = dr * m_Rotation;
 
   if (!m_AllowRoll || m_Walkthrough) {
-    // remove 'roll'
-    int d = -1;
-    if (m_Up == X_neg || m_Up == Y_neg || m_Up == Z_neg) {
-      d = 1;
-    }
-    quatf rinv = m_Rotation.inverse();
+    // 'turntable' camera movement
     v3f up = dir2v3f(m_Up);
-    v3f realleft = rinv * V3F(1, 0, 0);
-    v3f flat = normalize_safe(realleft - dot(realleft, up)*up);
-    float cs = dot(realleft, flat);
-    if (cs > -1.0f && cs < 1.0f) {
-      float val  = 1.0f - abs(dot(up, realleft));
-      val = pow(val, 3.0f);
-      float sign = dot(up, realleft) > 0 ? -1.0f : 1.0f;
-      float target_agl = sign * val * acos(cs);
-      float agl = target_agl;
-      m_Rotation = quatf(V3F(0, 0, 1), agl) * m_Rotation;
-    }
-  }
+    v3f realup = m_Rotation * up;
 
+    // rotate wrt the turntable normal
+    m_Rotation = quatf(realup, -dx) * m_Rotation; 
+    // rotate wrt the camera plane y-axis
+    m_Rotation = deltaRotation(0, dy) * m_Rotation;
+  }
+  else
+  {
+    quatf dr = deltaRotation(dx, dy);
+    m_Rotation = dr * m_Rotation;
+  }
 }
 
 //---------------------------------------------------------------------------
@@ -387,19 +381,23 @@ void NAMESPACE::Trackball::updateTranslation(uint x, uint y)
   if (!m_Walkthrough) {
     float speed = m_BallSpeed * m_Radius * (1.0f + length(m_Translation) / m_Radius);
     if (m_BallSpeed == 0.0f) speed = 1.0f * m_Radius;
-    float dx =  (float((int) x) - float(m_PrevX)) * speed / float(m_Width);
-    float dy = -(float((int) y) - float(m_PrevY)) * speed / float(m_Height);
-    //std::cerr << abs(dx) << std::endl;
-    //std::cerr << abs(dy) << std::endl;
+
+    // compute drag delta
+    float dx = (int(x) - m_PrevX) * speed / m_Width;
+    float dy = (int(y) - m_PrevY) * speed / m_Height;    
+    m_PrevX = x;
+    m_PrevY = y;
+
+    // clamp displacement to limit
     const float limit = 100.0f;
     dx = min(abs(dx), limit)*sign(dx);
     dy = min(abs(dy), limit)*sign(dy);
-    m_PrevX = x;
-    m_PrevY = y;
-    v3f   tx = dx * V3F(1, 0, 0);
-    v3f   ty = dy * V3F(0, 1, 0);
+
+    v3f tx =  dx * V3F(1, 0, 0);
+    v3f ty = -dy * V3F(0, 1, 0);
+
     m_Translation = m_Translation + tx + ty;
-  }
+  } 
 }
 
 //---------------------------------------------------------------------------
