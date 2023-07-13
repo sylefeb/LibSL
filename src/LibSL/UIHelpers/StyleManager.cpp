@@ -21,7 +21,7 @@ using namespace std;
 #define regex_rgb_float string("rgb[a]?\\(" + regex_float_0_1 + "," + regex_float_0_1  + "," + regex_float_0_1 + "(?:," + regex_float_0_1 + ")?\\)")
 #define regex_rgb_int   string("rgb[a]?\\(" + regex_int_0_255 + "," + regex_int_0_255  + "," + regex_int_0_255 + "(?:," + regex_int_0_255 + ")?\\)")
 #define regex_hex       string("#(?:[0-9a-fA-F]{2}){3,4}")
-#define regex_color     string("(?:" + regex_rgb_float + "|" + regex_rgb_int + "|" + regex_hex +")")
+#define regex_color     string("(?:" + regex_rgb_float + "|" + regex_rgb_int + "|" + regex_hex +"|None)")
 
 #define regex_label     string("\\b\\w*\\b")
 
@@ -99,6 +99,10 @@ ImVec4 NAMESPACE::parseColor(string& input) {
 
   if (regex_search(input, sm_color, regex(regex_rgb_int))) {
     color = StyleManager::rgbintToRGBA(input);
+  }
+
+  if (regex_search(input, sm_color, regex("None"))) {
+    color = ImVec4(0.0f, 0.0f, 0.0f, -1.0f);
   }
 
   return color;
