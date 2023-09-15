@@ -155,9 +155,19 @@ quatf& NAMESPACE::Trackball::rotation()
   return (m_Rotation);
 }
 
+const quatf& NAMESPACE::Trackball::rotation() const
+{
+  return (m_Rotation);
+}
+
 //---------------------------------------------------------------------------
 
 v3f& NAMESPACE::Trackball::translation()
+{
+  return (m_Translation);
+}
+
+const v3f& NAMESPACE::Trackball::translation() const
 {
   return (m_Translation);
 }
