@@ -52,6 +52,7 @@ SET(LIBSL_INCLUDE_DIR
 			${LibSL_DIR}/src/libs/src/SQLite/
 			${LibSL_DIR}/src/libs/src/hashlibpp/src/
 			${LibSL_DIR}/src/libs/src/rply/
+			${LibSL_DIR}/src/libs/src/imgui/
 			$ENV{DXSDK_DIR}/include
 			$ENV{DXSDK_DIR}/lib/x86
 			$ENV{DXSDK_DIR}/Samples/C++/DXUT/Core)

@@ -62,25 +62,29 @@ namespace LibSL {
       typedef LibSL::Math::quatf quatf;
       typedef LibSL::Math::v3f   v3f;
 
+      // previous x and y screen-space positions
+      int   m_PrevX;
+      int   m_PrevY;
+
+      // screen dimensions in pixels
+      uint  m_Width;
+      uint  m_Height;
+
       quatf m_Rotation;
       v3f   m_Translation;
       v3f   m_Center;
-      uint  m_Width;
-      uint  m_Height;
-      int   m_PrevX;
-      int   m_PrevY;
       float m_Elapsed;
       uint  m_Status;
       float m_Radius;
       bool  m_Walkthrough;
-			bool  m_AllowRoll;
+      bool  m_AllowRoll; // if false use 'turntable' navigation
       float m_WalkDir;
       float m_WalkSide;
       float m_WalkSpeed;
       float m_BallSpeed;
       bool  m_Locked;
       bool  m_ForceZoom;
-      e_Direction m_Up;      
+      e_Direction m_Up;
 
       void  initRotation(uint x,uint y);
       void  initTranslation(uint x,uint y);

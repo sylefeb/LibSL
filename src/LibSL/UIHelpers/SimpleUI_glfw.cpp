@@ -240,6 +240,7 @@ static void openGLErrorCallback( GLenum source, GLenum type, GLuint id, GLenum s
 void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int argc, bool frameLess, bool hidden, bool fullscreen)
 {
   glfwInit();
+  glfwSetErrorCallback(glfwError);
 
 #ifdef OPENGLCORE
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, LIBSL_OPENGL_MAJOR_VERSION);
@@ -268,7 +269,10 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
   }
 
   // window creation
-  if (fullscreen) {
+  if (hidden) {
+    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+    glfw_window = glfwCreateWindow(256, 256, "", NULL, NULL);
+  } else if (fullscreen) {
     GLFWmonitor* monitor = glfwGetPrimaryMonitor();
     const GLFWvidmode* mode = glfwGetVideoMode(monitor);
     glfwWindowHint(GLFW_RED_BITS, mode->redBits);
@@ -310,7 +314,6 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
 #endif
 #endif
 
-  glfwSetErrorCallback(glfwError);
   glfwSetMouseButtonCallback(glfw_window, glfwMouseButton);
   glfwSetScrollCallback(glfw_window, glfwMouseWheel);
   glfwSetCursorPosCallback(glfw_window, glfwMouseMove);
@@ -334,12 +337,6 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
 #endif
 
   glEnable(GL_DEPTH_TEST);
-
-  if (hidden) {
-    glfwHideWindow(glfw_window);
-  } else {
-    glfwShowWindow(glfw_window);
-  }
 }
 
 void NAMESPACE::loop()
