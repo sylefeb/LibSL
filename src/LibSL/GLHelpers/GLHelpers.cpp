@@ -152,12 +152,16 @@ GLhandleARB NAMESPACE::loadGLSLProgram(const char *prg,GLuint type)
       case GL_COMPUTE_SHADER:
         shader_type_name = "compute";
         break;
+#ifdef GL_MESH_SHADER_NV
       case GL_MESH_SHADER_NV:
         shader_type_name = "mesh";
         break;
+#endif
+#ifdef GL_TASK_SHADER_NV
       case GL_TASK_SHADER_NV:
         shader_type_name = "task";
         break;
+#endif
       default:
         shader_type_name = "unknown";
         break;
