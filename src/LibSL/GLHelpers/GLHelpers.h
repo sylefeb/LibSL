@@ -385,6 +385,7 @@ namespace LibSL {
 			{
 				sl_assert(m_Handle != 0);
 				glDeleteQueriesARB(1,&m_Handle);
+				m_Handle = 0;
 			}
 
 			void start()
