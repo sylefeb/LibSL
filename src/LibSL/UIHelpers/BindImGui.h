@@ -50,7 +50,7 @@ namespace LibSL {
 
       void bindImGui();
       void initImGui();
-      void renderImgui();
+      void renderImGui();
       void terminateImGui();
     }
 

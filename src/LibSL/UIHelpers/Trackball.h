@@ -123,6 +123,9 @@ namespace LibSL {
       LibSL::Math::v3f&         translation();
       const LibSL::Math::v3f&   translation() const;
 
+      const LibSL::Math::quatf& rotation() const;
+      const LibSL::Math::v3f&   translation() const;
+
       const LibSL::Math::v3f&   getCenter() const;
       void                      setCenter(const LibSL::Math::v3f& center);
 

@@ -174,6 +174,20 @@ const v3f& NAMESPACE::Trackball::translation() const
 
 //---------------------------------------------------------------------------
 
+const quatf& NAMESPACE::Trackball::rotation() const
+{
+  return (m_Rotation);
+}
+
+//---------------------------------------------------------------------------
+
+const v3f& NAMESPACE::Trackball::translation() const
+{
+  return (m_Translation);
+}
+
+//---------------------------------------------------------------------------
+
 const m4x4f NAMESPACE::Trackball::matrix() const
 {
   if (m_Walkthrough) {

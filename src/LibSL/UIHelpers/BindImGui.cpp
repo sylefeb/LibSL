@@ -586,7 +586,7 @@ void NAMESPACE::terminateImGui()
   ::ImGui::DestroyContext();
 }
 
-void NAMESPACE::renderImgui()
+void NAMESPACE::renderImGui()
 {
   ::ImGui::Render();
   ImGui_ImplSimpleUI_RenderDrawData(ImGui::GetDrawData());
