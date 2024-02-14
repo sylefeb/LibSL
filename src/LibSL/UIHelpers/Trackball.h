@@ -119,9 +119,9 @@ namespace LibSL {
       void  setUp(e_Direction dir)  { m_Up = dir; }
 
       LibSL::Math::quatf&       rotation();
-      LibSL::Math::v3f&         translation();
-
       const LibSL::Math::quatf& rotation() const;
+
+      LibSL::Math::v3f&         translation();
       const LibSL::Math::v3f&   translation() const;
 
       const LibSL::Math::v3f&   getCenter() const;

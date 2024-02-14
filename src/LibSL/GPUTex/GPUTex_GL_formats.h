@@ -94,7 +94,7 @@ namespace LibSL  {
 
     template <typename T_Type,int T_Num> class GL_format;
 
-#ifndef EMSCRIPTEN
+#ifndef EMSCRIPTEN_WEBGL1
 #ifndef ANDROID
     template <> class GL_format<unsigned char,1>
     {
