@@ -353,7 +353,7 @@ namespace LibSL  {
 #ifdef LIBSL_IDKFK // power user only
         AutoPtr(const typename Pointer::t_RawPointer& raw) : Pointer(raw)  { }
 #else
-        explicit AutoPtr(const typename Pointer::t_RawPointer& raw) : Pointer(raw)  { }
+        explicit AutoPtr(const typename AutoPtr::t_RawPointer& raw) : Pointer(raw) { }
 #endif
 
         AutoPtr(const AutoPtr& ptr) : Pointer(ptr)  { }
@@ -377,7 +377,7 @@ namespace LibSL  {
 
         SafePtr() : Pointer() { }
 
-        SafePtr(const typename Pointer::t_RawPointer& raw) : Pointer(raw) { }
+        SafePtr(const typename SafePtr::t_RawPointer& raw) : Pointer(raw) { }
 
         SafePtr(const SafePtr& ptr) : Pointer(ptr) { }
 
@@ -385,8 +385,8 @@ namespace LibSL  {
 
         void erase() { if (!Pointer::isNull()) { delete (Pointer::raw()); (*this) = NULL; } }
 
-        operator typename Pointer::t_RawPointer() { return (raw()); }
-        operator T_Type * const ()   const { return (raw()); }
+        operator typename SafePtr::t_RawPointer() { return (Pointer::raw()); }
+        operator T_Type * const ()   const { return (Pointer::raw()); }
       };
 
 #else // g++
