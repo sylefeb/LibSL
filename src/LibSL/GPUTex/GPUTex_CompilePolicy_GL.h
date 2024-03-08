@@ -591,7 +591,7 @@ namespace LibSL  {
       }
 
 
-#if !defined(EMSCRIPTEN) && !defined(ANDROID)
+#if !defined(EMSCRIPTEN_WEBGL1) && !defined(ANDROID)
 
       /// Create 3D texture
       static
