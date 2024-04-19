@@ -139,10 +139,12 @@ struct ArgTraits<size_t> {
 /**
  * unsigned long longs have value-like semantics.
  */
+#if !defined(_MSC_VER)
 template<>
 struct ArgTraits<unsigned long long> {
     typedef ValueLike ValueCategory;
 };
+#endif
 #endif
 
 // ======================================================================
