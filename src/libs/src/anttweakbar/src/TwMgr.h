@@ -364,7 +364,7 @@ struct CRect
     int X, Y, W, H;
     CRect() : X(0), Y(0), W(0), H(0) {}
     CRect(int _X, int _Y, int _W, int _H) : X(_X), Y(_Y), W(_W), H(_H) {}
-    bool operator==(const CRect& _Rect) { return (Empty() && _Rect.Empty()) || (X==_Rect.X && Y==_Rect.Y && W==_Rect.W && H==_Rect.H); }
+    bool operator==(const CRect& _Rect) const { return (Empty() && _Rect.Empty()) || (X==_Rect.X && Y==_Rect.Y && W==_Rect.W && H==_Rect.H); }
     bool Empty(int _Margin=0) const { return (W<=_Margin || H<=_Margin); }
     bool Subtract(const CRect& _Rect, std::vector<CRect>& _OutRects) const;
     bool Subtract(const std::vector<CRect>& _Rects, std::vector<CRect>& _OutRects) const;

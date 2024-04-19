@@ -22,8 +22,8 @@ if len(sys.argv) < 2:
 	sys.exit()
 
 print(sys.argv[1])
-shader  = re.search( '(\w*)\.\w+$' , sys.argv[1] ).group(1)
-path	= re.search( '(.*)\.\w+$' , sys.argv[1] ).group(1)
+shader  = re.search( '(\\w*)\\.\\w+$' , sys.argv[1] ).group(1)
+path	= re.search( '(.*)\\.\\w+$' , sys.argv[1] ).group(1)
 if sys.platform.startswith('win32'):
 	path	= path.replace('/','\\')
 	dir	 = path.rpartition('\\')[0] + path.rpartition('\\')[1]
@@ -61,14 +61,14 @@ def parseVars( fname, notweak ) :
 	for l in lines:
 		# print("#{0}#".format(l))
 		if l.find("#include") > -1:
-			include = dir + re.match('#include\s+\"(.*)\"',l).group(1)
-			matched_notweak	= re.match('.*//\s*notweak\s*',l);
+			include = dir + re.match('#include\\s+\\"(.*)\\"',l).group(1)
+			matched_notweak	= re.match('.*//\\s*notweak\\s*',l);
 			parseVars( include, (matched_notweak != None) | notweak )
 		if l.find("#string") > -1:
 			string = re.match('#string\s+(.*)',l).group(1)
 			allStringInc[string] = 1
-		if re.match(".*\s*uniform\s+",l) != None:
-					var	 = re.match('.*uniform\s+(?:layout\(.*\)\s+)?(\w+)\s+\*?(\w+)\s*(?:\[\s*(.*)\s*\])?\s*(?:=\s*(.*)\s*)?;',l)
+		if re.match(".*\\s*uniform\\s+",l) != None:
+					var	 = re.match('.*uniform\\s+(?:layout\\(.*\\)\\s+)?(\\w+)\\s+\\*?(\\w+)\\s*(?:\\[\\s*(.*)\\s*\\])?\\s*(?:=\\s*(.*)\\s*)?;',l)
 					# print(var.group(0))
 					# print(var.group(1))
 					# print(var.group(2))
@@ -80,12 +80,12 @@ def parseVars( fname, notweak ) :
 						allDefaults[ var.group(2) ] = var.group(4);
 						print(' [AutoBindShader] \'{0}\' defaults to \'{1}\''.format(var.group(2),var.group(4)) )
 					if  not notweak:
-						matched = re.match('.*;\s*//\s*tweak\s+(\w+)\s*(.*)$',l)
+						matched = re.match('.*;\\s*//\\s*tweak\\s+(\\w+)\\s*(.*)$',l)
 						if matched != None:
 							print(' [AutoBindShader] tweak for \'{0}\', type is \'{1}\''.format(var.group(2),matched.group(1)) )
 							allTweaks.append( [var,matched] )
 		if l.find("technique") > -1:
-			var = re.match('technique\s+(\w+)',l)
+			var = re.match('technique\\s+(\\w+)',l)
 			allTechniques.append( var )
 	return
 
@@ -103,13 +103,13 @@ def appendFileToString( fname, notweak ) :
 					fcpp.write( encode(str) + '") + decode("');
 					str = '';
 					count = 0;
-				matched_ignore	= re.match('.*//\s*ignore\s*',l);
+				matched_ignore	= re.match('.*//\\s*ignore\\s*',l);
 				if matched_ignore != None:
 					str = str + l;
 					continue
 				# check line content
-				matched_if	= re.match('^#ifdef\s+(\w*)\s*(?://(.*)\s*)?$',l);
-				matched_ifnot = re.match('^#ifndef\s+(\w*)\s*(?://(.*)\s*)?$',l);
+				matched_if	= re.match('^#ifdef\\s+(\\w*)\\s*(?://(.*)\\s*)?$',l);
+				matched_ifnot = re.match('^#ifndef\s+(\\w*)\\s*(?://(.*)\\s*)?$',l);
 				if matched_if != None:
 					# interrupt string
 					fcpp.write( encode(str) + '") + \n' );
@@ -166,8 +166,8 @@ def appendFileToString( fname, notweak ) :
 					# pop last condition
 					defstack.pop()
 				elif l.find("#include") > -1:
-					include = dir + re.search('#include\s+\"(.*)\"',l).group(1)
-					matched_notweak	= re.match('.*//\s*notweak\s*',l);
+					include = dir + re.search('#include\\s+\\"(.*)\\"',l).group(1)
+					matched_notweak	= re.match('.*//\\s*notweak\\s*',l);
 					# interrupt string
 					fcpp.write( encode(str + '\n') + '") + decode("' )
 					str = '';
@@ -176,7 +176,7 @@ def appendFileToString( fname, notweak ) :
 					# resume
 					fcpp.write('") + decode("' )
 				elif l.find("#string") > -1:
-					string = re.search('#string\s+(.*)',l).group(1)
+					string = re.search('#string\\s+(.*)',l).group(1)
 					fcpp.write( encode(str) + '") + {0} + decode("'.format(string) )
 					str = ''
 				else:

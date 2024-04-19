@@ -347,9 +347,9 @@ namespace LibSL  {
       class FastArray : public Array<T_Type,InitNop,CheckNop>
       {
       public:
-        FastArray()                               : Array()     { }
-        FastArray(uint size)                      : Array(size) { }
-        FastArray(const std::vector<T_Type>& vec) : Array(vec)  { }
+        FastArray()                               : Array<T_Type, InitNop, CheckNop>()     { }
+        FastArray(uint size)                      : Array<T_Type, InitNop, CheckNop>(size) { }
+        FastArray(const std::vector<T_Type>& vec) : Array<T_Type, InitNop, CheckNop>(vec)  { }
       };
 #else
 
