@@ -65,7 +65,7 @@ def parseVars( fname, notweak ) :
 			matched_notweak	= re.match('.*//\\s*notweak\\s*',l);
 			parseVars( include, (matched_notweak != None) | notweak )
 		if l.find("#string") > -1:
-			string = re.match('#string\s+(.*)',l).group(1)
+			string = re.match('#string\\s+(.*)',l).group(1)
 			allStringInc[string] = 1
 		if re.match(".*\\s*uniform\\s+",l) != None:
 					var	 = re.match('.*uniform\\s+(?:layout\\(.*\\)\\s+)?(\\w+)\\s+\\*?(\\w+)\\s*(?:\\[\\s*(.*)\\s*\\])?\\s*(?:=\\s*(.*)\\s*)?;',l)
@@ -109,7 +109,7 @@ def appendFileToString( fname, notweak ) :
 					continue
 				# check line content
 				matched_if	= re.match('^#ifdef\\s+(\\w*)\\s*(?://(.*)\\s*)?$',l);
-				matched_ifnot = re.match('^#ifndef\s+(\\w*)\\s*(?://(.*)\\s*)?$',l);
+				matched_ifnot = re.match('^#ifndef\\s+(\\w*)\\s*(?://(.*)\\s*)?$',l);
 				if matched_if != None:
 					# interrupt string
 					fcpp.write( encode(str) + '") + \n' );
