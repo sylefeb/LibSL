@@ -175,7 +175,7 @@ SET(LIBSL_GL_HEADERS
 	./LibSL_gl.h
 	Mesh/AnimatedMeshGLSLRenderer.h
 	GLHelpers/GLHelpers.h
-  GLHelpers/GLBasicPipeline.h
+	GLHelpers/GLBasicPipeline.h
 	UIHelpers/BindAntTweakBar.h
  	UIHelpers/BindImGui.h
 	UIHelpers/StyleManager.h
@@ -195,7 +195,7 @@ SET(LIBSL_GL_SOURCE
 	Mesh/AnimatedMeshGLSLRenderer.cpp
 	UIHelpers/Manipulator.cpp
 	UIHelpers/SimpleUI.cpp
-  UIHelpers/TrackballUI.cpp
+	UIHelpers/TrackballUI.cpp
 	UIHelpers/Trackball.cpp
 	UIHelpers/BindAntTweakBar.cpp
 	UIHelpers/BindImGui.cpp
@@ -211,7 +211,7 @@ SET(LIBSL_GL4_HEADERS
 	./LibSL_gl4.h
 	Mesh/AnimatedMeshGLSLRenderer.h
 	GLHelpers/GLHelpers.h
-  GLHelpers/GLBasicPipeline.h
+	GLHelpers/GLBasicPipeline.h
 	UIHelpers/BindAntTweakBar.h
  	UIHelpers/BindImGui.h
 	UIHelpers/StyleManager.h
@@ -222,7 +222,7 @@ SET(LIBSL_GL4_HEADERS
 SET(LIBSL_GL4_SOURCE
 	GLHelpers/GLHelpers.cpp
 	GLHelpers/AutoBindShader.cpp
-  GLHelpers/GLBasicPipeline.cpp
+	GLHelpers/GLBasicPipeline.cpp
 	GLHelpers/Triangulate.cpp
 	GPUHelpers/Font.cpp
 	GPUHelpers/GPUHelpers.cpp
@@ -246,7 +246,7 @@ SET(LIBSL_GL4_SOURCE
 SET(LIBSL_GL4CORE_HEADERS
 	./LibSL_gl4core.h
 	GLHelpers/GLHelpers.h
-  GLHelpers/GLBasicPipeline.h
+	GLHelpers/GLBasicPipeline.h
 	UIHelpers/BindAntTweakBar.h
  	UIHelpers/BindImGui.h
 	UIHelpers/StyleManager.h
