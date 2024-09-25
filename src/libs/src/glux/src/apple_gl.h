@@ -2869,19 +2869,19 @@ extern void glGetQueryiv (GLenum target, GLenum pname, GLint *params) OPENGL_DEP
 extern void glGetQueryObjectiv (GLuint id, GLenum pname, GLint *params) OPENGL_DEPRECATED(10.0, 10.14);
 extern void glGetQueryObjectuiv (GLuint id, GLenum pname, GLuint *params) OPENGL_DEPRECATED(10.0, 10.14);
 
-extern void glBindBuffer (GLenum target, GLuint buffer) OPENGL_DEPRECATED(10.0, 10.14);
-extern void glDeleteBuffers (GLsizei n, const GLuint *buffers) OPENGL_DEPRECATED(10.0, 10.14);
-extern void glGenBuffers (GLsizei n, GLuint *buffers) OPENGL_DEPRECATED(10.0, 10.14);
-extern GLboolean glIsBuffer (GLuint buffer) OPENGL_DEPRECATED(10.0, 10.14);
-extern void glBufferData (GLenum target, GLsizeiptr size, const GLvoid *data, GLenum usage) OPENGL_DEPRECATED(10.0, 10.14);
-extern void glBufferSubData (GLenum target, GLintptr offset, GLsizeiptr size, const GLvoid *data) OPENGL_DEPRECATED(10.0, 10.14);
-extern void glGetBufferSubData (GLenum target, GLintptr offset, GLsizeiptr size, GLvoid *data) OPENGL_DEPRECATED(10.0, 10.14);
-extern GLvoid *glMapBuffer (GLenum target, GLenum access) OPENGL_DEPRECATED(10.0, 10.14);
-extern GLboolean glUnmapBuffer (GLenum target) OPENGL_DEPRECATED(10.0, 10.14);
-extern void glGetBufferParameteriv (GLenum target, GLenum pname, GLint *params) OPENGL_DEPRECATED(10.0, 10.14);
-extern void glGetBufferPointerv (GLenum target, GLenum pname, GLvoid **params) OPENGL_DEPRECATED(10.0, 10.14);
+// extern void glBindBuffer (GLenum target, GLuint buffer) OPENGL_DEPRECATED(10.0, 10.14);
+// extern void glDeleteBuffers (GLsizei n, const GLuint *buffers) OPENGL_DEPRECATED(10.0, 10.14);
+// extern void glGenBuffers (GLsizei n, GLuint *buffers) OPENGL_DEPRECATED(10.0, 10.14);
+// extern GLboolean glIsBuffer (GLuint buffer) OPENGL_DEPRECATED(10.0, 10.14);
+// extern void glBufferData (GLenum target, GLsizeiptr size, const GLvoid *data, GLenum usage) OPENGL_DEPRECATED(10.0, 10.14);
+// extern void glBufferSubData (GLenum target, GLintptr offset, GLsizeiptr size, const GLvoid *data) OPENGL_DEPRECATED(10.0, 10.14);
+// extern void glGetBufferSubData (GLenum target, GLintptr offset, GLsizeiptr size, GLvoid *data) OPENGL_DEPRECATED(10.0, 10.14);
+// extern GLvoid *glMapBuffer (GLenum target, GLenum access) OPENGL_DEPRECATED(10.0, 10.14);
+// extern GLboolean glUnmapBuffer (GLenum target) OPENGL_DEPRECATED(10.0, 10.14);
+// extern void glGetBufferParameteriv (GLenum target, GLenum pname, GLint *params) OPENGL_DEPRECATED(10.0, 10.14);
+// extern void glGetBufferPointerv (GLenum target, GLenum pname, GLvoid **params) OPENGL_DEPRECATED(10.0, 10.14);
 
-extern void glDrawBuffers (GLsizei n, const GLenum *bufs) OPENGL_DEPRECATED(10.0, 10.14);
+// extern void glDrawBuffers (GLsizei n, const GLenum *bufs) OPENGL_DEPRECATED(10.0, 10.14);
 // extern void glVertexAttrib1d (GLuint index, GLdouble x) OPENGL_DEPRECATED(10.0, 10.14);
 // extern void glVertexAttrib1dv (GLuint index, const GLdouble *v) OPENGL_DEPRECATED(10.0, 10.14);
 // extern void glVertexAttrib1f (GLuint index, GLfloat x) OPENGL_DEPRECATED(10.0, 10.14);
