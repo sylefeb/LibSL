@@ -2392,7 +2392,7 @@ extern void glBindTexture (GLenum target, GLuint texture) OPENGL_DEPRECATED(10.0
 extern void glBitmap (GLsizei width, GLsizei height, GLfloat xorig, GLfloat yorig, GLfloat xmove, GLfloat ymove, const GLubyte *bitmap) OPENGL_DEPRECATED(10.0, 10.14);
 extern void glBlendColor (GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha) OPENGL_DEPRECATED(10.0, 10.14);
 extern void glBlendEquation (GLenum mode) OPENGL_DEPRECATED(10.0, 10.14);
-extern void glBlendEquationSeparate (GLenum modeRGB, GLenum modeAlpha) OPENGL_DEPRECATED(10.0, 10.14);
+// extern void glBlendEquationSeparate (GLenum modeRGB, GLenum modeAlpha) OPENGL_DEPRECATED(10.0, 10.14);
 extern void glBlendFunc (GLenum sfactor, GLenum dfactor) OPENGL_DEPRECATED(10.0, 10.14);
 extern void glCallList (GLuint list) OPENGL_DEPRECATED(10.0, 10.14);
 extern void glCallLists (GLsizei n, GLenum type, const GLvoid *lists) OPENGL_DEPRECATED(10.0, 10.14);

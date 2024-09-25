@@ -716,7 +716,9 @@ sub write_glux_header()
 #define __GLUX__
 // --------------------------------------------------------
 #ifdef __APPLE__
+#  ifndef GL_GLEXT_LEGACY
 #  define GL_GLEXT_LEGACY
+#  endif
 #endif
 #include \"gluxLoader.h\"
 #include \"gluxPlugin.h\"
