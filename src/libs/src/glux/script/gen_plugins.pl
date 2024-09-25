@@ -758,6 +758,11 @@ sub write_glux_cpp()
 // --------------------------------------------------------
 #include \"glux.h\"
 
+#ifdef __APPLE__
+#undef GL_GLEXT_FUNCTION_POINTERS
+#include <OpenGL/gl.h>
+#endif
+
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
