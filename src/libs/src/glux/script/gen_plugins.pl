@@ -315,7 +315,6 @@ sub write_h_header()
 #endif
 #ifdef __APPLE__
 #  define GL_GLEXT_LEGACY
-#  define GL_GLEXT_FUNCTION_POINTERS
 #endif
 
 #ifndef GL_ARB_multitexture // hack due to MESA headers including GL_ARB_multitexture
@@ -341,7 +340,6 @@ sub write_h_header()
 #  include \"glux_wglext.h\"
 #else
 #ifdef __APPLE__
-//#  include \"glux_glext_apple.h\"
 #  include \"glux_glext.h\"
 #else
 #ifdef EMSCRIPTEN
@@ -719,7 +717,7 @@ sub write_glux_header()
 // --------------------------------------------------------
 #ifdef __APPLE__
 #  define GL_GLEXT_LEGACY
-#  define GL_GLEXT_FUNCTION_POINTERS
+#  degone GL_SILENCE_DEPRECATION
 #endif
 #include \"gluxLoader.h\"
 #include \"gluxPlugin.h\"
@@ -763,7 +761,6 @@ sub write_glux_cpp()
 #include \"glux.h\"
 
 #ifdef __APPLE__
-#undef GL_GLEXT_FUNCTION_POINTERS
 #include <OpenGL/gl.h>
 #endif
 
