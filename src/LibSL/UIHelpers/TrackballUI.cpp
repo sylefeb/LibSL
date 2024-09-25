@@ -64,10 +64,14 @@ using namespace LibSL::Math;
 using namespace LibSL::UIHelpers;
 
 #ifdef OPENGL
+#ifdef __APPLE__
+#include <OpenGL/gl.h>
+#else
 #include <GL/gl.h>
+#endif
 #ifdef USE_GLUT
 #ifdef __APPLE__
-#include <GLUT/glut.h>
+#include <glut.h>
 #else
 #include <GL/glut.h>
 #endif

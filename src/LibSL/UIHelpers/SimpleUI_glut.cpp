@@ -37,7 +37,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #ifdef EMSCRIPTEN
 #include <GL/glut.h>
 #else
+#ifdef __APPLE__
+#include <glut.h>
+#else
 #include <GL/freeglut.h>
+#endif
 #endif
 
 //---------------------------------------------------------------------------
