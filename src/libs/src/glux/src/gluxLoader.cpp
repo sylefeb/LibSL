@@ -1,13 +1,13 @@
 // --------------------------------------------------------
 // Author: Sylvain.Lefebvre@sophia.inria.fr
-// -------------------------------------------------------- 
+// --------------------------------------------------------
 #include "gluxLoader.h"
 #include "gluxPlugin.h"
 
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
-// -------------------------------------------------------- 
+// --------------------------------------------------------
 
 using namespace glux;
 using namespace std;
@@ -20,41 +20,42 @@ const char *g_glux__wglExtensions = NULL;
 // core profile extensions
 std::set<std::string>  g_glux__glExtensions;
 
-// -------------------------------------------------------- 
+// --------------------------------------------------------
 
 #if defined(_WIN32) || defined(_WIN64)
-#include <windows.h> 
+#include <windows.h>
 // typedef of wglGetExtensionsStringARB
 typedef const char * (APIENTRYP t_wglGetExtensionsStringARB) (HDC hdc);
-#endif 
+#endif
 
 #ifdef __APPLE__
+#define GL_SILENCE_DEPRECATION
 #include <OpenGL/gl.h>
 #else
 #include <GL/gl.h>
 #endif
 
-// -------------------------------------------------------- 
+// --------------------------------------------------------
 
 // for core profile compatibility
 #define GL_NUM_EXTENSIONS                 0x821D // how to avoid this?
 #define GL_EXTENSIONS                     0x1F03 // how to avoid this?
 typedef const GLubyte *(APIENTRYP t_glGetStringi) (GLenum name, GLuint index);
 
-// -------------------------------------------------------- 
+// --------------------------------------------------------
 
 #include <set>
 #include <fstream>
 
-// -------------------------------------------------------- 
+// --------------------------------------------------------
 
-static map<string,gluxPlugin *> *s_Plugins     = NULL; 
+static map<string,gluxPlugin *> *s_Plugins     = NULL;
 static bool                      s_Initialized = false;
 
-// -------------------------------------------------------- 
+// --------------------------------------------------------
 
 void glux::registerPlugin(gluxPlugin *pl)
-{   
+{
   if (s_Plugins == NULL) {
     s_Plugins = new map<string,gluxPlugin *>;
   }
@@ -64,11 +65,11 @@ void glux::registerPlugin(gluxPlugin *pl)
   if (P == s_Plugins->end()) {
     (*s_Plugins)[pl->getIdString()] = pl;
   } else {
-    pl->linkTo((*P).second); 
+    pl->linkTo((*P).second);
   }
-} 
+}
 
-// -------------------------------------------------------- 
+// --------------------------------------------------------
 
 void glux::init(int flags,const char *profile)
 {
@@ -76,9 +77,9 @@ void glux::init(int flags,const char *profile)
   s_Initialized = true;
 
   bool all_ok      = true;
-  bool use_profile = false; 
+  bool use_profile = false;
   stringstream strout;
-  set<string>  ext_profile; 
+  set<string>  ext_profile;
 
   // MessageBoxA(NULL,(const char *)glGetString(GL_EXTENSIONS), "", MB_OK);
 
@@ -89,7 +90,7 @@ void glux::init(int flags,const char *profile)
   // check if OpenGL is initialized
   if (glGetString(GL_VENDOR) == NULL) {
     strout << "OpenGL should be initialized before calling gluxInit() !" << endl;
-#ifndef GLUX_NO_OUTPUT  
+#ifndef GLUX_NO_OUTPUT
     cerr << strout.str() << endl;
 #if defined(_WIN32) || defined(_WIN64)
     MessageBox(NULL,strout.str().c_str(),"gluX - Fatal error",MB_OK | MB_ICONSTOP);
@@ -102,10 +103,10 @@ void glux::init(int flags,const char *profile)
   strout << "Vendor   string: " << glGetString(GL_VENDOR)   << std::endl;
 	strout << "Renderer string: " << glGetString(GL_RENDERER) << std::endl;
   strout << "Version  string: " << glGetString(GL_VERSION)  << std::endl;
-  
+
   // read profile
   if (profile != NULL) {
-    ifstream fprof(profile);     
+    ifstream fprof(profile);
     strout << endl;
     strout << "-=-=-=-=-=-=-=-=-=-=-=-=-"   << endl;
     strout << "  Using profile " << profile << endl;
@@ -154,7 +155,7 @@ void glux::init(int flags,const char *profile)
         all_ok &= ok;
       }
     }
-  } else {   
+  } else {
     // no plugins explicitly loaded
     strout << "-> No Plugin loaded: you have to use GLUX_LOAD or GLUX_REQUIRE before using extensions." << endl;
   }
@@ -169,14 +170,14 @@ void glux::init(int flags,const char *profile)
     exit (-1);
   }
 
-#ifndef GLUX_NO_OUTPUT  
+#ifndef GLUX_NO_OUTPUT
   strout << "-=-=-=-=-=-=-=-=-=-=-=-=-" << endl << endl;
   cerr   << strout.str();
 #endif
 
 }
 
-// -------------------------------------------------------- 
+// --------------------------------------------------------
 
 bool glux::validateExtension(const pair<string,gluxPlugin*>& ext,int flags,
                              bool use_profile,const char *profile,const set<string>& ext_profile,
@@ -215,8 +216,8 @@ bool glux::validateExtension(const pair<string,gluxPlugin*>& ext,int flags,
       if (P != ext_profile.end()) {
 
         strout << " " << ext.first << endl << endl;
-        strout << "Cannot fully support profile " << profile << " : " << endl 
-          << "Extension " << ext.first 
+        strout << "Cannot fully support profile " << profile << " : " << endl
+          << "Extension " << ext.first
           << " not supported." << endl << endl;
         strout << strout.str() << endl;
 #if defined(_WIN32) || defined(_WIN64)
@@ -240,7 +241,7 @@ bool glux::validateExtension(const pair<string,gluxPlugin*>& ext,int flags,
   return (r);
 }
 
-// -------------------------------------------------------- 
+// --------------------------------------------------------
 
 void glux::shutdown()
 {
@@ -266,14 +267,14 @@ void gluxShutdown()
 
 // --------------------------------------------------------
 
-void gluxInit() 
+void gluxInit()
 {
   gluxInit(0,NULL);
 }
 
 // --------------------------------------------------------
 
-void gluxInit(int flags) 
+void gluxInit(int flags)
 {
   gluxInit(flags,NULL);
 }
@@ -324,7 +325,7 @@ int gluxIsDevl(const char *s)
     } else {
       return (GLUX_NOT_DEVL);
     }
-  }  
+  }
 }
 
 // --------------------------------------------------------
