@@ -4,7 +4,7 @@ on:
   push:
 
 jobs:
-  release-silice:
+  compile-linux:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -15,5 +15,17 @@ jobs:
           mkdir BUILD
           cd BUILD
           sudo apt-get install freeglut3-dev
+          cmake ..
+          make
+  compile-linux:
+    runs-on: macos-15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Compile
+        shell: bash
+        run: |
+          mkdir BUILD
+          cd BUILD
           cmake ..
           make
