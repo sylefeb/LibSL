@@ -14,5 +14,6 @@ jobs:
         run: |
           mkdir BUILD
           cd BUILD
+          sudo apt-get install freeglut3-dev
           cmake ..
           make
