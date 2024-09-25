@@ -314,7 +314,9 @@ sub write_h_header()
 #  include <windows.h>
 #endif
 #ifdef __APPLE__
+#  ifndef GL_GLEXT_LEGACY
 #  define GL_GLEXT_LEGACY
+#  endif
 #endif
 
 #ifndef GL_ARB_multitexture // hack due to MESA headers including GL_ARB_multitexture
