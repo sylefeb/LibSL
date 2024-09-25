@@ -8,16 +8,16 @@ tools to simplify programming real-time computer graphics applications
 under OpenGL and DirectX.
 
 This software is governed by the CeCILL-C license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
+abiding by the rules of distribution of free software.  You can  use,
 modify and/ or redistribute the software under the terms of the CeCILL-C
 license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+"http://www.cecill.info".
 
 As a counterpart to the access to the source code and  rights to copy,
 modify and redistribute granted by the license, users are provided only
 with a limited warranty  and the software's author,  the holder of the
 economic rights,  and the successive licensors  have only  limited
-liability. 
+liability.
 
 In this respect, the user's attention is drawn to the risks associated
 with loading,  using,  modifying and/or developing or reproducing the
@@ -26,9 +26,9 @@ that may mean  that it is complicated to manipulate,  and  that  also
 therefore means  that it is reserved for developers  and  experienced
 professionals having in-depth computer knowledge. Users are therefore
 encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+requirements in conditions enabling the security of their systems and/or
+data to be ensured and,  more generally, to use and operate it in the
+same conditions as regards security.
 
 The fact that you are presently reading this means that you have had
 knowledge of the CeCILL-C license and that you accept its terms.
@@ -41,7 +41,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #include <assert.h>
 
 #ifdef __APPLE__
-#include <OpenGL/gl.h>
+#include "apple_gl.h"
 #else
 #ifndef EMSCRIPTEN
 #include <GL/gl.h>
@@ -57,7 +57,7 @@ namespace GPUMesh {
 
   /// GL Mesh policy for immediate calls
 
-  template <class VertexFormat,class T_IndexType=Loki::NullType> 
+  template <class VertexFormat,class T_IndexType=Loki::NullType>
   class CompilePolicy_GL_Calls
   {
   public:
@@ -193,7 +193,7 @@ namespace GPUMesh {
 
   /// GL Mesh policy for immediate calls through indices
 
-  template <class T_VertexFormat,class T_IndexType> 
+  template <class T_VertexFormat,class T_IndexType>
   class CompilePolicy_Indexed_GL_Calls : public CompilePolicy_GL_Calls<T_VertexFormat,T_IndexType>
   {
   public:
@@ -215,7 +215,7 @@ namespace GPUMesh {
 
 
   /// GL Mesh using immediate calls
-  template <class T_VertexFormat> 
+  template <class T_VertexFormat>
   class GPUMesh_GL_Calls
     : public GPUMesh_generic< CompilePolicy_GL_Calls , T_VertexFormat > {
 	public:
@@ -223,7 +223,7 @@ namespace GPUMesh {
 	};
 
   /// GL Mesh using immediate calls through indices
-  template <class T_VertexFormat,class T_IndexType> 
+  template <class T_VertexFormat,class T_IndexType>
   class GPUMesh_Indexed_GL_Calls
     : public GPUMesh_generic< CompilePolicy_Indexed_GL_Calls , T_VertexFormat , T_IndexType > {
 	public:

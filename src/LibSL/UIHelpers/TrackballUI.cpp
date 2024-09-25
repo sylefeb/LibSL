@@ -65,7 +65,7 @@ using namespace LibSL::UIHelpers;
 
 #ifdef OPENGL
 #ifdef __APPLE__
-#include <OpenGL/gl.h>
+#include "apple_gl.h"
 #else
 #include <GL/gl.h>
 #endif

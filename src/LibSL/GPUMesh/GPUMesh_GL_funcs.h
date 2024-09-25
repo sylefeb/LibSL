@@ -8,16 +8,16 @@ tools to simplify programming real-time computer graphics applications
 under OpenGL and DirectX.
 
 This software is governed by the CeCILL-C license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
+abiding by the rules of distribution of free software.  You can  use,
 modify and/ or redistribute the software under the terms of the CeCILL-C
 license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+"http://www.cecill.info".
 
 As a counterpart to the access to the source code and  rights to copy,
 modify and redistribute granted by the license, users are provided only
 with a limited warranty  and the software's author,  the holder of the
 economic rights,  and the successive licensors  have only  limited
-liability. 
+liability.
 
 In this respect, the user's attention is drawn to the risks associated
 with loading,  using,  modifying and/or developing or reproducing the
@@ -26,9 +26,9 @@ that may mean  that it is complicated to manipulate,  and  that  also
 therefore means  that it is reserved for developers  and  experienced
 professionals having in-depth computer knowledge. Users are therefore
 encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+requirements in conditions enabling the security of their systems and/or
+data to be ensured and,  more generally, to use and operate it in the
+same conditions as regards security.
 
 The fact that you are presently reading this means that you have had
 knowledge of the CeCILL-C license and that you accept its terms.
@@ -48,7 +48,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #pragma once
 
 #ifdef __APPLE__
-#include <OpenGL/gl.h>
+#include "apple_gl.h"
 #define APIENTRY
 #else
 #ifndef EMSCRIPTEN
@@ -103,30 +103,30 @@ public:
 
   static func getColor0Fct(int i)
   {
-    static const func funcs[4]={NULL, NULL, glColor3fv, glColor4fv}; 
+    static const func funcs[4]={NULL, NULL, glColor3fv, glColor4fv};
     return (funcs[i]);
   }
   static attfunc getAttributeFct(int i)
   {
-    static const attfunc funcs[4]={glVertexAttrib1fvARB, glVertexAttrib2fvARB, glVertexAttrib3fvARB, glVertexAttrib4fvARB}; 
+    static const attfunc funcs[4]={glVertexAttrib1fvARB, glVertexAttrib2fvARB, glVertexAttrib3fvARB, glVertexAttrib4fvARB};
     return (funcs[i]);
   }
   static func getVertexFct(int i)
   {
-    static const func funcs[4]={NULL, glVertex2fv, glVertex3fv, glVertex4fv}; 
+    static const func funcs[4]={NULL, glVertex2fv, glVertex3fv, glVertex4fv};
     return (funcs[i]);
   }
   static func getNormalFct(int i)
   {
-    static const func funcs[4]={NULL, NULL, glNormal3fv, NULL}; 
+    static const func funcs[4]={NULL, NULL, glNormal3fv, NULL};
     return (funcs[i]);
   }
   static texfunc getTexCoordnFct(int i)
   {
-		static const texfunc funcs[4]={glMultiTexCoord1fvARB, glMultiTexCoord2fvARB, glMultiTexCoord3fvARB, glMultiTexCoord4fvARB}; 
+		static const texfunc funcs[4]={glMultiTexCoord1fvARB, glMultiTexCoord2fvARB, glMultiTexCoord3fvARB, glMultiTexCoord4fvARB};
     return (funcs[i]);
   }
-  
+
 };
 
 // -----------------------------------------
@@ -141,30 +141,30 @@ public:
 
   static func getColor0Fct(int i)
   {
-    static const func funcs[4]={NULL, NULL, glColor3dv, glColor4dv}; 
+    static const func funcs[4]={NULL, NULL, glColor3dv, glColor4dv};
     return (funcs[i]);
   }
   static attfunc getAttributeFct(int i)
   {
-    static const attfunc funcs[4]={glVertexAttrib1dvARB, glVertexAttrib2dvARB, glVertexAttrib3dvARB, glVertexAttrib4dvARB}; 
+    static const attfunc funcs[4]={glVertexAttrib1dvARB, glVertexAttrib2dvARB, glVertexAttrib3dvARB, glVertexAttrib4dvARB};
     return (funcs[i]);
   }
   static func getVertexFct(int i)
   {
-    static const func funcs[4]={NULL, glVertex2dv, glVertex3dv, glVertex4dv}; 
+    static const func funcs[4]={NULL, glVertex2dv, glVertex3dv, glVertex4dv};
     return (funcs[i]);
   }
   static func getNormalFct(int i)
   {
-    static const func funcs[4]={NULL, NULL, glNormal3dv, NULL}; 
+    static const func funcs[4]={NULL, NULL, glNormal3dv, NULL};
     return (funcs[i]);
   }
   static texfunc getTexCoordnFct(int i)
   {
-    static const texfunc funcs[4]={glMultiTexCoord1dvARB, glMultiTexCoord2dvARB, glMultiTexCoord3dvARB, glMultiTexCoord4dvARB}; 
+    static const texfunc funcs[4]={glMultiTexCoord1dvARB, glMultiTexCoord2dvARB, glMultiTexCoord3dvARB, glMultiTexCoord4dvARB};
     return (funcs[i]);
   }
-  
+
 };
 
 // -----------------------------------------
@@ -177,10 +177,10 @@ public:
 
   static func getColor0Fct(int i)
   {
-    static const func funcs[4]={NULL, NULL, glColor3ubv, glColor4ubv}; 
+    static const func funcs[4]={NULL, NULL, glColor3ubv, glColor4ubv};
     return (funcs[i]);
   }
-  
+
 };
 
 // -----------------------------------------

@@ -53,7 +53,7 @@ using namespace LibSL::System::Types;
 // ------------------------------------------------------
 
 #ifdef __APPLE__
-#include <OpenGL/gl.h>
+#include "apple_gl.h"
 #else
 #ifdef EMSCRIPTEN
 #define GL_GLEXT_PROTOTYPES
@@ -156,7 +156,7 @@ namespace LibSL  {
             isdepth             = 0};
     };
 
-    
+
 #ifndef EMSCRIPTEN
 #ifndef ANDROID
 #ifndef __APPLE__

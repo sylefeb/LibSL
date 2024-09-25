@@ -29,8 +29,7 @@ typedef const char * (APIENTRYP t_wglGetExtensionsStringARB) (HDC hdc);
 #endif
 
 #ifdef __APPLE__
-#define GL_SILENCE_DEPRECATION
-#include <OpenGL/gl.h>
+#include "apple_gl.h"
 #else
 #include <GL/gl.h>
 #endif

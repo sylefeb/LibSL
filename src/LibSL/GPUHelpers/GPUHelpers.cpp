@@ -180,7 +180,7 @@ void NAMESPACE::Transform::set(uint matrixid,const m4x4f& m)
 #endif
 
 #ifdef __APPLE__
-#include <OpenGL/gl.h>
+#include "apple_gl.h"
 #include <OpenGL/glu.h>
 #else
 #ifdef ANDROID

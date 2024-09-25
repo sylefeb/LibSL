@@ -60,7 +60,7 @@ using namespace LibSL::System::Types;
 #endif
 
 #ifdef __APPLE__
-#include <OpenGL/gl.h>
+#include "apple_gl.h"
 #else
 #ifndef EMSCRIPTEN
 #ifdef ANDROID

@@ -315,20 +315,19 @@ sub write_h_header()
 #endif
 #ifdef __APPLE__
 #  define GL_GLEXT_LEGACY
-#  define GL_SILENCE_DEPRECATION
 #endif
 
 #ifndef GL_ARB_multitexture // hack due to MESA headers including GL_ARB_multitexture
 #define GL_ARB_multitexture
 #ifdef __APPLE__
-#include <OpenGL/gl.h>
+#include \"apple_gl.h\"
 #else
 #include <GL/gl.h>
 #endif
 #undef  GL_ARB_multitexture
 #else
 #ifdef __APPLE__
-#include <OpenGL/gl.h>
+#include \"apple_gl.h\"
 #else
 #include <GL/gl.h>
 #endif
@@ -718,7 +717,6 @@ sub write_glux_header()
 // --------------------------------------------------------
 #ifdef __APPLE__
 #  define GL_GLEXT_LEGACY
-#  define GL_SILENCE_DEPRECATION
 #endif
 #include \"gluxLoader.h\"
 #include \"gluxPlugin.h\"
@@ -762,8 +760,7 @@ sub write_glux_cpp()
 #include \"glux.h\"
 
 #ifdef __APPLE__
-#define GL_SILENCE_DEPRECATION
-#include <OpenGL/gl.h>
+#include \"apple_gl.h\"
 #endif
 
 #include <cstdlib>
@@ -827,8 +824,7 @@ sub write_glux_ext_defs_header()
 #endif
 // --------------------------------------------------------
 #ifdef __APPLE__
-#define GL_SILENCE_DEPRECATION
-#include <OpenGL/gl.h>
+#include \"apple_gl.h\"
 #else
 #include <GL/gl.h>
 #endif

@@ -8,16 +8,16 @@ tools to simplify programming real-time computer graphics applications
 under OpenGL and DirectX.
 
 This software is governed by the CeCILL-C license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
+abiding by the rules of distribution of free software.  You can  use,
 modify and/ or redistribute the software under the terms of the CeCILL-C
 license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+"http://www.cecill.info".
 
 As a counterpart to the access to the source code and  rights to copy,
 modify and redistribute granted by the license, users are provided only
 with a limited warranty  and the software's author,  the holder of the
 economic rights,  and the successive licensors  have only  limited
-liability. 
+liability.
 
 In this respect, the user's attention is drawn to the risks associated
 with loading,  using,  modifying and/or developing or reproducing the
@@ -26,9 +26,9 @@ that may mean  that it is complicated to manipulate,  and  that  also
 therefore means  that it is reserved for developers  and  experienced
 professionals having in-depth computer knowledge. Users are therefore
 encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+requirements in conditions enabling the security of their systems and/or
+data to be ensured and,  more generally, to use and operate it in the
+same conditions as regards security.
 
 The fact that you are presently reading this means that you have had
 knowledge of the CeCILL-C license and that you accept its terms.
@@ -46,7 +46,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 // ------------------------------------------------------
 
 #if defined(__APPLE__)
-#include <OpenGL/gl.h>
+#include "apple_gl.h"
 #elif defined(WIN32)
 #include <GL_VERSION_1_2.h>
 #else
@@ -135,7 +135,7 @@ namespace LibSL  {
       typedef LibSL::Memory::Array::Array3D<T_PixelFormat> t_PixelArray3D;
 
       /// Create 2D texture
-      static typename T_APIPolicy::t_Handle2D 
+      static typename T_APIPolicy::t_Handle2D
         create2D(const t_PixelArray2D& array,uint flags)
       {
         GLuint id = 0;
@@ -159,7 +159,7 @@ namespace LibSL  {
       }
 
       /// Create 2D texture with mipmap
-      static typename T_APIPolicy::t_Handle2D 
+      static typename T_APIPolicy::t_Handle2D
         create2D(const LibSL::Memory::Array::Array<t_PixelArray2D>& miparray,uint flags)
       {
         GLuint id = 0;
@@ -170,7 +170,7 @@ namespace LibSL  {
         glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
         send2Dmipmap(id,miparray,flags);
         LIBSL_GL_CHECK_ERROR;
-        return (id);    
+        return (id);
       }
 
       /// Send 2D texture to GPU memory
@@ -188,7 +188,7 @@ namespace LibSL  {
         }
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         glPixelStorei(GL_PACK_ALIGNMENT,   1);
-        glBindTexture(GL_TEXTURE_2D,id);	  
+        glBindTexture(GL_TEXTURE_2D,id);
         // Assert memory layout of tuples is valid
         // NOTE: if this fail, it means the compiler is building non-byte aligned Tuples
         sl_assert(sizeof(T_PixelFormat) == sizeof(typename T_PixelFormat::t_Element)*T_PixelFormat::e_Size);
@@ -203,7 +203,7 @@ namespace LibSL  {
           (flags & GPUTEX_INTEGER)
           ? (int)GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::int_format
           : (int)GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::format,
-          GL_type<typename T_PixelFormat::t_Element>::type, 
+          GL_type<typename T_PixelFormat::t_Element>::type,
           array.raw());
         if (flags & GPUTEX_AUTOGEN_MIPMAP) {
           {
@@ -226,7 +226,7 @@ namespace LibSL  {
         }
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         glPixelStorei(GL_PACK_ALIGNMENT,   1);
-        glBindTexture(GL_TEXTURE_2D,id);	  
+        glBindTexture(GL_TEXTURE_2D,id);
         // Assert memory layout of tuples is valid
         // NOTE: if this fail, it means the compiler is building non-byte aligned Tuples
         sl_assert(sizeof(T_PixelFormat) == sizeof(typename T_PixelFormat::t_Element)*T_PixelFormat::e_Size);
@@ -237,8 +237,8 @@ namespace LibSL  {
             GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::internal_format,
             miparray[l].xsize(), miparray[l].ysize(),
             0,
-            GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::format, 
-            GL_type<typename T_PixelFormat::t_Element>::type, 
+            GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::format,
+            GL_type<typename T_PixelFormat::t_Element>::type,
             miparray[l].raw());
         }
         LIBSL_GL_CHECK_ERROR;
@@ -257,7 +257,7 @@ namespace LibSL  {
         glTexSubImage2D(GL_TEXTURE_2D,0,
           x,y,
           array.xsize(),array.ysize(),
-          GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::format, 
+          GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::format,
           GL_type<typename T_PixelFormat::t_Element>::type,
           array.raw());
         // test for error
@@ -265,7 +265,7 @@ namespace LibSL  {
       }
 
       /// Destroy 2D texture
-      static void 
+      static void
         destroy2D(typename T_APIPolicy::t_Handle2D handle)
       {
         LIBSL_GL_CHECK_ERROR;
@@ -279,8 +279,8 @@ namespace LibSL  {
       /// Create 2D render target
       ///   - num render targets are created (enables multiple render targets).
       ///   - in OpenGL a render target always has an associated depth buffer
-      static 
-        typename T_APIPolicy::t_HandleRT2D 
+      static
+        typename T_APIPolicy::t_HandleRT2D
         createRenderTarget2D(uint w,uint h,uint flags,uint num)
       {
         bool is_depth = (GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::isdepth != 0);
@@ -295,7 +295,7 @@ namespace LibSL  {
           if (GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::int_internal_format < 0) {
             throw GLException("GLPolicy::createRenderTarget2D - format does not support integer mapping");
           }
-        }        
+        }
         // gen objects
         glGenFramebuffers(1, &(handle.fbo));            // frame buffer
         if (!is_depth) {
@@ -311,20 +311,20 @@ namespace LibSL  {
         ForIndex(n,num) {
           glGenTextures(1, &(handle.textures[n]));
         }
-        // textures 
+        // textures
         ForIndex(n,num) {
           glBindTexture(GL_TEXTURE_2D,handle.textures[n]);
-          glTexImage2D(GL_TEXTURE_2D, 
+          glTexImage2D(GL_TEXTURE_2D,
             0,
             (flags & GPUTEX_INTEGER)
             ? (int)GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::int_internal_format
-            : (int)GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::internal_format, 
+            : (int)GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::internal_format,
             w,h,
             0,
             (flags & GPUTEX_INTEGER)
             ? (int)GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::int_format
             : (int)GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::format,
-            GL_type<typename T_PixelFormat::t_Element>::type, 
+            GL_type<typename T_PixelFormat::t_Element>::type,
             NULL);
           //	if (!handle.autoMIPMAP) {
           glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
@@ -349,9 +349,9 @@ namespace LibSL  {
           // -> attach everything together
           glBindFramebuffer(GL_FRAMEBUFFER , handle.fbo);
           ForIndex(n,num) {
-            glFramebufferTexture2D(GL_FRAMEBUFFER, 
-              GL_COLOR_ATTACHMENT0+n, 
-              GL_TEXTURE_2D, 
+            glFramebufferTexture2D(GL_FRAMEBUFFER,
+              GL_COLOR_ATTACHMENT0+n,
+              GL_TEXTURE_2D,
               handle.textures[n], 0);
           }
           if (handle.depth_rb) {
@@ -505,8 +505,8 @@ namespace LibSL  {
       }
 
       /// Create 3D texture
-      static 
-        typename T_APIPolicy::t_Handle3D 
+      static
+        typename T_APIPolicy::t_Handle3D
         create3D(const t_PixelArray3D& array,uint flags)
       {
         GLuint id;
@@ -554,7 +554,7 @@ namespace LibSL  {
           (flags & GPUTEX_INTEGER)
           ? GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::int_format
           : GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::format,
-          GL_type<typename T_PixelFormat::t_Element>::type, 
+          GL_type<typename T_PixelFormat::t_Element>::type,
           array.raw());
         LIBSL_GL_CHECK_ERROR;
       }
@@ -571,7 +571,7 @@ namespace LibSL  {
         glTexSubImage3D(GL_TEXTURE_3D,0,
           x,y,z,
           array.xsize(), array.ysize(), array.zsize(),
-          GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::format, 
+          GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::format,
           GL_type<typename T_PixelFormat::t_Element>::type,
           array.raw());
         // test for error
@@ -609,7 +609,7 @@ namespace LibSL  {
       }
 
       /// Create 2D texture with mipmap
-      static typename T_APIPolicy::t_Handle2DArray 
+      static typename T_APIPolicy::t_Handle2DArray
         create2DArray(const LibSL::Memory::Array::Array<LibSL::Memory::Array::Array<t_PixelArray2D> >& texmiparray,uint flags)
       {
         GLuint id;
@@ -625,7 +625,7 @@ namespace LibSL  {
           glTexParameteri(GL_TEXTURE_2D_ARRAY,GL_TEXTURE_MAG_FILTER,GL_NEAREST_MIPMAP_NEAREST);
         }
         send2DArrayMipmap(id,texmiparray,flags);
-        return (id);      
+        return (id);
       }
 
 
@@ -647,7 +647,7 @@ namespace LibSL  {
         LIBSL_GL_CHECK_ERROR;
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         glPixelStorei(GL_PACK_ALIGNMENT,   1);
-        glBindTexture(GL_TEXTURE_2D_ARRAY,id);	  
+        glBindTexture(GL_TEXTURE_2D_ARRAY,id);
         // Assert memory layout of tuples is valid
         // NOTE: if this fail, it means the compiler is building non-byte aligned Tuples
         sl_assert(sizeof(T_PixelFormat) == sizeof(typename T_PixelFormat::t_Element)*T_PixelFormat::e_Size);
@@ -661,7 +661,7 @@ namespace LibSL  {
           (flags & GPUTEX_INTEGER)
           ? GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::int_format
           : GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::format,
-          GL_type<typename T_PixelFormat::t_Element>::type, 
+          GL_type<typename T_PixelFormat::t_Element>::type,
           NULL);
         LIBSL_GL_CHECK_ERROR;
         ForIndex(n,texarray.size()) {
@@ -669,8 +669,8 @@ namespace LibSL  {
             0,
             0,0,n,
             texarray[n].xsize(),texarray[n].ysize(),1,
-            GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::format, 
-            GL_type<typename T_PixelFormat::t_Element>::type, 
+            GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::format,
+            GL_type<typename T_PixelFormat::t_Element>::type,
             texarray[n].raw());
           LIBSL_GL_CHECK_ERROR;
         }
@@ -696,7 +696,7 @@ namespace LibSL  {
         LIBSL_GL_CHECK_ERROR;
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         glPixelStorei(GL_PACK_ALIGNMENT,   1);
-        glBindTexture(GL_TEXTURE_2D_ARRAY,id);	  
+        glBindTexture(GL_TEXTURE_2D_ARRAY,id);
         // Assert memory layout of tuples is valid
         // NOTE: if this fail, it means the compiler is building non-byte aligned Tuples
         sl_assert(sizeof(T_PixelFormat) == sizeof(typename T_PixelFormat::t_Element)*T_PixelFormat::e_Size);
@@ -707,8 +707,8 @@ namespace LibSL  {
             GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::internal_format,
             texmiparray[0][l].xsize(), texmiparray[0][l].ysize(), texmiparray.size(),
             0,
-            GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::format, 
-            GL_type<typename T_PixelFormat::t_Element>::type, 
+            GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::format,
+            GL_type<typename T_PixelFormat::t_Element>::type,
             NULL);
           LIBSL_GL_CHECK_ERROR;
           ForIndex(n,texmiparray.size()) {
@@ -716,8 +716,8 @@ namespace LibSL  {
               l,
               0,0,n,
               texmiparray[n][l].xsize(),texmiparray[n][l].ysize(),1,
-              GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::format, 
-              GL_type<typename T_PixelFormat::t_Element>::type, 
+              GL_format<typename T_PixelFormat::t_Element,T_PixelFormat::e_Size>::format,
+              GL_type<typename T_PixelFormat::t_Element>::type,
               texmiparray[n][l].raw());
             LIBSL_GL_CHECK_ERROR;
           }
@@ -725,7 +725,7 @@ namespace LibSL  {
       }
 
       /// Destroy 2D texture array
-      static void 
+      static void
         destroy2DArray(typename T_APIPolicy::t_Handle2DArray handle)
       {
         glDeleteTextures(1,&handle);
