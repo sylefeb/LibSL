@@ -10,8 +10,6 @@ SET(LibSL_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 # Options
 if(ANDROID)
 
-# MESSAGE(SEND_ERROR "LibSL Android!!")
-
 OPTION(LIBSL_BUILD_GL              "Build LibSL_gl" ON)
 OPTION(LIBSL_BUILD_GL4             "Build LibSL_gl for OpenGL 4.x" OFF)
 OPTION(LIBSL_BUILD_DX9             "Build LibSL_d3d" OFF)
@@ -52,8 +50,13 @@ OPTION(LIBSL_POWER_USER            "Power user mode (reserved, do not use)" OFF)
 else(EMSCRIPTEN)
 
 OPTION(LIBSL_BUILD_GL              "Build LibSL_gl" ON)
+if (APPLE)
+OPTION(LIBSL_BUILD_GL4             "Build LibSL_gl for OpenGL 4.x" OFF)
+OPTION(LIBSL_BUILD_GL4CORE         "Build LibSL_gl for OpenGL 4.x core profile" OFF)
+else (APPLE)
 OPTION(LIBSL_BUILD_GL4             "Build LibSL_gl for OpenGL 4.x" ON)
 OPTION(LIBSL_BUILD_GL4CORE         "Build LibSL_gl for OpenGL 4.x core profile" ON)
+endif(APPLE)
 OPTION(LIBSL_BUILD_DX9             "Build LibSL_d3d" OFF)
 OPTION(LIBSL_BUILD_DX10            "Build LibSL_dx10" OFF)
 OPTION(LIBSL_BUILD_LINALG          "Build LibSL_linalg" ON)
