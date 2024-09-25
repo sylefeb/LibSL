@@ -17,7 +17,8 @@ jobs:
           sudo apt-get install freeglut3-dev
           cmake ..
           make
-  compile-linux:
+
+  compile-macos:
     runs-on: macos-15
     steps:
       - name: Check out repository
