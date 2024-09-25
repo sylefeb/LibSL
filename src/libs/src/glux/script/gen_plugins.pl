@@ -717,7 +717,7 @@ sub write_glux_header()
 // --------------------------------------------------------
 #ifdef __APPLE__
 #  define GL_GLEXT_LEGACY
-#  degone GL_SILENCE_DEPRECATION
+#  define GL_SILENCE_DEPRECATION
 #endif
 #include \"gluxLoader.h\"
 #include \"gluxPlugin.h\"
