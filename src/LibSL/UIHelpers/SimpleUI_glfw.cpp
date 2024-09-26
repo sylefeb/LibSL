@@ -289,6 +289,7 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
   }
   if (!glfw_window) {
 #ifdef OPENGLCORE
+    std::cerr << "[GLFW] OpenGL core profile FAILED, fallback to GL 1.0\n";
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 1);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
