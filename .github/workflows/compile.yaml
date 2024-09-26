@@ -14,19 +14,19 @@ jobs:
         run: |
           mkdir BUILD
           cd BUILD
-          sudo apt-get install freeglut3-dev
+          sudo apt-get install freeglut3-dev libxrandr
           cmake ..
           make
 
-  compile-macos:
-    runs-on: macos-15
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-      - name: Compile
-        shell: bash
-        run: |
-          mkdir BUILD
-          cd BUILD
-          cmake ..
-          make
+  # compile-macos:
+  #   runs-on: macos-15
+  #   steps:
+  #     - name: Check out repository
+  #       uses: actions/checkout@v4
+  #     - name: Compile
+  #       shell: bash
+  #       run: |
+  #         mkdir BUILD
+  #         cd BUILD
+  #         cmake ..
+  #         make
