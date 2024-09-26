@@ -23,10 +23,10 @@ void mainRender()
   g_Shader.end();
 
   // ImGUI
-  ImGui::SetNextWindowSize(ImVec2(500, 180), ImGuiCond_Once);
-  ImGui::Begin("Status");
-  ImGui::End();
-  SimpleUI::renderImGui();
+  //ImGui::SetNextWindowSize(ImVec2(500, 180), ImGuiCond_Once);
+  //ImGui::Begin("Status");
+  //ImGui::End();
+  //SimpleUI::renderImGui();
 }
 
 void mainMousePressed(uint x,uint y,uint button,uint flags)
@@ -58,9 +58,9 @@ int main(int argc,const char **argv)
    LIBSL_GL_CHECK_ERROR;
 
     /// bind imgui
-    SimpleUI::bindImGui();
-    SimpleUI::initImGui();
-    SimpleUI::onReshape(600, 600);
+    //SimpleUI::bindImGui();
+    //SimpleUI::initImGui();
+    //SimpleUI::onReshape(600, 600);
 
     LIBSL_GL_CHECK_ERROR;
 
