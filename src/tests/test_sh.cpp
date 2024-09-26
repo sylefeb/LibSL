@@ -48,14 +48,14 @@ int main(int argc,const char **argv)
     glGetError();
 #endif
 
-   LIBSL_GL_CHECK_ERROR;
+    LIBSL_GL_CHECK_ERROR;
 
     // set callbacks
     SimpleUI::onRender             = mainRender;
     SimpleUI::onMouseButtonPressed = mainMousePressed;
     SimpleUI::onMouseMotion        = mouseMotion;
 
-   LIBSL_GL_CHECK_ERROR;
+    LIBSL_GL_CHECK_ERROR;
 
     /// bind imgui
     //SimpleUI::bindImGui();
