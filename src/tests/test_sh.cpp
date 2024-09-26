@@ -2,7 +2,6 @@
 #include <LibSL/LibSL.h>
 #include <LibSL/LibSL_gl.h>
 LIBSL_WIN32_FIX
-#include <AntTweakBar.h>
 
 #include "test_sh.h"
 AutoBindShader::test_sh g_Shader;
@@ -20,20 +19,14 @@ void mainRender()
   g_Shader.u_Image.set((GLuint)0);
   g_Sq->render();
   g_Shader.end(); 
-
-  TwDraw();
 }
 
 void mainMousePressed(uint x,uint y,uint button,uint flags)
 {
-  TwMouseAction   twa  = (flags == LIBSL_BUTTON_UP ? TW_MOUSE_RELEASED : TW_MOUSE_PRESSED);
-  TwMouseButtonID twid = (button == LIBSL_LEFT_BUTTON ? TW_MOUSE_LEFT : ( button == LIBSL_RIGHT_BUTTON ? TW_MOUSE_RIGHT : TW_MOUSE_MIDDLE ) );
-  TwMouseButton(twa,twid);
 }
 
 void mouseMotion(uint x,uint y)
 {
-  TwMouseMotion(x,y);
 }
 
 // 'main' is the starting point of the application
@@ -55,15 +48,8 @@ int main(int argc,const char **argv)
     // create a square
     g_Sq  = AutoPtr< Shapes::Square>(new Shapes::Square());
 
-    // init AntTweakBar
-    if( ! TwInit(TW_OPENGL,NULL) ) {
-      throw Fatal("Cannot initialize AntTweakBar!");
-    }
-    TwWindowSize(600,600);
-
     // shader init
     g_Shader.init();
-    g_Shader.makeTwBar();
 
     // enter the main loop
     SimpleUI::loop();

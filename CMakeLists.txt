@@ -184,7 +184,7 @@ endif(EMSCRIPTEN)
 #Include(UseCXX17)
 #AddGlobalCXX11()
 
-ADD_SUBDIRECTORY(src)
-
 # Building LibSL as part of a CMakeLists.txt tree makes the AUTO_BIND_SHADER macro available to the source tree (this behavior is what we want)
 INCLUDE(src/tools/autobindshader/AutoBindShader.cmake)
+
+ADD_SUBDIRECTORY(src)
