@@ -17,6 +17,7 @@ jobs:
           sudo apt-get install freeglut3-dev
           cmake ..
           make
+          ./src/tests/test_sh
 
   compile-macos:
     runs-on: macos-15
@@ -30,3 +31,4 @@ jobs:
           cd BUILD
           cmake ..
           make
+          ./src/tests/test_sh

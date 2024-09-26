@@ -3,6 +3,9 @@
 #include <LibSL/LibSL_gl.h>
 LIBSL_WIN32_FIX
 
+#include <imgui.h>
+#include <LibSL/UIHelpers/BindImGui.h>
+
 #include "test_sh.h"
 AutoBindShader::test_sh g_Shader;
 Tex2DRGBA_Ptr           g_Tex;
@@ -11,13 +14,19 @@ AutoPtr<Shapes::Square> g_Sq;
 // 'mainRender' is called everytime the screen is drawn
 void mainRender()
 {
-  clearScreen( );
+  clearScreen();
 
   g_Tex->bind();
   g_Shader.begin();
   g_Shader.u_Image.set((GLuint)0);
   g_Sq->render();
   g_Shader.end(); 
+
+  // ImGUI
+  ImGui::SetNextWindowSize(ImVec2(500, 180), ImGuiCond_Once);
+  ImGui::Begin("Status");
+  ImGui::End();
+  SimpleUI::renderImGui();
 }
 
 void mainMousePressed(uint x,uint y,uint button,uint flags)
@@ -40,6 +49,11 @@ int main(int argc,const char **argv)
     SimpleUI::onMouseButtonPressed = mainMousePressed;
     SimpleUI::onMouseMotion        = mouseMotion;
 
+    /// bind imgui
+    SimpleUI::bindImGui();
+    SimpleUI::initImGui();
+    SimpleUI::onReshape(600, 600);
+
     // load an image into a texture
     ImageRGBA_Ptr img(new ImageRGBA(128,128));
     ForImage(img, i, j) {
@@ -54,7 +68,7 @@ int main(int argc,const char **argv)
     g_Shader.init();
 
     // enter the main loop
-    SimpleUI::loop();
+    // SimpleUI::loop();
 
     // -> free ressources
     g_Tex = Tex2DRGBA_Ptr();
@@ -64,11 +78,12 @@ int main(int argc,const char **argv)
     // -> close the window
     SimpleUI::shutdown();
 
+    return 0;
+
   } catch (Fatal& f) { // error handling
     std::cerr << Console::red << f.message() << Console::gray << std::endl;
+    return -1;
   }
-
-  return 0;
 }
 
 
