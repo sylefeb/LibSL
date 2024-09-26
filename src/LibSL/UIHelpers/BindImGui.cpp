@@ -292,7 +292,7 @@ static bool ImGui_ImplSimpleUI_CreateFontsTexture()
   return true;
 }
 
-static void checkGLSLCompiled(GLhandleARB id)
+static void checkGLSLCompiled(GLuint id)
 {
   GLint compiled;
 #ifdef OPENGLES
