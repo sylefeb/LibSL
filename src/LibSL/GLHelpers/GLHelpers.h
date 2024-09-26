@@ -548,7 +548,7 @@ namespace LibSL {
 		{
 		private:
 
-			GLuint                 m_Shader;
+			GLhandleARB            m_Shader;
 
 			// error or warnings ?
 			bool                   m_Strict;
@@ -573,7 +573,7 @@ namespace LibSL {
 			void end();
 
       const char *name()   const { return "[runtime]"; }
-			GLuint      handle() const {return (m_Shader);}
+			GLhandleARB handle() const {return (m_Shader);}
 
 			bool  isReady()  const {return (m_Shader!=0);}
 			bool  isActive() const {return (m_Active);}
