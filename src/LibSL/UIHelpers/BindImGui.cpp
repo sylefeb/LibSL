@@ -406,7 +406,7 @@ static bool ImGui_ImplSimpleUI_CreateDeviceObjects()
 
   GLint linked;
 #if defined(OPENGLES) || defined(__APPLE__)
-  glGetProgramiv(m_Shader, GL_OBJECT_LINK_STATUS_ARB, &linked);
+  glGetProgramiv(g_ShaderHandle, GL_OBJECT_LINK_STATUS_ARB, &linked);
 #else
   glGetObjectParameterivARB(g_ShaderHandle, GL_OBJECT_LINK_STATUS_ARB, &linked);
 #endif
@@ -414,13 +414,13 @@ static bool ImGui_ImplSimpleUI_CreateDeviceObjects()
     std::cerr << "**** BindImGui GLSL program failed to link ****" << std::endl;
     GLint maxLength;
 #if defined(OPENGLES) || defined(__APPLE__)
-    glGetProgramiv(m_Shader, GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
+    glGetProgramiv(g_ShaderHandle, GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
 #else
     glGetObjectParameterivARB(g_ShaderHandle, GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
 #endif
     Array<GLcharARB> infoLog(maxLength);
 #if defined(OPENGLES) || defined(__APPLE__)
-    glGetProgramInfoLog(m_Shader, maxLength, NULL, infoLog.raw());
+    glGetProgramInfoLog(g_ShaderHandle, maxLength, NULL, infoLog.raw());
 #else
     glGetInfoLogARB(g_ShaderHandle, maxLength, NULL, infoLog.raw());
 #endif
