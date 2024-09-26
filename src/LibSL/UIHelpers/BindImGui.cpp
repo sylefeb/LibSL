@@ -316,7 +316,6 @@ static void checkGLSLCompiled(GLuint id)
     glGetInfoLogARB(id, maxLength, &len, infoLog.raw());
 #endif
     std::cerr << Console::yellow << infoLog.raw() << Console::gray << std::endl;
-    glDeleteObjectARB(id);
     throw GLException("\n\n**** GLSL shader failed to compile ****\n%s\n", infoLog.raw() != nullptr ? infoLog.raw() : "<unknown error>");
   }
 }
@@ -406,7 +405,7 @@ static bool ImGui_ImplSimpleUI_CreateDeviceObjects()
   glLinkProgram(g_ShaderHandle);
 
   GLint linked;
-#ifdef OPENGLES
+#if defined(OPENGLES) || defined(__APPLE__)
   glGetProgramiv(m_Shader, GL_OBJECT_LINK_STATUS_ARB, &linked);
 #else
   glGetObjectParameterivARB(g_ShaderHandle, GL_OBJECT_LINK_STATUS_ARB, &linked);
@@ -414,13 +413,13 @@ static bool ImGui_ImplSimpleUI_CreateDeviceObjects()
   if (!linked) {
     std::cerr << "**** BindImGui GLSL program failed to link ****" << std::endl;
     GLint maxLength;
-#ifdef OPENGLES
+#if defined(OPENGLES) || defined(__APPLE__)
     glGetProgramiv(m_Shader, GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
 #else
     glGetObjectParameterivARB(g_ShaderHandle, GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
 #endif
     Array<GLcharARB> infoLog(maxLength);
-#ifdef OPENGLES
+#if defined(OPENGLES) || defined(__APPLE__)
     glGetProgramInfoLog(m_Shader, maxLength, NULL, infoLog.raw());
 #else
     glGetInfoLogARB(g_ShaderHandle, maxLength, NULL, infoLog.raw());
