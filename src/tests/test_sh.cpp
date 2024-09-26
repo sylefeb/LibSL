@@ -79,7 +79,7 @@ int main(int argc,const char **argv)
     g_Shader.init();
 
     // enter the main loop
-    // SimpleUI::loop();
+    SimpleUI::loop();
 
     // -> free ressources
     g_Tex = Tex2DRGBA_Ptr();
