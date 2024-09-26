@@ -246,8 +246,8 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
   std::cerr << "[GLFW] OpenGL core profile " << LIBSL_OPENGL_MAJOR_VERSION << '.' << LIBSL_OPENGL_MINOR_VERSION << '\n';
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, LIBSL_OPENGL_MAJOR_VERSION);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, LIBSL_OPENGL_MINOR_VERSION);
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #else
   // In case core profile fails.
   // From: https://www.glfw.org/docs/latest/window_guide.html#window_hints_ctx
@@ -271,9 +271,11 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
 
   // window creation
   if (hidden) {
+    std::cerr << "[GLFW] offscreen\n";
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
     glfw_window = glfwCreateWindow(256, 256, "", NULL, NULL);
   } else if (fullscreen) {
+    std::cerr << "[GLFW] fullscreen\n";
     GLFWmonitor* monitor = glfwGetPrimaryMonitor();
     const GLFWvidmode* mode = glfwGetVideoMode(monitor);
     glfwWindowHint(GLFW_RED_BITS, mode->redBits);
@@ -282,7 +284,9 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
     glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
     glfw_window = glfwCreateWindow(mode->width, mode->height, title, monitor, NULL);
   } else {
+    std::cerr << "[GLFW] windowed\n";
     if (frameLess) {
+      std::cerr << "[GLFW] frameless\n";
       glfwWindowHint(GLFW_DECORATED, GL_FALSE);
     }
     glfw_window = glfwCreateWindow(width, height, title, NULL, NULL);
