@@ -47,15 +47,22 @@ int main(int argc,const char **argv)
 #ifdef __APPLE__
     glGetError();
 #endif
+
+   LIBSL_GL_CHECK_ERROR;
+
     // set callbacks
     SimpleUI::onRender             = mainRender;
     SimpleUI::onMouseButtonPressed = mainMousePressed;
     SimpleUI::onMouseMotion        = mouseMotion;
 
+   LIBSL_GL_CHECK_ERROR;
+
     /// bind imgui
     SimpleUI::bindImGui();
     SimpleUI::initImGui();
     SimpleUI::onReshape(600, 600);
+
+    LIBSL_GL_CHECK_ERROR;
 
     // load an image into a texture
     ImageRGBA_Ptr img(new ImageRGBA(128,128));
