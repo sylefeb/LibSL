@@ -1,6 +1,6 @@
 
 #include <LibSL/LibSL.h>
-#include <LibSL/LibSL_gl.h>
+#include <LibSL/LibSL_gl4core.h>
 LIBSL_WIN32_FIX
 
 #include <imgui.h>
@@ -18,15 +18,16 @@ void mainRender()
 
   g_Tex->bind();
   g_Shader.begin();
+  g_Shader.u_Scale.set(1.0f);
   g_Shader.u_Image.set((GLuint)0);
   g_Sq->render();
   g_Shader.end();
 
   // ImGUI
-  //ImGui::SetNextWindowSize(ImVec2(500, 180), ImGuiCond_Once);
-  //ImGui::Begin("Status");
-  //ImGui::End();
-  //SimpleUI::renderImGui();
+  ImGui::SetNextWindowSize(ImVec2(500, 180), ImGuiCond_Once);
+  ImGui::Begin("Status");
+  ImGui::End();
+  SimpleUI::renderImGui();
 }
 
 void mainMousePressed(uint x,uint y,uint button,uint flags)
@@ -58,9 +59,9 @@ int main(int argc,const char **argv)
     LIBSL_GL_CHECK_ERROR;
 
     /// bind imgui
-    //SimpleUI::bindImGui();
-    //SimpleUI::initImGui();
-    //SimpleUI::onReshape(600, 600);
+    SimpleUI::bindImGui();
+    SimpleUI::initImGui();
+    SimpleUI::onReshape(600, 600);
 
     LIBSL_GL_CHECK_ERROR;
 
@@ -78,7 +79,7 @@ int main(int argc,const char **argv)
     g_Shader.init();
 
     // enter the main loop
-    // SimpleUI::loop();
+    SimpleUI::loop();
 
     // -> free ressources
     g_Tex = Tex2DRGBA_Ptr();

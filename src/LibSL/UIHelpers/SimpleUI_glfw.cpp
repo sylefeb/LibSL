@@ -301,7 +301,7 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
 #endif
   }
   // window position
-  glfwSetWindowPos(glfw_window, 0, 1);
+  // glfwSetWindowPos(glfw_window, 16, 32);
   // opengl context
   glfwMakeContextCurrent(glfw_window);
 
