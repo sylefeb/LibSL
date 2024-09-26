@@ -295,7 +295,7 @@ static bool ImGui_ImplSimpleUI_CreateFontsTexture()
 static void checkGLSLCompiled(GLuint id)
 {
   GLint compiled;
-#ifdef OPENGLES
+#if defined(OPENGLES) || defined(__APPLE__)
   glGetShaderiv(id, GL_OBJECT_COMPILE_STATUS_ARB, &compiled);
 #else
   glGetObjectParameterivARB(id, GL_OBJECT_COMPILE_STATUS_ARB, &compiled);
@@ -303,14 +303,14 @@ static void checkGLSLCompiled(GLuint id)
   if (!compiled) {
     std::cerr << "**** BindImGui GLSL shader failed to compile ****" << std::endl;
     GLint maxLength;
-#ifdef OPENGLES
+#if defined(OPENGLES) || defined(__APPLE__)
     glGetShaderiv(id, GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
 #else
     glGetObjectParameterivARB(id, GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
 #endif
     Array<GLcharARB> infoLog(maxLength + 1);
     GLint len = 0;
-#ifdef OPENGLES
+#if defined(OPENGLES) || defined(__APPLE__)
     glGetShaderInfoLog(id, maxLength, &len, infoLog.raw());
 #else
     glGetInfoLogARB(id, maxLength, &len, infoLog.raw());
