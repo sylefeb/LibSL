@@ -30,6 +30,5 @@ jobs:
           mkdir BUILD
           cd BUILD
           cmake ..
-          glfwinfo
           make
           ./src/tests/test_sh
