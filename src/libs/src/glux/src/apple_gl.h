@@ -45,9 +45,6 @@
 
 #include <OpenGL/gltypes.h>
 
-#ifndef GL_GLEXT_LEGACY
-#include <OpenGL/glext.h>
-#endif
 #include <OpenGL/OpenGLAvailability.h>
 
 

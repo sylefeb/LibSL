@@ -76,7 +76,7 @@ GLUX_LOAD(GL_ATI_texture_float)
 GLUX_LOAD(GL_NV_texture_shader2)
 #else
 #ifdef __APPLE__
-#include <OpenGL/glext.h>
+
 #else
 #ifdef ANDROID
 #include <GLES2/gl2ext.h>

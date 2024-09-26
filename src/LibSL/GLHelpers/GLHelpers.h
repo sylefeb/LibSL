@@ -121,7 +121,7 @@ using namespace LibSL::System::Types;
 #undef Success
 #else
 #ifdef __APPLE__
-#include <OpenGL/glext.h>
+//
 #else
 #ifdef ANDROID
 #include <GLES2/gl2ext.h>
