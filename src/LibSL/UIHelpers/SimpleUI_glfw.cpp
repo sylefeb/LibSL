@@ -243,6 +243,7 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
   glfwSetErrorCallback(glfwError);
 
 #ifdef OPENGLCORE
+  std::cerr << "[GLFW] OpenGL core profile " << LIBSL_OPENGL_MAJOR_VERSION << '.' << LIBSL_OPENGL_MINOR_VERSION << '\n';
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, LIBSL_OPENGL_MAJOR_VERSION);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, LIBSL_OPENGL_MINOR_VERSION);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
