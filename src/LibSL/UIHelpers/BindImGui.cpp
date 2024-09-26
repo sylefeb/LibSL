@@ -132,7 +132,7 @@ static double       g_Time = 0.0f;
 static bool         g_MousePressed[5] = { false, false, false, false, false };
 static float        g_MouseWheel = 0.0f;
 static GLuint       g_FontTexture = 0;
-static int          g_ShaderHandle = 0, g_VertHandle = 0, g_FragHandle = 0;
+static GLhandleARB  g_ShaderHandle = 0, g_VertHandle = 0, g_FragHandle = 0;
 static int          g_AttribLocationTex = 0, g_AttribLocationProjMtx = 0;
 static int          g_AttribLocationPosition = 0, g_AttribLocationUV = 0, g_AttribLocationColor = 0;
 static unsigned int g_VboHandle = 0, g_VaoHandle = 0, g_ElementsHandle = 0;
@@ -292,7 +292,7 @@ static bool ImGui_ImplSimpleUI_CreateFontsTexture()
   return true;
 }
 
-static void checkGLSLCompiled(GLuint id)
+static void checkGLSLCompiled(GLhandleARB id)
 {
   GLint compiled;
 #ifdef OPENGLES
