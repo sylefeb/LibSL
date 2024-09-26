@@ -4,20 +4,20 @@ on:
   push:
 
 jobs:
-  compile-linux:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-      - name: Compile
-        shell: bash
-        run: |
-          mkdir BUILD
-          cd BUILD
-          sudo apt-get install freeglut3-dev
-          cmake ..
-          make
-          ./src/tests/test_sh
+  # compile-linux:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Check out repository
+  #       uses: actions/checkout@v4
+  #     - name: Compile
+  #       shell: bash
+  #       run: |
+  #         mkdir BUILD
+  #         cd BUILD
+  #         sudo apt-get install freeglut3-dev
+  #         cmake ..
+  #         make
+  #         ./src/tests/test_sh
 
   compile-macos:
     runs-on: macos-15

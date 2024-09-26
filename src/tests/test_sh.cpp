@@ -20,7 +20,7 @@ void mainRender()
   g_Shader.begin();
   g_Shader.u_Image.set((GLuint)0);
   g_Sq->render();
-  g_Shader.end(); 
+  g_Shader.end();
 
   // ImGUI
   ImGui::SetNextWindowSize(ImVec2(500, 180), ImGuiCond_Once);
@@ -44,6 +44,9 @@ int main(int argc,const char **argv)
 
     // opens a window
     SimpleUI::init(600,600,"autobindshader");
+#ifdef __APPLE__
+    glGetError();
+#endif
     // set callbacks
     SimpleUI::onRender             = mainRender;
     SimpleUI::onMouseButtonPressed = mainMousePressed;
@@ -85,5 +88,3 @@ int main(int argc,const char **argv)
     return -1;
   }
 }
-
-
