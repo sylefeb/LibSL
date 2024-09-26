@@ -35,6 +35,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 -------------------------------------------------------------------- */
 #include "precompiled.h"
 
+#include <LibSL.h>
+
 #include <iostream>
 using namespace std;
 
@@ -49,7 +51,7 @@ void extract_paths(const uchar *tbl,int refval)
     cerr << endl;
   }
 
-  Contour::ArrayRemap a(tbl, 8,5, 1,0);
+  LibSL::Memory::Array::ArrayRemap a(tbl, 8,5, 1,0);
 
   vector<vector<v3i> > cnts;
   Contour::extract(a,Contour::EdgeBelow(),Contour::EdgeAny(),refval, cnts);

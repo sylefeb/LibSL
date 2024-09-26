@@ -49,11 +49,11 @@ int main(int argc,const char **argv)
     SimpleUI::onMouseMotion        = mouseMotion;
 
     // load an image into a texture
-    ImageRGBA_Ptr img = loadImage<ImageRGBA>("media/image_test_rgba.png");
-    g_Tex = new Tex2DRGBA( img->pixels() );
+    ImageRGBA_Ptr img(loadImage<ImageRGBA>("media/image_test_rgba.png"));
+    g_Tex = Tex2DRGBA_Ptr(new Tex2DRGBA( img->pixels() ));
 
     // create a square
-    g_Sq  = new Shapes::Square();
+    g_Sq  = AutoPtr< Shapes::Square>(new Shapes::Square());
 
     // init AntTweakBar
     if( ! TwInit(TW_OPENGL,NULL) ) {
@@ -69,7 +69,7 @@ int main(int argc,const char **argv)
     SimpleUI::loop();
 
     // -> free the loaded texture
-    g_Tex = NULL;
+    g_Tex = Tex2DRGBA_Ptr();
     // -> free shader
     g_Shader.terminate();
     // -> close the window

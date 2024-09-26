@@ -53,23 +53,23 @@ int main(int argc, char* argv[])
 {
   try {
     /*
-    if(0) LIBSL_CATCH_ANY( test_memory(); );
-    if(0) LIBSL_CATCH_ANY( test_memory_perf(); );
-    if(0) LIBSL_CATCH_ANY( test_image(); );
-    if(0) LIBSL_CATCH_ANY( test_math(); );
-    if(0) LIBSL_CATCH_ANY( test_system(); );
-    if(0) LIBSL_CATCH_ANY( test_datastructures(); );
-    if(0) LIBSL_CATCH_ANY( test_graph(); );
-    if(0) LIBSL_CATCH_ANY( test_mesh(); );
-    if(0) LIBSL_CATCH_ANY( test_lloyd(); );
-    if(0) LIBSL_CATCH_ANY( test_aab(); );
-    if(0) LIBSL_CATCH_ANY( test_quadtree(); );
-    if(0) LIBSL_CATCH_ANY( test_polygon(); );
-    if(0) LIBSL_CATCH_ANY( test_brush(); );
-    if(0) LIBSL_CATCH_ANY( test_hermitcurve(); );
+    if (0) LIBSL_CATCH_ANY( test_memory(); );
+    if (0) LIBSL_CATCH_ANY( test_memory_perf(); );
+    if (0) LIBSL_CATCH_ANY( test_image(); );
+    if (0) LIBSL_CATCH_ANY( test_math(); );
+    if (0) LIBSL_CATCH_ANY( test_system(); );
+    if (0) LIBSL_CATCH_ANY( test_datastructures(); );
+    if (0) LIBSL_CATCH_ANY( test_graph(); );
+    if (0) LIBSL_CATCH_ANY( test_mesh(); );
+    if (0) LIBSL_CATCH_ANY( test_lloyd(); );
+    if (0) LIBSL_CATCH_ANY( test_aab(); );
+    if (0) LIBSL_CATCH_ANY( test_quadtree(); );
+    if (0) LIBSL_CATCH_ANY( test_polygon(); );
+    if (0) LIBSL_CATCH_ANY( test_brush(); );
+    if (0) LIBSL_CATCH_ANY( test_hermitcurve(); );
+    if (0) LIBSL_CATCH_ANY(test_contour(););
     */
     if (1) LIBSL_CATCH_ANY(test_memory(););
-    if (0) LIBSL_CATCH_ANY(test_contour(););
 
   } catch (LibSL::Errors::Fatal& err) {
     cerr << Console::red;

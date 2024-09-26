@@ -27,7 +27,7 @@ test_memory.cpp
 # test_polygon.cpp
 # test_quadtree.cpp
 # test_system.cpp
-test_contour.cpp
+# test_contour.cpp
 )
 
 SET(TESTS_HEADERS 
@@ -45,8 +45,10 @@ LINK_DIRECTORIES(${LIBSL_BINARY_DIR})
 ADD_EXECUTABLE(TestLibSL ${TESTS_SOURCES})
 TARGET_LINK_LIBRARIES(TestLibSL ${LIBSL_LIBRARIES} ${LIBSL_LINALG_LIBRARIES} ${LIBSL_GL_LIBRARIES})
 
-# ADD_EXECUTABLE(test_sh test_sh.cpp test_sh.fp test_sh.vp test_sh.h)
-# TARGET_LINK_LIBRARIES(test_sh ${LIBSL_LIBRARIES} ${LIBSL_GL_LIBRARIES})
+if(LIBSL_BUILD_GL)
+ADD_EXECUTABLE(test_sh test_sh.cpp test_sh.fp test_sh.vp test_sh.h)
+TARGET_LINK_LIBRARIES(test_sh ${LIBSL_LIBRARIES} ${LIBSL_GL_LIBRARIES})
+endif(LIBSL_BUILD_GL)
 
 ADD_DEFINITIONS(-DOPENGL -DUSE_GLUX)
 
