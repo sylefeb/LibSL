@@ -562,7 +562,7 @@ namespace LibSL {
 			GLCompute() : m_Shader(0), m_Strict(true), m_Active(false) { }
 
 			void init(const char *cp_code);
-			void init(GLuint shader);
+			void init(GLhandleARB shader);
 
 			void run(const LibSL::Math::v3i& numGroups);
 			void run(const LibSL::Math::v3i& numGroups, const LibSL::Math::v3i& groupSize);

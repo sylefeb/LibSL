@@ -787,7 +787,7 @@ void NAMESPACE::GLCompute::init(const char *cs_code)
 {
   m_Shader = glCreateProgramObjectARB();
 
-  GLuint cs;
+  GLhandleARB cs;
 
   cs = loadGLSLProgram(cs_code,GL_COMPUTE_SHADER);
 
@@ -816,7 +816,7 @@ void NAMESPACE::GLCompute::init(const char *cs_code)
 
 // -----------------------------------------------------
 
-void NAMESPACE::GLCompute::init(GLuint shader)
+void NAMESPACE::GLCompute::init(GLhandleARB shader)
 {
   m_Shader = shader;
 }
