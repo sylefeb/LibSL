@@ -5,7 +5,6 @@ LIBSL_WIN32_FIX
 
 #include "test_sh.h"
 AutoBindShader::test_sh g_Shader;
-
 Tex2DRGBA_Ptr           g_Tex;
 AutoPtr<Shapes::Square> g_Sq;
 
@@ -42,11 +41,14 @@ int main(int argc,const char **argv)
     SimpleUI::onMouseMotion        = mouseMotion;
 
     // load an image into a texture
-    ImageRGBA_Ptr img(loadImage<ImageRGBA>("media/image_test_rgba.png"));
+    ImageRGBA_Ptr img(new ImageRGBA(128,128));
+    ForImage(img, i, j) {
+      img->pixel(i, j) = v4b(i, j, 0, 255);
+    }
     g_Tex = Tex2DRGBA_Ptr(new Tex2DRGBA( img->pixels() ));
 
     // create a square
-    g_Sq  = AutoPtr< Shapes::Square>(new Shapes::Square());
+    g_Sq  = AutoPtr<Shapes::Square>(new Shapes::Square());
 
     // shader init
     g_Shader.init();
@@ -54,10 +56,11 @@ int main(int argc,const char **argv)
     // enter the main loop
     SimpleUI::loop();
 
-    // -> free the loaded texture
+    // -> free ressources
     g_Tex = Tex2DRGBA_Ptr();
-    // -> free shader
+    g_Sq = AutoPtr<Shapes::Square>();
     g_Shader.terminate();
+
     // -> close the window
     SimpleUI::shutdown();
 

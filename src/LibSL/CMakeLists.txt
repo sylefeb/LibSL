@@ -12,7 +12,7 @@ SET(LIBSL_CORE_HEADERS
 	DataStructures/GraphAlgorithms.h
 	DataStructures/Hierarchy.h
 	DataStructures/Pod.h
-        DataStructures/Pow2Tree.h
+	DataStructures/Pow2Tree.h
 	Errors/Errors.h
 	Geometry/AAB.h
 	Geometry/Bezier.h
@@ -145,7 +145,7 @@ SET(LIBSL_CORE_SOURCE
 	Mesh/VertexFormat_dynamic.cpp
 	Mesh/AnimatedMesh.cpp
 	Mesh/AnimatedMeshController.cpp
-  Mesh/AnimatedMeshFormat_animesh.cpp
+  	Mesh/AnimatedMeshFormat_animesh.cpp
 	Geometry/Intersections/Intersection_Plane_AABox.cpp
 	Geometry/Intersections/Intersection_Polygon_AABox.cpp
 	Geometry/Intersections/Intersection_Ray_Plane.cpp
@@ -160,7 +160,7 @@ SET(LIBSL_CORE_SOURCE
 	Geometry/Components.cpp
 	Geometry/ConvexHull.cpp
 	Geometry/Morpho.cpp
-  Geometry/PointTree.cpp
+  	Geometry/PointTree.cpp
 	System/half.cpp
 	../libs/src/SQLite/sqlite3.c
 	../libs/src/rply/rply.c
