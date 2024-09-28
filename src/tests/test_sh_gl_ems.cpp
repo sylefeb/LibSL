@@ -7,10 +7,10 @@ LIBSL_FILE_FORMATS
 #include <imgui.h>
 #include <LibSL/UIHelpers/BindImGui.h>
 
-#include "test_sh_gl.h"
-AutoBindShader::test_sh_gl g_Shader;
-Tex2DRGBA_Ptr              g_Tex;
-AutoPtr<Shapes::Square>    g_Sq;
+#include "test_sh_gl_ems.h"
+AutoBindShader::test_sh_gl_ems g_Shader;
+Tex2DRGBA_Ptr                  g_Tex;
+AutoPtr<Shapes::Square>        g_Sq;
 
 // 'mainRender' is called everytime the screen is drawn
 void mainRender()

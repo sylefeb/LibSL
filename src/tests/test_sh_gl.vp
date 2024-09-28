@@ -3,6 +3,6 @@ uniform float u_Scale;
 
 void main()
 {
-  v_TexCoord  = gl_Vertex.xy;
+  v_TexCoord  = gl_MultiTexCoord0.xy;
   gl_Position = vec4( gl_Vertex.xy * u_Scale , 0.0 , 1.0 );
 }

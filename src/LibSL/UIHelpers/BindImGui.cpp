@@ -338,9 +338,6 @@ static bool ImGui_ImplSimpleUI_CreateDeviceObjects()
 
   const GLchar* fragment_shader =
     "#version 410\n"
-#if defined(EMSCRIPTEN) | defined(ANDROID)
-    "precision mediump float;\n"
-#endif
     "uniform sampler2D Texture;\n"
     "in vec2 Frag_UV;\n"
     "in vec4 Frag_Color;\n"

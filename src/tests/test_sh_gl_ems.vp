@@ -1,0 +1,11 @@
+attribute vec4 mvf_vertex;
+attribute vec4 mvf_texcoord0;
+
+varying vec2  v_TexCoord;
+uniform float u_Scale;
+
+void main()
+{
+  v_TexCoord  = mvf_texcoord0.xy;
+  gl_Position = vec4( mvf_vertex.xy * u_Scale , 0.0 , 1.0 );
+}
