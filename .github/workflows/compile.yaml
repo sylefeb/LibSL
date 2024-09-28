@@ -3,30 +3,43 @@ name: compile
 on:
   push:
 
-jobs:
-  compile-linux:
+# jobs:
+#   compile-linux:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Check out repository
+#         uses: actions/checkout@v4
+#       - name: Compile
+#         shell: bash
+#         run: |
+#           mkdir BUILD
+#           cd BUILD
+#           sudo apt-get install freeglut3-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
+#           cmake ..
+#           make
+
+#   compile-macos:
+#     runs-on: macos-15
+#     steps:
+#       - name: Check out repository
+#         uses: actions/checkout@v4
+#       - name: Compile
+#         shell: bash
+#         run: |
+#           mkdir BUILD
+#           cd BUILD
+#           cmake ..
+#           make
+
+  compile-ems:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
+      - name: Setup Emscripten
+        uses: lovasoa/setup-emscripten@v1
       - name: Compile
         shell: bash
         run: |
           mkdir BUILD
           cd BUILD
-          sudo apt-get install freeglut3-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
-          cmake ..
-          make
-
-  compile-macos:
-    runs-on: macos-15
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-      - name: Compile
-        shell: bash
-        run: |
-          mkdir BUILD
-          cd BUILD
-          cmake ..
-          make
+          emcmake cmake ..
+          emmake make
