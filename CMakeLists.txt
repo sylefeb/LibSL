@@ -10,6 +10,7 @@ SET(LibSL_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 # Options
 if(ANDROID)
 
+# Android
 OPTION(LIBSL_BUILD_GL              "Build LibSL_gl" ON)
 OPTION(LIBSL_BUILD_GL4             "Build LibSL_gl for OpenGL 4.x" OFF)
 OPTION(LIBSL_BUILD_DX9             "Build LibSL_d3d" OFF)
@@ -32,6 +33,7 @@ else (ANDROID)
 
 if(EMSCRIPTEN)
 
+# Emscripten
 OPTION(LIBSL_BUILD_GL              "Build LibSL_gl" ON)
 OPTION(LIBSL_BUILD_GL4             "Build LibSL_gl for OpenGL 4.x" OFF)
 OPTION(LIBSL_BUILD_GL4CORE         "Build LibSL_gl for OpenGL 4.x core profile" OFF)
@@ -51,12 +53,16 @@ OPTION(LIBSL_POWER_USER            "Power user mode (reserved, do not use)" OFF)
 
 else(EMSCRIPTEN)
 
-OPTION(LIBSL_BUILD_GL              "Build LibSL_gl" ON)
+# Generic
 if (APPLE)
+# - Apple
+OPTION(LIBSL_BUILD_GL              "Build LibSL_gl" OFF)
 OPTION(LIBSL_BUILD_GL4             "Build LibSL_gl for OpenGL 4.x" OFF)
 OPTION(LIBSL_BUILD_GL4CORE         "Build LibSL_gl for OpenGL 4.x core profile" ON)
 OPTION(LIBSL_USE_GLFW              "Use glfw instead of glut" ON)
 else (APPLE)
+# - Windows
+OPTION(LIBSL_BUILD_GL              "Build LibSL_gl" ON)
 OPTION(LIBSL_BUILD_GL4             "Build LibSL_gl for OpenGL 4.x" ON)
 OPTION(LIBSL_BUILD_GL4CORE         "Build LibSL_gl for OpenGL 4.x core profile" ON)
 OPTION(LIBSL_USE_GLFW              "Use glfw instead of glut" OFF)
