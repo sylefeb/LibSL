@@ -21,12 +21,13 @@ AutoPtr<Shapes::Square>         g_Sq;
 // 'mainRender' is called everytime the screen is drawn
 void mainRender()
 {
+  
   clearScreen();
-
+  
   g_Tex->bind();
   g_Shader.begin();
   g_Shader.u_Scale.set(1.0f);
-  g_Shader.u_Image.set((GLuint)0);
+  g_Shader.u_Image.set(0);
   g_Sq->render();
   g_Shader.end();
 
@@ -35,6 +36,7 @@ void mainRender()
   ImGui::Begin("Status");
   ImGui::End();
   SimpleUI::renderImGui();
+
 }
 
 void mainMousePressed(uint x,uint y,uint button,uint flags)
