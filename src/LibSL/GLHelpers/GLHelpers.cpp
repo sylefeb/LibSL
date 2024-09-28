@@ -884,7 +884,7 @@ void NAMESPACE::GLMeshShader::init(const char *ms_code, const char *fp_code, con
   GLuint ts;
   if(ts_code) {
     ts = loadGLSLProgram(ts_code, GL_TASK_SHADER_NV);
-    glAttachObjectARB(m_Shader, ts);
+    glAttachShader(m_Shader, ts);
   }
 
   glLinkProgram(m_Shader);
