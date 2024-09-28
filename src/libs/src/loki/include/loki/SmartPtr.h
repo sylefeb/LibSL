@@ -1320,7 +1320,7 @@ namespace Loki
             {
                 return false;
             }
-            return OP::template Merge( rhs );
+            return OP::template Merge < T1, OP1, CP1,KP1, SP1, CNP1 > (rhs);
         }
 
         PointerType operator->()

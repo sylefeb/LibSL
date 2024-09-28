@@ -295,26 +295,14 @@ static bool ImGui_ImplSimpleUI_CreateFontsTexture()
 static void checkGLSLCompiled(GLuint id)
 {
   GLint compiled;
-#if defined(OPENGLES) || defined(__APPLE__)
   glGetShaderiv(id, GL_OBJECT_COMPILE_STATUS_ARB, &compiled);
-#else
-  glGetObjectParameterivARB(id, GL_OBJECT_COMPILE_STATUS_ARB, &compiled);
-#endif
   if (!compiled) {
     std::cerr << "**** BindImGui GLSL shader failed to compile ****" << std::endl;
     GLint maxLength;
-#if defined(OPENGLES) || defined(__APPLE__)
     glGetShaderiv(id, GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
-#else
-    glGetObjectParameterivARB(id, GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
-#endif
     Array<GLcharARB> infoLog(maxLength + 1);
     GLint len = 0;
-#if defined(OPENGLES) || defined(__APPLE__)
     glGetShaderInfoLog(id, maxLength, &len, infoLog.raw());
-#else
-    glGetInfoLogARB(id, maxLength, &len, infoLog.raw());
-#endif
     std::cerr << Console::yellow << infoLog.raw() << Console::gray << std::endl;
     throw GLException("\n\n**** GLSL shader failed to compile ****\n%s\n", infoLog.raw() != nullptr ? infoLog.raw() : "<unknown error>");
   }
@@ -406,25 +394,13 @@ static bool ImGui_ImplSimpleUI_CreateDeviceObjects()
   glLinkProgram(g_ShaderHandle);
 
   GLint linked;
-#if defined(OPENGLES) || defined(__APPLE__)
   glGetProgramiv(g_ShaderHandle, GL_OBJECT_LINK_STATUS_ARB, &linked);
-#else
-  glGetObjectParameterivARB(g_ShaderHandle, GL_OBJECT_LINK_STATUS_ARB, &linked);
-#endif
   if (!linked) {
     std::cerr << "**** BindImGui GLSL program failed to link ****" << std::endl;
     GLint maxLength;
-#if defined(OPENGLES) || defined(__APPLE__)
     glGetProgramiv(g_ShaderHandle, GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
-#else
-    glGetObjectParameterivARB(g_ShaderHandle, GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
-#endif
     Array<GLcharARB> infoLog(maxLength);
-#if defined(OPENGLES) || defined(__APPLE__)
     glGetProgramInfoLog(g_ShaderHandle, maxLength, NULL, infoLog.raw());
-#else
-    glGetInfoLogARB(g_ShaderHandle, maxLength, NULL, infoLog.raw());
-#endif
     throw GLException("\n\n**** GLSL program failed to link (%s) ****\n%s", "BindImGui <internal>", infoLog.raw());
   }
 

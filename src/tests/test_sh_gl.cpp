@@ -20,7 +20,7 @@ void mainRender()
   g_Tex->bind();
   g_Shader.begin();
   g_Shader.u_Scale.set(1.0f);
-  g_Shader.u_Image.set((GLuint)0);
+  g_Shader.u_Image.set(0);
   g_Sq->render();
   g_Shader.end();
 
