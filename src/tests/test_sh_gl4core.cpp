@@ -21,9 +21,9 @@ AutoPtr<Shapes::Square>         g_Sq;
 // 'mainRender' is called everytime the screen is drawn
 void mainRender()
 {
-  
+
   clearScreen();
-  
+
   g_Tex->bind();
   g_Shader.begin();
   g_Shader.u_Scale.set(1.0f);
