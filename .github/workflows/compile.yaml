@@ -3,7 +3,8 @@ name: compile
 on:
   push:
 
-# jobs:
+jobs:
+
 #   compile-linux:
 #     runs-on: ubuntu-latest
 #     steps:
