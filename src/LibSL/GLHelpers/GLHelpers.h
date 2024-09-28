@@ -582,6 +582,44 @@ namespace LibSL {
 			void  setStrict(bool s) {m_Strict=s;}
 
 		};
+    
+    class GLMeshShader : public GLBaseShader
+    {
+    private:
+
+      GLuint                 m_Shader;
+
+      // error or warnings ?
+      bool                   m_Strict;
+      bool                   m_Active;
+
+      // check everything is properly loaded
+      void authorize() const;
+
+    public:
+
+      GLMeshShader() : m_Shader(0), m_Strict(true), m_Active(false) { }
+
+      void init(const char *ms_code, const char *fp_code, const char *ts_code = nullptr);
+
+      void init(GLuint shader);
+
+      void run(uint first, uint count);
+
+      void terminate();
+
+      void begin();
+      void end();
+
+			GLuint      handle() const {return (m_Shader);}
+      const char *name()   const { return "[runtime]"; }
+
+      bool  isReady()  const {return (m_Shader!=0);}
+      bool  isActive() const {return (m_Active);}
+      bool  isStrict() const {return (m_Strict);}
+
+      void  setStrict(bool s) {m_Strict=s;}
+    };
 
 #endif
 

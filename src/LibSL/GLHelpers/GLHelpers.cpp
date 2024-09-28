@@ -103,6 +103,11 @@ GLUX_LOAD( GL_ARB_map_buffer_range );
 GLUX_LOAD( GL_ARB_shader_atomic_counters );
 GLUX_LOAD( GL_NV_shader_buffer_load );
 GLUX_LOAD( GL_ARB_compute_shader );
+
+
+#include "GL_NV_mesh_shader.h"
+GLUX_LOAD(GL_NV_mesh_shader);
+
 #endif
 #endif
 #endif
@@ -129,7 +134,32 @@ GLuint NAMESPACE::loadGLSLProgram(const char *prg,GLuint type)
   GLint compiled;
   glGetShaderiv(id,GL_OBJECT_COMPILE_STATUS_ARB, &compiled);
   if (!compiled) {
-    cerr << "**** GLSL shader failed to compile (" << (type == GL_VERTEX_SHADER ? "vertex" : (type == GL_FRAGMENT_SHADER ? "fragment" : "geometry")) << ") ****" << endl;
+    std::string shader_type_name = "";
+    switch(type) {
+      case GL_VERTEX_SHADER:
+        shader_type_name = "vertex";
+        break;
+      case GL_FRAGMENT_SHADER:
+        shader_type_name = "fragment";
+        break;
+      case GL_GEOMETRY_SHADER_ARB:
+        shader_type_name = "geometry";
+        break;
+      case GL_COMPUTE_SHADER:
+        shader_type_name = "compute";
+        break;
+      case GL_MESH_SHADER_NV:
+        shader_type_name = "mesh";
+        break;
+      case GL_TASK_SHADER_NV:
+        shader_type_name = "task";
+        break;
+      default:
+        shader_type_name = "unknown";
+        break;
+    }
+    //cerr << "**** GLSL shader failed to compile (" << (type == GL_VERTEX_SHADER ? "vertex" : (type == GL_FRAGMENT_SHADER ? "fragment" : "geometry")) << ") ****" << endl;
+    cerr << "**** GLSL shader failed to compile (" << shader_type_name << ") ****" << endl;
     GLint maxLength;
     glGetShaderiv(id,GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
     Array<GLcharARB> infoLog(maxLength+1);
@@ -146,7 +176,7 @@ GLuint NAMESPACE::loadGLSLProgram(const char *prg,GLuint type)
       out.close();
     }
     glDeleteShader(id);
-    throw GLException("\n\n**** GLSL shader failed to compile (%s) ****\n%s\n", (type == GL_VERTEX_SHADER ? "vertex" : (type == GL_FRAGMENT_SHADER ? "fragment" : "geometry")), infoLog.raw() != nullptr ? infoLog.raw() : "<unknown error>");
+    throw GLException("\n\n**** GLSL shader failed to compile (%s) ****\n%s\n", shader_type_name.c_str(), infoLog.raw() != nullptr ? infoLog.raw() : "<unknown error>");
   }
 
   return (id);
@@ -837,6 +867,99 @@ void NAMESPACE::GLCompute::run(const v3i& numGroups, const v3i& groupSize)
   }
 	glDispatchComputeGroupSizeARB(numGroups[0],numGroups[1],numGroups[2],
 				      groupSize[0],groupSize[1],groupSize[2]);
+}
+
+// -----------------------------------------------------
+
+void NAMESPACE::GLMeshShader::init(const char *ms_code, const char *fp_code, const char *ts_code)
+{
+  m_Shader = glCreateProgram();
+
+  GLuint ms = loadGLSLProgram(ms_code, GL_MESH_SHADER_NV);
+  glAttachShader(m_Shader, ms);
+
+  GLuint fp = loadGLSLProgram(fp_code, GL_FRAGMENT_SHADER);
+  glAttachShader(m_Shader, fp);
+
+  GLuint ts;
+  if(ts_code) {
+    ts = loadGLSLProgram(ts_code, GL_TASK_SHADER_NV);
+    glAttachObjectARB(m_Shader, ts);
+  }
+
+  glLinkProgram(m_Shader);
+
+  GLint linked;
+  glGetShaderiv(m_Shader,GL_OBJECT_LINK_STATUS_ARB, &linked);
+  if (!linked) {
+    GLint maxLength;
+    glGetShaderiv(m_Shader,GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
+    Array<GLcharARB> infoLog(maxLength);
+    glGetShaderInfoLog(m_Shader, maxLength, nullptr, infoLog.raw());
+    throw GLException("\n\n**** GLSL mesh shader failed to link (%s) ****\n%s",name(),infoLog.raw());
+  }
+
+  glDeleteShader(ms);
+  glDeleteShader(fp);
+
+  if(ts_code) {
+    glDeleteShader(ts);
+  }
+
+  glUseProgram(0);
+}
+
+// -----------------------------------------------------
+
+void NAMESPACE::GLMeshShader::init(GLuint shader)
+{
+  m_Shader = shader;
+}
+
+// -----------------------------------------------------
+
+void NAMESPACE::GLMeshShader::terminate()
+{
+  if (m_Shader != 0) {
+    glUseProgram(0);
+    glDeleteProgram(m_Shader);
+    m_Shader = 0;
+  }
+}
+
+// -----------------------------------------------------
+
+void NAMESPACE::GLMeshShader::authorize() const
+{
+  if (m_Shader==0)
+    throw GLException("GLMeshShader::authorize - shader used without having been initialized !");
+}
+
+// -----------------------------------------------------
+
+void NAMESPACE::GLMeshShader::begin()
+{
+  authorize();
+  glUseProgram(m_Shader);
+  m_Active = true;
+}
+
+// -----------------------------------------------------
+
+void NAMESPACE::GLMeshShader::end()
+{
+  glUseProgram(0);
+  m_Active = false;
+}
+
+// -----------------------------------------------------
+
+void NAMESPACE::GLMeshShader::run(uint first, uint count)
+{
+  authorize();
+  if (!m_Active)
+    throw GLException("GLCompute::run - must be enclosed in-between begin/end calls");
+  glDrawMeshTasksNV(first, count);
 }
 
 // -----------------------------------------------------

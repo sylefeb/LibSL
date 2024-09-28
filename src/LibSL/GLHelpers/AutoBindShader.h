@@ -164,6 +164,69 @@ namespace AutoBindShader {
     TwBar* makeTwBar() { return T_Precompiled::makeTwBar(this); }
 #endif
   };
+  
+  template<class T_Precompiled>
+  class MeshShader : public T_Precompiled
+  {
+
+  public:
+    MeshShader()
+    {
+      m_FirstInit = true;
+      m_WriteShaderFiles = false;
+    }
+
+    void init()
+    {
+      std::string ms_code = T_Precompiled::msCode();
+      std::string fp_code = T_Precompiled::fpCode();
+      std::string ts_code = T_Precompiled::tsCode();
+      if (m_WriteShaderFiles) {
+        std::ofstream file_ms((T_Precompiled::name() + std::string("_auto.ms")).c_str());
+        file_ms << ms_code.c_str();
+        file_ms.close();
+      }
+      if (m_WriteShaderFiles) {
+        std::ofstream file_fp((T_Precompiled::name() + std::string("_auto.fp")).c_str());
+        file_fp << fp_code.c_str();
+        file_fp.close();
+      }
+
+      if (!m_FirstInit) {
+        m_Shader.terminate();
+      }
+      m_Shader.init(
+            ms_code.length() > 0 ? ms_code.c_str() : nullptr,
+            fp_code.length() > 0 ? fp_code.c_str() : nullptr,
+            ts_code.length() > 0 ? ts_code.c_str() : nullptr);
+      m_Shader.setStrict(false);
+      T_Precompiled::initParameters(m_Shader, m_FirstInit);
+      if (m_FirstInit) {
+        m_Shader.begin();
+        m_Shader.end();
+      }
+      m_FirstInit = false;
+    }
+
+    void terminate(){ m_Shader.terminate(); }
+    LibSL::GLHelpers::GLMeshShader& shader()   { return m_Shader; }
+    void    setWriteShaderFiles(bool b)    { m_WriteShaderFiles = b; }
+    void	  begin()                        { m_Shader.begin(); }
+    void	  end()	                         { m_Shader.end(); }
+
+    void	  run(const uint first, const uint count)	{ m_Shader.run(first, count); }
+
+  #ifdef TW_INCLUDED
+    TwBar *makeTwBar() { return T_Precompiled::makeTwBar(this); }
+  #endif
+
+  protected:
+
+    LibSL::GLHelpers::GLMeshShader m_Shader;
+    bool	   m_FirstInit;
+    bool	   m_WriteShaderFiles;
+
+  };
 
 #endif // OPENGL4
 
