@@ -33,7 +33,8 @@ SET(TESTS_HEADERS
 )
 
 SET(TESTS_SHADERS
-  test_sh
+  test_sh_gl
+  test_sh_gl4core
 )
 
 AUTO_BIND_SHADERS( ${TESTS_SHADERS} )
@@ -44,11 +45,16 @@ ADD_EXECUTABLE(TestLibSL ${TESTS_SOURCES})
 TARGET_LINK_LIBRARIES(TestLibSL LibSL)
 
 if(LIBSL_BUILD_GL4CORE)
-ADD_EXECUTABLE(test_sh test_sh.cpp test_sh.fp test_sh.vp test_sh.h)
-TARGET_LINK_LIBRARIES(test_sh LibSL LibSL_gl4core)
+ADD_EXECUTABLE(test_sh_gl4core test_sh_gl4core.cpp test_sh_gl4core.fp test_sh_gl4core.vp test_sh_gl4core.h)
+TARGET_LINK_LIBRARIES(test_sh_gl4core LibSL LibSL_gl4core)
+SET_TARGET_PROPERTIES(test_sh_gl4core PROPERTIES COMPILE_DEFINITIONS "USE_GLUX;OPENGL4;OPENGLCORE")
 endif(LIBSL_BUILD_GL4CORE)
 
-ADD_DEFINITIONS(-DOPENGL4 -DUSE_GLUX)
+if(LIBSL_BUILD_GL4CORE)
+ADD_EXECUTABLE(test_sh_gl test_sh_gl.cpp test_sh_gl.fp test_sh_gl.vp test_sh_gl.h)
+TARGET_LINK_LIBRARIES(test_sh_gl LibSL LibSL_gl)
+SET_TARGET_PROPERTIES(test_sh_gl PROPERTIES COMPILE_DEFINITIONS "USE_GLUX;OPENGL")
+endif(LIBSL_BUILD_GL4CORE)
 
 INSTALL(TARGETS TestLibSL
 	RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/bin

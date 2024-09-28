@@ -195,7 +195,7 @@ static void ImGui_ImplSimpleUI_RenderDrawLists(ImDrawData* draw_data)
   glUseProgram(g_ShaderHandle);
   glUniform1i(g_AttribLocationTex, 0);
   glUniformMatrix4fv(g_AttribLocationProjMtx, 1, GL_FALSE, &ortho_projection[0][0]);
-  
+
   glBindVertexArray(g_VaoHandle);
 
   for (int n = 0; n < draw_data->CmdListsCount; n++)
@@ -332,6 +332,7 @@ static bool ImGui_ImplSimpleUI_CreateDeviceObjects()
 #endif
 
 #ifdef OPENGL4
+
   const GLchar* vertex_shader =
     "#version 410\n"
     "uniform mat4 ProjMtx;\n"
@@ -576,7 +577,7 @@ static void bindKeyPressed(uchar key)
   io.KeysDown[key] = true;
   if (!io.WantCaptureKeyboard) {
     if (prevKeyPressed) prevKeyPressed(key);
-  } 
+  }
 }
 
 static void bindKeyUnpressed(uchar key)

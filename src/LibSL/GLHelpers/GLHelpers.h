@@ -190,7 +190,7 @@ namespace LibSL {
 
 		LIBSL_NEW_EXCEPTION_TYPE(GLException)
 
-		GLhandleARB loadGLSLProgram(const char *prg,GLuint type);
+		GLuint loadGLSLProgram(const char *prg,GLuint type);
 
 #ifdef OPENGL4
 		class GLBuffer;
@@ -206,7 +206,7 @@ namespace LibSL {
       virtual bool        isActive() const =0;
       virtual bool        isStrict() const =0;
       virtual const char *name()     const =0;
-      virtual GLhandleARB handle()   const =0;
+      virtual GLuint      handle()   const =0;
     };
 
 		class GLShader : public GLBaseShader
@@ -222,7 +222,7 @@ namespace LibSL {
 
 		private:
 
-			GLhandleARB            m_Shader;
+			GLuint                 m_Shader;
 
 			// error or warnings ?
 			bool                   m_Strict;
@@ -240,14 +240,14 @@ namespace LibSL {
 
 			void init(const char *vp_code,const char *fp_code,const t_GeometryShaderNfo *gs_code = NULL);
 
-			void init(GLhandleARB shader);
+			void init(GLuint shader);
 
 			void terminate();
 
 			void begin();
 			void end();
 
-			GLhandleARB handle() const {return (m_Shader);}
+			GLuint      handle() const {return (m_Shader);}
       const char *name()   const { return "[runtime]"; }
 
 			bool  isReady()  const {return (m_Shader!=0);}
@@ -548,7 +548,7 @@ namespace LibSL {
 		{
 		private:
 
-			GLhandleARB            m_Shader;
+			GLuint                 m_Shader;
 
 			// error or warnings ?
 			bool                   m_Strict;
@@ -562,7 +562,7 @@ namespace LibSL {
 			GLCompute() : m_Shader(0), m_Strict(true), m_Active(false) { }
 
 			void init(const char *cp_code);
-			void init(GLhandleARB shader);
+			void init(GLuint shader);
 
 			void run(const LibSL::Math::v3i& numGroups);
 			void run(const LibSL::Math::v3i& numGroups, const LibSL::Math::v3i& groupSize);
@@ -573,7 +573,7 @@ namespace LibSL {
 			void end();
 
       const char *name()   const { return "[runtime]"; }
-			GLhandleARB handle() const {return (m_Shader);}
+			GLuint      handle() const {return (m_Shader);}
 
 			bool  isReady()  const {return (m_Shader!=0);}
 			bool  isActive() const {return (m_Active);}

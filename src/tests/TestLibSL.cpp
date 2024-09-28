@@ -45,9 +45,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #include <iostream>
 using namespace std;
 
-//#ifdef WIN32
-LIBSL_WIN32_FIX
-//#endif
+LIBSL_FILE_FORMATS
 
 int main(int argc, char* argv[])
 {

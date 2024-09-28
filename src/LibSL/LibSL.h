@@ -185,6 +185,8 @@ LibSL::Mesh::MeshFormat_stl     s_Stl;   \
 LibSL::Mesh::MeshFormat_ply     s_Ply;   \
 LibSL::Mesh::MeshFormat_off     s_Off;
 
+#define LIBSL_FILE_FORMATS LIBSL_WIN32_FIX
+
 #else
 
 #define LIBSL_WIN32_FIX                  \
@@ -203,6 +205,8 @@ LibSL::Mesh::MeshFormat_dae     s_Dae;   \
 LibSL::Mesh::MeshFormat_ply     s_Ply;   \
 LibSL::Mesh::MeshFormat_stl     s_Stl;   \
 LibSL::Mesh::MeshFormat_off     s_Off;
+
+#define LIBSL_FILE_FORMATS LIBSL_WIN32_FIX
 
 #endif
 
