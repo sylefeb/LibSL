@@ -1,5 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
+MESSAGE(STATUS "[in LibSL/src/libsl/src]")
+
 ################################################################################
 # Hides most of the ELF symbols which would have previously (and unnecessarily)
 # been public. This is the case by default on Windows, but on Linux we need to
@@ -40,7 +42,7 @@ if (LIBSL_BUILD_GLUX)
 ADD_SUBDIRECTORY(glux)
 endif(LIBSL_BUILD_GLUX)
 
-if (LIBSL_BUILD_GL)
+if (LIBSL_BUILD_GL OR LIBSL_BUILD_GL4 OR LIBSL_BUILD_GL4CORE)
 
   IF(NOT EMSCRIPTEN)
   IF(NOT ANDROID)
@@ -50,20 +52,8 @@ if (LIBSL_BUILD_GL)
   ENDIF(NOT ANDROID)
   ENDIF(NOT EMSCRIPTEN)
 
-else (LIBSL_BUILD_GL)
-if (LIBSL_BUILD_GL4)
+  ADD_SUBDIRECTORY(glfw)
 
-  IF(NOT EMSCRIPTEN)
-  IF(NOT ANDROID)
-  ADD_SUBDIRECTORY(anttweakbar)
-  ENDIF(NOT ANDROID)
-  ENDIF(NOT EMSCRIPTEN)
-
-endif(LIBSL_BUILD_GL4)
-endif(LIBSL_BUILD_GL)
-
-if (LIBSL_BUILD_GL OR LIBSL_BUILD_GL4)
-ADD_SUBDIRECTORY(glfw)
 endif()
 
 if (LIBSL_BUILD_LINALG)

@@ -116,8 +116,8 @@ static void glfwMouseButton(GLFWwindow* window, int glfw_button, int glfw_action
   } else if (glfw_action == GLFW_RELEASE) {
       flags |= LIBSL_BUTTON_UP;
   }
-  glfwGetCursorPos(window, &x, &y); //CZ 2018-05-02 : warning, might have changed inbetween click and callback
-  NAMESPACE::onMouseButtonPressed(std::floor(x),std::floor(y),button,flags);
+  glfwGetCursorPos(window, &x, &y); //CZ 2018-05-02 : warning, might have changed in between click and callback
+  NAMESPACE::onMouseButtonPressed((uint)std::floor(x), (uint)std::floor(y),button,flags);
 }
 
 static void glfwMouseWheel(GLFWwindow* window, double x, double y)
@@ -125,13 +125,13 @@ static void glfwMouseWheel(GLFWwindow* window, double x, double y)
 #ifdef EMSCRIPTEN
   NAMESPACE::onMouseWheel(-40 * y);
 #else
-  NAMESPACE::onMouseWheel(40 * y);
+  NAMESPACE::onMouseWheel((uint)std::floor(40 * y));
 #endif
 }
 
 static void glfwMouseMove(GLFWwindow* window, double x, double y)
 {
-  NAMESPACE::onMouseMotion(std::floor(x),std::floor(y));
+  NAMESPACE::onMouseMotion((uint)std::floor(x), (uint)std::floor(y));
 }
 
 void glfwKeyboardText(GLFWwindow* window, unsigned int codepoint)
@@ -170,8 +170,8 @@ static void glfwKeyboardSpecial(GLFWwindow* window, int key, int scancode, int a
 
 static void glfwRender()
 {
-  static double last = LibSL::System::Time::milliseconds();
-  double now         = LibSL::System::Time::milliseconds();
+  static double last = (double)LibSL::System::Time::milliseconds();
+  double now         = (double)LibSL::System::Time::milliseconds();
   float  elapsed     = float(now - last);
 
   if (elapsed > 0) {
