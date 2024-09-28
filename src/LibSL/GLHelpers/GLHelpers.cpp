@@ -197,19 +197,19 @@ void NAMESPACE::GLShader::init(
 #ifdef OPENGL4
   LIBSL_GL_CHECK_ERROR;
   // set default bindings
-  glBindAttribLocationARB(m_Shader, LibSL::GPUMesh::gl4::mvf_attrib_location<MVF_BASE_POSITION >::value, "mvf_position");
-  glBindAttribLocationARB(m_Shader, LibSL::GPUMesh::gl4::mvf_attrib_location<MVF_BASE_POSITION >::value, "mvf_vertex"); // aliasing
-  glBindAttribLocationARB(m_Shader, LibSL::GPUMesh::gl4::mvf_attrib_location<MVF_BASE_NORMAL   >::value, "mvf_normal");
-  glBindAttribLocationARB(m_Shader, LibSL::GPUMesh::gl4::mvf_attrib_location<MVF_BASE_COLOR0   >::value, "mvf_color0");
-  glBindAttribLocationARB(m_Shader, LibSL::GPUMesh::gl4::mvf_attrib_location<MVF_BASE_COLOR1   >::value, "mvf_color1");
-  glBindAttribLocationARB(m_Shader, LibSL::GPUMesh::gl4::mvf_attrib_location<MVF_BASE_TEXCOORD0>::value, "mvf_texcoord0");
-  glBindAttribLocationARB(m_Shader, LibSL::GPUMesh::gl4::mvf_attrib_location<MVF_BASE_TEXCOORD1>::value, "mvf_texcoord1");
-  glBindAttribLocationARB(m_Shader, LibSL::GPUMesh::gl4::mvf_attrib_location<MVF_BASE_TEXCOORD2>::value, "mvf_texcoord2");
-  glBindAttribLocationARB(m_Shader, LibSL::GPUMesh::gl4::mvf_attrib_location<MVF_BASE_TEXCOORD3>::value, "mvf_texcoord3");
-  glBindAttribLocationARB(m_Shader, LibSL::GPUMesh::gl4::mvf_attrib_location<MVF_BASE_TEXCOORD4>::value, "mvf_texcoord4");
-  glBindAttribLocationARB(m_Shader, LibSL::GPUMesh::gl4::mvf_attrib_location<MVF_BASE_TEXCOORD5>::value, "mvf_texcoord5");
-  glBindAttribLocationARB(m_Shader, LibSL::GPUMesh::gl4::mvf_attrib_location<MVF_BASE_TEXCOORD6>::value, "mvf_texcoord6");
-  glBindAttribLocationARB(m_Shader, LibSL::GPUMesh::gl4::mvf_attrib_location<MVF_BASE_TEXCOORD7>::value, "mvf_texcoord7");
+  glBindAttribLocation(m_Shader, LibSL::GPUMesh::gl4::mvf_attrib_location<MVF_BASE_POSITION >::value, "mvf_position");
+  glBindAttribLocation(m_Shader, LibSL::GPUMesh::gl4::mvf_attrib_location<MVF_BASE_POSITION >::value, "mvf_vertex"); // aliasing
+  glBindAttribLocation(m_Shader, LibSL::GPUMesh::gl4::mvf_attrib_location<MVF_BASE_NORMAL   >::value, "mvf_normal");
+  glBindAttribLocation(m_Shader, LibSL::GPUMesh::gl4::mvf_attrib_location<MVF_BASE_COLOR0   >::value, "mvf_color0");
+  glBindAttribLocation(m_Shader, LibSL::GPUMesh::gl4::mvf_attrib_location<MVF_BASE_COLOR1   >::value, "mvf_color1");
+  glBindAttribLocation(m_Shader, LibSL::GPUMesh::gl4::mvf_attrib_location<MVF_BASE_TEXCOORD0>::value, "mvf_texcoord0");
+  glBindAttribLocation(m_Shader, LibSL::GPUMesh::gl4::mvf_attrib_location<MVF_BASE_TEXCOORD1>::value, "mvf_texcoord1");
+  glBindAttribLocation(m_Shader, LibSL::GPUMesh::gl4::mvf_attrib_location<MVF_BASE_TEXCOORD2>::value, "mvf_texcoord2");
+  glBindAttribLocation(m_Shader, LibSL::GPUMesh::gl4::mvf_attrib_location<MVF_BASE_TEXCOORD3>::value, "mvf_texcoord3");
+  glBindAttribLocation(m_Shader, LibSL::GPUMesh::gl4::mvf_attrib_location<MVF_BASE_TEXCOORD4>::value, "mvf_texcoord4");
+  glBindAttribLocation(m_Shader, LibSL::GPUMesh::gl4::mvf_attrib_location<MVF_BASE_TEXCOORD5>::value, "mvf_texcoord5");
+  glBindAttribLocation(m_Shader, LibSL::GPUMesh::gl4::mvf_attrib_location<MVF_BASE_TEXCOORD6>::value, "mvf_texcoord6");
+  glBindAttribLocation(m_Shader, LibSL::GPUMesh::gl4::mvf_attrib_location<MVF_BASE_TEXCOORD7>::value, "mvf_texcoord7");
   LIBSL_GL_CHECK_ERROR;
 #else
 #ifdef OPENGLES
