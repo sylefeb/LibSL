@@ -66,6 +66,24 @@ namespace AutoBindShader {
       }
       m_FirstInit = false;
     }
+    void reload(std::string path = "")
+    {
+      sl_assert(!m_FirstInit);
+      std::string vp_code = LibSL::StlHelpers::loadFileIntoString((path + "/" + T_Precompiled::name() + std::string(".vp")).c_str());
+      std::string fp_code = LibSL::StlHelpers::loadFileIntoString((path + "/" + T_Precompiled::name() + std::string(".fp")).c_str());
+      LibSL::GLHelpers::GLShader::t_GeometryShaderNfo gs = T_Precompiled::gsCode();
+      if (gs.code.length() > 0) {
+        gs.code = LibSL::StlHelpers::loadFileIntoString((path + "/" + T_Precompiled::name() + std::string(".cs")).c_str());
+      }
+      m_Shader.terminate();
+      m_Shader.init(
+        vp_code.length() > 0 ? vp_code.c_str() : NULL,
+        fp_code.length() > 0 ? fp_code.c_str() : NULL,
+        gs.code.length() > 0 ? &gs : NULL);
+      m_Shader.setStrict(false);
+      T_Precompiled::initTweaks();
+      T_Precompiled::initParameters(m_Shader, m_FirstInit);
+    }
     void terminate()
     {
       m_Shader.terminate();
@@ -78,13 +96,13 @@ namespace AutoBindShader {
       T_Precompiled::m_TypeOut = 0;
       T_Precompiled::m_MaxVerticesOut = 0;
     }
-    LibSL::GLHelpers::GLShader& shader()   { return m_Shader; }
-    void    setWriteShaderFiles(bool b)    { m_WriteShaderFiles = b; }
-    void	  begin()                        { m_Shader.begin(); T_Precompiled::commitTweaks(); }
-    void	  end()	                         { m_Shader.end(); }
+    LibSL::GLHelpers::GLShader& shader() { return m_Shader; }
+    void    setWriteShaderFiles(bool b) { m_WriteShaderFiles = b; }
+    void	  begin() { m_Shader.begin(); T_Precompiled::commitTweaks(); }
+    void	  end() { m_Shader.end(); }
 
 #ifdef TW_INCLUDED
-    TwBar *makeTwBar() { return T_Precompiled::makeTwBar(this); }
+    TwBar* makeTwBar() { return T_Precompiled::makeTwBar(this); }
 #endif
 
   };
@@ -116,9 +134,9 @@ namespace AutoBindShader {
         file_cs.close();
       }
       m_Shader.init(this->csCode().c_str());
-      m_Shader.setStrict( false );
+      m_Shader.setStrict(false);
       T_Precompiled::initParameters(m_Shader, m_FirstInit);
-      if ( m_FirstInit ) {
+      if (m_FirstInit) {
         m_Shader.begin();
         m_Shader.end();
       }
@@ -133,17 +151,17 @@ namespace AutoBindShader {
       m_FirstInit = true;
       m_WriteShaderFiles = false;
     }
-    LibSL::GLHelpers::GLCompute& shader()                  { return m_Shader;  }
-    void    setWriteShaderFiles(bool b) { m_WriteShaderFiles = b; }
+    LibSL::GLHelpers::GLCompute& shader() { return m_Shader; }
+    void    setWriteShaderFiles(bool b)   { m_WriteShaderFiles = b; }
 
     void	  begin() { m_Shader.begin(); T_Precompiled::commitTweaks(); }
-    void	  end()	  { m_Shader.end();   }
+    void	  end()   { m_Shader.end(); }
 
-    void	  run(const LibSL::Math::v3i& numGroups)	{ m_Shader.run(numGroups); }
-    void	  run(const LibSL::Math::v3i& numGroups, const LibSL::Math::v3i& groupSize)	{ m_Shader.run(numGroups, groupSize); }
+    void	  run(const LibSL::Math::v3i& numGroups) { m_Shader.run(numGroups); }
+    void	  run(const LibSL::Math::v3i& numGroups, const LibSL::Math::v3i& groupSize) { m_Shader.run(numGroups, groupSize); }
 
 #ifdef TW_INCLUDED
-    TwBar *makeTwBar() { return T_Precompiled::makeTwBar(this); }
+    TwBar* makeTwBar() { return T_Precompiled::makeTwBar(this); }
 #endif
   };
   

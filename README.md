@@ -1,7 +1,9 @@
 # LibSL - v1.11 - README
 
+![compilation (Linux,MacOS)](https://github.com/sylefeb/LibSL/actions/workflows/compile.yaml/badge.svg)
+
 # What is LibSL?
- 
+
 A simple C++ toolbox to simplify many of the basic tasks when doing research in Computer Graphics. It features simple, very straightforward image and mesh manipulation, texture and render targets, a simple UI with a trackball, an OpenGL extension loader, and many little things here and there. It supports several graphics API on several platforms, even though lately the focus has been essentially on OpenGL. The package also contains several other great libraries (libng, libjpg, AntTweakBar, OpenNL, sqlite, tinyXML, to name a few) with which LibSL easily interacts.
 
 You won't be impressed, and you probably don't need it. The point is, most of my code relies on it and over the years it ended up being used by several students, colleagues and collaborators, so it seemed a good idea to make it easily accessible.
@@ -13,15 +15,15 @@ LibSL is primarily developed by Sylvain Lefebvre for his research work at INRIA 
 IMPORTANT If you are downloading LibSL, it probably means we work together, you can skip the rest of this paragraph. If not, please be warned that I do not provide support for LibSL. Similarly, I will probably not answer any emails regarding setup, install, usage, etc.. It is here for your enjoyment and convenience but I do not have time to turn it into a nice, well coded and well documented library. It is messy, slow, badly designed -- but it works for me. Oh, and there is no documentation.
 
 # Some history
- 
+
 LibSL was designed as a support library for doing shader intensive programming. Its primary design goals are simplicity of use and maintenance, easy switch between GL/DirectX, error checking, and non--intrusion. It is slow by design (who cares about CPU performance anyway when we have GPUs? (joking, of course!) ). It can be bypassed at all times by API-specific functions. There is no wrapper: Different graphics API are supported via template policies. This is likely not the best approach, but it works for me. Its development started back in 2006 and continues today. LibSL has been used in many successful research projects published at SIGGRAPH and EUROGRAPHICS.
 
 # Contributors
- 
+
 Former students have suffered LibSL and went as far as contributing to it:
 
 * Christian Eisenacher (image filtering, PCA)
-* Matthäus Chajdas (voxel stuff, of course :), he also inspired the cmake build, the use of sqlite, etc. ) 
+* Matthäus Chajdas (voxel stuff, of course :), he also inspired the cmake build, the use of sqlite, etc. )
 * Jérémie Dumas (many improvements, in particular to tuples)
 
 More recently, several colleagues and students provided corrections and new features:

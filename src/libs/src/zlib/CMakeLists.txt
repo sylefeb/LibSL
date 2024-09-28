@@ -185,7 +185,7 @@ else()
     endif()
     # Check support for ARM floating point
     if("${ARCH}" MATCHES "arm")
-        if (__GNUC__)
+        if (__GNUC__ AND NOT APPLE)
             execute_process(COMMAND ${CMAKE_C_COMPILER} "-dumpmachine"
                             OUTPUT_VARIABLE GCC_MACHINE)
             if ("${GCC_MACHINE}" MATCHES "eabihf")
@@ -723,7 +723,7 @@ if(MINGW OR MSYS)
     set(ZLIB_DLL_SRCS ${CMAKE_CURRENT_BINARY_DIR}/zlib1rc.obj)
 endif()
 
-set(ZLIB_ALL_SRCS ${ZLIB_SRCS} ${ZLIB_ARCH_SRCS} ${ZLIB_DLL_SRCS} 
+set(ZLIB_ALL_SRCS ${ZLIB_SRCS} ${ZLIB_ARCH_SRCS} ${ZLIB_DLL_SRCS}
     ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
 if(WITH_GZFILEOP)
     list(APPEND ZLIB_ALL_SRCS ${ZLIB_GZFILE_SRCS})

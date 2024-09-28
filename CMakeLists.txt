@@ -2,7 +2,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 PROJECT(LibSL)
 
-# MESSAGE(STATUS "[in LibSL/]")
+MESSAGE(STATUS "[in LibSL/]")
 
 SET(LibSL_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -10,8 +10,7 @@ SET(LibSL_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 # Options
 if(ANDROID)
 
-# MESSAGE(SEND_ERROR "LibSL Android!!")
-
+# Android
 OPTION(LIBSL_BUILD_GL              "Build LibSL_gl" ON)
 OPTION(LIBSL_BUILD_GL4             "Build LibSL_gl for OpenGL 4.x" OFF)
 OPTION(LIBSL_BUILD_DX9             "Build LibSL_d3d" OFF)
@@ -25,6 +24,7 @@ OPTION(LIBSL_MULTITHREADED_STATIC  "Build LibSL with /MT flag in Visual C++" OFF
 OPTION(LIBSL_BUILD_GLUX            "Build gluX"   OFF)
 OPTION(LIBSL_BUILD_LIBARCHIVE      "Build libarchive"   OFF)
 OPTION(LIBSL_USE_GLUX              "Use gluX with LibSL_gl"   OFF)
+OPTION(LIBSL_USE_GLFW              "Use glfw instead of glut" OFF)
 OPTION(LIBSL_POWER_USER            "Power user mode (reserved, do not use)" OFF)
 
 ADD_DEFINITIONS(-DANDROID)
@@ -33,6 +33,7 @@ else (ANDROID)
 
 if(EMSCRIPTEN)
 
+# Emscripten
 OPTION(LIBSL_BUILD_GL              "Build LibSL_gl" ON)
 OPTION(LIBSL_BUILD_GL4             "Build LibSL_gl for OpenGL 4.x" OFF)
 OPTION(LIBSL_BUILD_GL4CORE         "Build LibSL_gl for OpenGL 4.x core profile" OFF)
@@ -47,13 +48,25 @@ OPTION(LIBSL_MULTITHREADED_STATIC  "Build LibSL with /MT flag in Visual C++" OFF
 OPTION(LIBSL_BUILD_GLUX            "Build gluX"   OFF)
 OPTION(LIBSL_BUILD_LIBARCHIVE      "Build libarchive"   OFF)
 OPTION(LIBSL_USE_GLUX              "Use gluX with LibSL_gl"   OFF)
+OPTION(LIBSL_USE_GLFW              "Use glfw instead of glut" OFF)
 OPTION(LIBSL_POWER_USER            "Power user mode (reserved, do not use)" OFF)
 
 else(EMSCRIPTEN)
 
+# Generic
+if (APPLE)
+# - Apple
+OPTION(LIBSL_BUILD_GL              "Build LibSL_gl" OFF)
+OPTION(LIBSL_BUILD_GL4             "Build LibSL_gl for OpenGL 4.x" OFF)
+OPTION(LIBSL_BUILD_GL4CORE         "Build LibSL_gl for OpenGL 4.x core profile" ON)
+OPTION(LIBSL_USE_GLFW              "Use glfw instead of glut" ON)
+else (APPLE)
+# - Windows
 OPTION(LIBSL_BUILD_GL              "Build LibSL_gl" ON)
 OPTION(LIBSL_BUILD_GL4             "Build LibSL_gl for OpenGL 4.x" ON)
 OPTION(LIBSL_BUILD_GL4CORE         "Build LibSL_gl for OpenGL 4.x core profile" ON)
+OPTION(LIBSL_USE_GLFW              "Use glfw instead of glut" OFF)
+endif(APPLE)
 OPTION(LIBSL_BUILD_DX9             "Build LibSL_d3d" OFF)
 OPTION(LIBSL_BUILD_DX10            "Build LibSL_dx10" OFF)
 OPTION(LIBSL_BUILD_LINALG          "Build LibSL_linalg" ON)
@@ -127,6 +140,7 @@ INCLUDE_DIRECTORIES(
 			${CMAKE_CURRENT_SOURCE_DIR}/src/libs/src/SQLite
 			${CMAKE_CURRENT_SOURCE_DIR}/src/libs/src/qhull/src/libqhull_r
 			${CMAKE_CURRENT_SOURCE_DIR}/src/libs/src/rply
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/libs/src/glfw/include
 			)
 
 if (LIBSL_ENABLE_NVIDIA_CG)
@@ -181,7 +195,7 @@ endif(EMSCRIPTEN)
 #Include(UseCXX17)
 #AddGlobalCXX11()
 
-ADD_SUBDIRECTORY(src)
-
 # Building LibSL as part of a CMakeLists.txt tree makes the AUTO_BIND_SHADER macro available to the source tree (this behavior is what we want)
 INCLUDE(src/tools/autobindshader/AutoBindShader.cmake)
+
+ADD_SUBDIRECTORY(src)

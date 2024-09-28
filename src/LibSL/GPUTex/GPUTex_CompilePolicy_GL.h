@@ -46,7 +46,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 // ------------------------------------------------------
 
 #ifdef __APPLE__
-#include <OpenGL/gl.h>
+#include "apple_gl.h"
 #else
 #ifdef EMSCRIPTEN
 #define GL_GLEXT_PROTOTYPES

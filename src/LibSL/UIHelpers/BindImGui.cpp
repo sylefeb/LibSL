@@ -132,7 +132,7 @@ static double       g_Time = 0.0f;
 static bool         g_MousePressed[5] = { false, false, false, false, false };
 static float        g_MouseWheel = 0.0f;
 static GLuint       g_FontTexture = 0;
-static int          g_ShaderHandle = 0, g_VertHandle = 0, g_FragHandle = 0;
+static GLuint       g_ShaderHandle = 0, g_VertHandle = 0, g_FragHandle = 0;
 static int          g_AttribLocationTex = 0, g_AttribLocationProjMtx = 0;
 static int          g_AttribLocationPosition = 0, g_AttribLocationUV = 0, g_AttribLocationColor = 0;
 static unsigned int g_VboHandle = 0, g_VaoHandle = 0, g_ElementsHandle = 0;
@@ -195,7 +195,7 @@ static void ImGui_ImplSimpleUI_RenderDrawLists(ImDrawData* draw_data)
   glUseProgram(g_ShaderHandle);
   glUniform1i(g_AttribLocationTex, 0);
   glUniformMatrix4fv(g_AttribLocationProjMtx, 1, GL_FALSE, &ortho_projection[0][0]);
-  
+
   glBindVertexArray(g_VaoHandle);
 
   for (int n = 0; n < draw_data->CmdListsCount; n++)
@@ -292,6 +292,34 @@ static bool ImGui_ImplSimpleUI_CreateFontsTexture()
   return true;
 }
 
+static void checkGLSLCompiled(GLuint id)
+{
+  GLint compiled;
+#if defined(OPENGLES) || defined(__APPLE__)
+  glGetShaderiv(id, GL_OBJECT_COMPILE_STATUS_ARB, &compiled);
+#else
+  glGetObjectParameterivARB(id, GL_OBJECT_COMPILE_STATUS_ARB, &compiled);
+#endif
+  if (!compiled) {
+    std::cerr << "**** BindImGui GLSL shader failed to compile ****" << std::endl;
+    GLint maxLength;
+#if defined(OPENGLES) || defined(__APPLE__)
+    glGetShaderiv(id, GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
+#else
+    glGetObjectParameterivARB(id, GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
+#endif
+    Array<GLcharARB> infoLog(maxLength + 1);
+    GLint len = 0;
+#if defined(OPENGLES) || defined(__APPLE__)
+    glGetShaderInfoLog(id, maxLength, &len, infoLog.raw());
+#else
+    glGetInfoLogARB(id, maxLength, &len, infoLog.raw());
+#endif
+    std::cerr << Console::yellow << infoLog.raw() << Console::gray << std::endl;
+    throw GLException("\n\n**** GLSL shader failed to compile ****\n%s\n", infoLog.raw() != nullptr ? infoLog.raw() : "<unknown error>");
+  }
+}
+
 static bool ImGui_ImplSimpleUI_CreateDeviceObjects()
 {
   // Backup GL state
@@ -302,6 +330,39 @@ static bool ImGui_ImplSimpleUI_CreateDeviceObjects()
   GLint last_vertex_array;
   glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &last_vertex_array);
 #endif
+
+#ifdef OPENGL4
+
+  const GLchar* vertex_shader =
+    "#version 410\n"
+    "uniform mat4 ProjMtx;\n"
+    "in      vec2 Position;\n"
+    "in      vec2 UV;\n"
+    "in      vec4 Color;\n"
+    "out     vec2 Frag_UV;\n"
+    "out     vec4 Frag_Color;\n"
+    "void main()\n"
+    "{\n"
+    "	Frag_UV     = UV;\n"
+    "	Frag_Color  = Color;\n"
+    "	gl_Position = ProjMtx * vec4(Position.xy,0.0,1.0);\n"
+    "}\n";
+
+  const GLchar* fragment_shader =
+    "#version 410\n"
+#if defined(EMSCRIPTEN) | defined(ANDROID)
+    "precision mediump float;\n"
+#endif
+    "uniform sampler2D Texture;\n"
+    "in vec2 Frag_UV;\n"
+    "in vec4 Frag_Color;\n"
+    "out vec4 color;\n"
+    "void main()\n"
+    "{\n"
+    "	 color = Frag_Color * texture( Texture, Frag_UV.st);\n"
+    "}\n";
+
+#else // OPENGL4
 
   const GLchar *vertex_shader =
     "uniform mat4 ProjMtx;\n"
@@ -314,7 +375,7 @@ static bool ImGui_ImplSimpleUI_CreateDeviceObjects()
     "{\n"
     "	Frag_UV = UV;\n"
     "	Frag_Color = Color;\n"
-    "	gl_Position = ProjMtx * vec4(Position.xy,0,1);\n"
+    "	gl_Position = ProjMtx * vec4(Position.xy,0.0,1.0);\n"
     "}\n";
 
   const GLchar* fragment_shader =
@@ -329,16 +390,43 @@ static bool ImGui_ImplSimpleUI_CreateDeviceObjects()
     "	gl_FragColor = Frag_Color * texture2D( Texture, Frag_UV.st);\n"
     "}\n";
 
+#endif // OPENGL4
+
   g_ShaderHandle = glCreateProgram();
   g_VertHandle = glCreateShader(GL_VERTEX_SHADER);
   g_FragHandle = glCreateShader(GL_FRAGMENT_SHADER);
   glShaderSource(g_VertHandle, 1, &vertex_shader, 0);
   glShaderSource(g_FragHandle, 1, &fragment_shader, 0);
   glCompileShader(g_VertHandle);
+  checkGLSLCompiled(g_VertHandle);
   glCompileShader(g_FragHandle);
+  checkGLSLCompiled(g_FragHandle);
   glAttachShader(g_ShaderHandle, g_VertHandle);
   glAttachShader(g_ShaderHandle, g_FragHandle);
   glLinkProgram(g_ShaderHandle);
+
+  GLint linked;
+#if defined(OPENGLES) || defined(__APPLE__)
+  glGetProgramiv(g_ShaderHandle, GL_OBJECT_LINK_STATUS_ARB, &linked);
+#else
+  glGetObjectParameterivARB(g_ShaderHandle, GL_OBJECT_LINK_STATUS_ARB, &linked);
+#endif
+  if (!linked) {
+    std::cerr << "**** BindImGui GLSL program failed to link ****" << std::endl;
+    GLint maxLength;
+#if defined(OPENGLES) || defined(__APPLE__)
+    glGetProgramiv(g_ShaderHandle, GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
+#else
+    glGetObjectParameterivARB(g_ShaderHandle, GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
+#endif
+    Array<GLcharARB> infoLog(maxLength);
+#if defined(OPENGLES) || defined(__APPLE__)
+    glGetProgramInfoLog(g_ShaderHandle, maxLength, NULL, infoLog.raw());
+#else
+    glGetInfoLogARB(g_ShaderHandle, maxLength, NULL, infoLog.raw());
+#endif
+    throw GLException("\n\n**** GLSL program failed to link (%s) ****\n%s", "BindImGui <internal>", infoLog.raw());
+  }
 
   g_AttribLocationTex = glGetUniformLocation(g_ShaderHandle, "Texture");
   g_AttribLocationProjMtx = glGetUniformLocation(g_ShaderHandle, "ProjMtx");
@@ -489,7 +577,7 @@ static void bindKeyPressed(uchar key)
   io.KeysDown[key] = true;
   if (!io.WantCaptureKeyboard) {
     if (prevKeyPressed) prevKeyPressed(key);
-  } 
+  }
 }
 
 static void bindKeyUnpressed(uchar key)

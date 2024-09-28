@@ -60,7 +60,7 @@ using namespace LibSL::System::Types;
 #endif
 
 #ifdef __APPLE__
-#include <OpenGL/gl.h>
+#include "apple_gl.h"
 #else
 #ifndef EMSCRIPTEN
 #ifdef ANDROID
@@ -121,7 +121,7 @@ using namespace LibSL::System::Types;
 #undef Success
 #else
 #ifdef __APPLE__
-#include <OpenGL/glext.h>
+//
 #else
 #ifdef ANDROID
 #include <GLES2/gl2ext.h>
@@ -190,7 +190,7 @@ namespace LibSL {
 
 		LIBSL_NEW_EXCEPTION_TYPE(GLException)
 
-		GLhandleARB loadGLSLProgram(const char *prg,GLuint type);
+		GLuint loadGLSLProgram(const char *prg,GLuint type);
 
 #ifdef OPENGL4
 		class GLBuffer;
@@ -206,7 +206,7 @@ namespace LibSL {
       virtual bool        isActive() const =0;
       virtual bool        isStrict() const =0;
       virtual const char *name()     const =0;
-      virtual GLhandleARB handle()   const =0;
+      virtual GLuint      handle()   const =0;
     };
 
 		class GLShader : public GLBaseShader
@@ -222,7 +222,7 @@ namespace LibSL {
 
 		private:
 
-			GLhandleARB            m_Shader;
+			GLuint                 m_Shader;
 
 			// error or warnings ?
 			bool                   m_Strict;
@@ -240,14 +240,14 @@ namespace LibSL {
 
 			void init(const char *vp_code,const char *fp_code,const t_GeometryShaderNfo *gs_code = NULL);
 
-			void init(GLhandleARB shader);
+			void init(GLuint shader);
 
 			void terminate();
 
 			void begin();
 			void end();
 
-			GLhandleARB handle() const {return (m_Shader);}
+			GLuint      handle() const {return (m_Shader);}
       const char *name()   const { return "[runtime]"; }
 
 			bool  isReady()  const {return (m_Shader!=0);}
@@ -587,7 +587,7 @@ namespace LibSL {
     {
     private:
 
-      GLhandleARB            m_Shader;
+      GLuint                 m_Shader;
 
       // error or warnings ?
       bool                   m_Strict;
@@ -602,7 +602,7 @@ namespace LibSL {
 
       void init(const char *ms_code, const char *fp_code, const char *ts_code = nullptr);
 
-      void init(GLhandleARB shader);
+      void init(GLuint shader);
 
       void run(uint first, uint count);
 
@@ -611,7 +611,7 @@ namespace LibSL {
       void begin();
       void end();
 
-      GLhandleARB handle() const {return (m_Shader);}
+			GLuint      handle() const {return (m_Shader);}
       const char *name()   const { return "[runtime]"; }
 
       bool  isReady()  const {return (m_Shader!=0);}

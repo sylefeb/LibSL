@@ -47,7 +47,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #include <glux.h>
 #endif
 #ifdef __APPLE__
-#include <OpenGL/gl.h>
+#include "apple_gl.h"
 #else
 #ifdef ANDROID
 #include <GLES2/gl2.h>

@@ -116,8 +116,8 @@ static void glfwMouseButton(GLFWwindow* window, int glfw_button, int glfw_action
   } else if (glfw_action == GLFW_RELEASE) {
       flags |= LIBSL_BUTTON_UP;
   }
-  glfwGetCursorPos(window, &x, &y); //CZ 2018-05-02 : warning, might have changed inbetween click and callback
-  NAMESPACE::onMouseButtonPressed(std::floor(x),std::floor(y),button,flags);
+  glfwGetCursorPos(window, &x, &y); //CZ 2018-05-02 : warning, might have changed in between click and callback
+  NAMESPACE::onMouseButtonPressed((uint)std::floor(x), (uint)std::floor(y),button,flags);
 }
 
 static void glfwMouseWheel(GLFWwindow* window, double x, double y)
@@ -125,13 +125,13 @@ static void glfwMouseWheel(GLFWwindow* window, double x, double y)
 #ifdef EMSCRIPTEN
   NAMESPACE::onMouseWheel(-40 * y);
 #else
-  NAMESPACE::onMouseWheel(40 * y);
+  NAMESPACE::onMouseWheel((uint)std::floor(40 * y));
 #endif
 }
 
 static void glfwMouseMove(GLFWwindow* window, double x, double y)
 {
-  NAMESPACE::onMouseMotion(std::floor(x),std::floor(y));
+  NAMESPACE::onMouseMotion((uint)std::floor(x), (uint)std::floor(y));
 }
 
 void glfwKeyboardText(GLFWwindow* window, unsigned int codepoint)
@@ -170,8 +170,8 @@ static void glfwKeyboardSpecial(GLFWwindow* window, int key, int scancode, int a
 
 static void glfwRender()
 {
-  static double last = LibSL::System::Time::milliseconds();
-  double now         = LibSL::System::Time::milliseconds();
+  static double last = (double)LibSL::System::Time::milliseconds();
+  double now         = (double)LibSL::System::Time::milliseconds();
   float  elapsed     = float(now - last);
 
   if (elapsed > 0) {
@@ -243,10 +243,11 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
   glfwSetErrorCallback(glfwError);
 
 #ifdef OPENGLCORE
+  std::cerr << "[GLFW] OpenGL core profile " << LIBSL_OPENGL_MAJOR_VERSION << '.' << LIBSL_OPENGL_MINOR_VERSION << '\n';
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, LIBSL_OPENGL_MAJOR_VERSION);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, LIBSL_OPENGL_MINOR_VERSION);
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #else
   // In case core profile fails.
   // From: https://www.glfw.org/docs/latest/window_guide.html#window_hints_ctx
@@ -270,9 +271,11 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
 
   // window creation
   if (hidden) {
+    std::cerr << "[GLFW] offscreen\n";
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
     glfw_window = glfwCreateWindow(256, 256, "", NULL, NULL);
   } else if (fullscreen) {
+    std::cerr << "[GLFW] fullscreen\n";
     GLFWmonitor* monitor = glfwGetPrimaryMonitor();
     const GLFWvidmode* mode = glfwGetVideoMode(monitor);
     glfwWindowHint(GLFW_RED_BITS, mode->redBits);
@@ -281,13 +284,16 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
     glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
     glfw_window = glfwCreateWindow(mode->width, mode->height, title, monitor, NULL);
   } else {
+    std::cerr << "[GLFW] windowed\n";
     if (frameLess) {
+      std::cerr << "[GLFW] frameless\n";
       glfwWindowHint(GLFW_DECORATED, GL_FALSE);
     }
     glfw_window = glfwCreateWindow(width, height, title, NULL, NULL);
   }
   if (!glfw_window) {
 #ifdef OPENGLCORE
+    std::cerr << "[GLFW] OpenGL core profile FAILED, fallback to GL 1.0\n";
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 1);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
@@ -301,7 +307,7 @@ void NAMESPACE::init(uint width,uint height, const char *title,char **argv, int 
 #endif
   }
   // window position
-  glfwSetWindowPos(glfw_window, 0, 1);
+  // glfwSetWindowPos(glfw_window, 16, 32);
   // opengl context
   glfwMakeContextCurrent(glfw_window);
 

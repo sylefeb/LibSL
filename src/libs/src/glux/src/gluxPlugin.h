@@ -1,27 +1,29 @@
 // --------------------------------------------------------
 // Author: Sylvain.Lefebvre@sophia.inria.fr
-// -------------------------------------------------------- 
+// --------------------------------------------------------
 
 #ifndef __GLUX_PLUGIN__
-#define __GLUX_PLUGIN__ 
+#define __GLUX_PLUGIN__
 
-// -------------------------------------------------------- 
+// --------------------------------------------------------
 
-#include "gluxLoader.h" 
+#include "gluxLoader.h"
 
-// -------------------------------------------------------- 
+// --------------------------------------------------------
 
-#ifndef GLUX_NO_OUTPUT  
+#ifndef GLUX_NO_OUTPUT
 # include <iostream>
-#endif 
+#endif
 
-// -------------------------------------------------------- 
+// --------------------------------------------------------
 
+#ifndef GL_GLEXT_LEGACY
 #define GL_GLEXT_LEGACY
+#endif
 #define GLX_GLXEXT_LEGACY
-#define WGL_WGLEXT_LEGACY 
+#define WGL_WGLEXT_LEGACY
 
-// -------------------------------------------------------- 
+// --------------------------------------------------------
 
 void *GLUX_LOAD_PROC(const char *name);
 
@@ -29,9 +31,9 @@ void *GLUX_LOAD_PROC(const char *name);
 #define APIENTRY
 #endif
 
-#define APIENTRYP APIENTRY * 
+#define APIENTRYP APIENTRY *
 
-// -------------------------------------------------------- 
+// --------------------------------------------------------
 
 namespace glux
 {
@@ -64,7 +66,7 @@ namespace glux
   };
 }
 
-// -------------------------------------------------------- 
+// --------------------------------------------------------
 
 #define GLUX_NEW_PLUGIN(idstr)      \
 namespace glux \
@@ -80,9 +82,9 @@ namespace glux \
       virtual ~gluxPlugin_##idstr() {} \
       bool load(); \
     }; \
-} 
+}
 
-// -------------------------------------------------------- 
+// --------------------------------------------------------
 
 #define GLUX_EMPTY_PLUGIN(idstr)      \
 namespace glux \
@@ -97,18 +99,18 @@ namespace glux \
       } \
       virtual ~gluxPlugin_##idstr() {} \
     }; \
-} 
+}
 
-// -------------------------------------------------------- 
+// --------------------------------------------------------
 
-#define GLUX_LOAD(idstr)    static glux::gluxPlugin_##idstr glux_plugin_##idstr(false); 
+#define GLUX_LOAD(idstr)    static glux::gluxPlugin_##idstr glux_plugin_##idstr(false);
 #define GLUX_REQUIRE(idstr) static glux::gluxPlugin_##idstr glux_plugin_##idstr(true);
 
-// -------------------------------------------------------- 
+// --------------------------------------------------------
 
-#define GLUX_PLUGIN_LOAD(idstr) bool glux::gluxPlugin_##idstr::load() 
+#define GLUX_PLUGIN_LOAD(idstr) bool glux::gluxPlugin_##idstr::load()
 
-#define GLUX_CHECK_EXTENSION_STRING(ext) (g_glux__glExtensions.empty() ? (strstr((const char *)glGetString(GL_EXTENSIONS),ext) == NULL) : (g_glux__glExtensions.find(ext) == g_glux__glExtensions.end()) ) 
+#define GLUX_CHECK_EXTENSION_STRING(ext) (g_glux__glExtensions.empty() ? (strstr((const char *)glGetString(GL_EXTENSIONS),ext) == NULL) : (g_glux__glExtensions.find(ext) == g_glux__glExtensions.end()) )
 
 // WGL extensions require special treatment
 #define GLUX_CHECK_WGL_EXTENSION_STRING(ext)       \
@@ -117,6 +119,6 @@ namespace glux \
   || (strstr(g_glux__wglExtensions, ext) == NULL)  \
   )
 
-// -------------------------------------------------------- 
-#endif 
-// -------------------------------------------------------- 
+// --------------------------------------------------------
+#endif
+// --------------------------------------------------------

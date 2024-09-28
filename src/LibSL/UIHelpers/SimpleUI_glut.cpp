@@ -37,7 +37,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 #ifdef EMSCRIPTEN
 #include <GL/glut.h>
 #else
+#ifdef __APPLE__
+#include <glut.h>
+#else
 #include <GL/freeglut.h>
+#endif
 #endif
 
 //---------------------------------------------------------------------------
@@ -226,9 +230,13 @@ void NAMESPACE::init(uint width,uint height,const char *title,char **argv,int ar
   glutInit              (&argc, argv);
 
 #ifdef OPENGLCORE
+#ifndef __APPLE__
   glutInitContextVersion(LIBSL_OPENGL_MAJOR_VERSION,LIBSL_OPENGL_MINOR_VERSION);
   glutInitContextFlags(GLUT_FORWARD_COMPATIBLE);
   glutInitContextProfile(GLUT_CORE_PROFILE);
+#else
+#error Cannot use GLUT with OpenGL core profile, use GLFW instead
+#endif
 #endif
 
   glutInitDisplayMode   (GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA | GLUT_STENCIL | GLUT_ALPHA);
