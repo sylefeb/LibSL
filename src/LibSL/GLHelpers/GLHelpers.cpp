@@ -775,19 +775,13 @@ void NAMESPACE::GLTexBuffer::deleteTexture()
 void NAMESPACE::GLCompute::init(const char *cs_code)
 {
   LIBSL_GL_CHECK_ERROR;
-
   m_Shader = glCreateProgram();
-
   GLuint cs;
-
   cs = loadGLSLProgram(cs_code,GL_COMPUTE_SHADER);
-
   glAttachShader(m_Shader,cs);
-
   glLinkProgram(m_Shader);
-
   GLint linked;
-  glGetShaderiv(m_Shader,GL_OBJECT_LINK_STATUS_ARB, &linked);
+  glGetProgramiv(m_Shader,GL_OBJECT_LINK_STATUS_ARB, &linked);
   if (!linked) {
     GLint maxLength;
     glGetShaderiv(m_Shader,GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
@@ -795,11 +789,8 @@ void NAMESPACE::GLCompute::init(const char *cs_code)
     glGetShaderInfoLog(m_Shader, maxLength, NULL, infoLog.raw());
     throw GLException("\n\n**** GLSL compute shader failed to link (%s) ****\n%s",name(),infoLog.raw());
   }
-
   glDeleteShader(cs);
-
   glUseProgram(0);
-
   LIBSL_GL_CHECK_ERROR;
 }
 
@@ -890,7 +881,7 @@ void NAMESPACE::GLMeshShader::init(const char *ms_code, const char *fp_code, con
   glLinkProgram(m_Shader);
 
   GLint linked;
-  glGetShaderiv(m_Shader,GL_OBJECT_LINK_STATUS_ARB, &linked);
+  glGetProgramiv(m_Shader,GL_OBJECT_LINK_STATUS_ARB, &linked);
   if (!linked) {
     GLint maxLength;
     glGetShaderiv(m_Shader,GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
