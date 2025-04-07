@@ -168,6 +168,7 @@ IF (WIN32)
 	winmm.lib
 	psapi.lib
 	shlwapi.lib
+	imm32.lib
   )
 
 ########################################
@@ -187,6 +188,7 @@ IF (NOT TARGET LibSL)
 	winmm.lib
 	psapi.lib
 	shlwapi.lib
+	imm32.lib
   )
   SET_PROPERTY(TARGET LibSL PROPERTY IMPORTED_LOCATION_RELEASE
 	${LIBSL_LIBRARY_DIR}/LibSL.lib)
@@ -202,6 +204,7 @@ IF (NOT TARGET LibSL)
 	winmm.lib
 	psapi.lib
 	shlwapi.lib
+	imm32.lib
   )
 #  SET_PROPERTY(TARGET LibSL PROPERTY INTERFACE_COMPILE_DEFINITIONS
 #	UNICODE
@@ -573,7 +576,7 @@ IF (NOT TARGET LibSL_gl)
     ${OPENGL_LIBRARIES}
     ${GLUT_LIBRARIES}
     )
-  ENDIF (NOT EMSCRIPTEN)  
+  ENDIF (NOT EMSCRIPTEN)
   SET_PROPERTY(TARGET LibSL_gl PROPERTY INTERFACE_COMPILE_DEFINITIONS
 	OPENGL
 	TW_STATIC

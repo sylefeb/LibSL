@@ -450,7 +450,7 @@ ENDIF (LIBSL_POWER_USER)
 
 IF(WIN32)
 #TARGET_LINK_LIBRARIES(LibSL jpeg png 3ds zlib loki qhull shlwapi psapi winmm tinyxml hashlibpp)
-TARGET_LINK_LIBRARIES(LibSL jpeg png 3ds zlib qhull shlwapi psapi winmm tinyxml hashlibpp)
+TARGET_LINK_LIBRARIES(LibSL jpeg png 3ds zlib qhull shlwapi psapi winmm tinyxml hashlibpp imm32)
 ELSE(WIN32)
 #TARGET_LINK_LIBRARIES(LibSL jpeg png 3ds zlib loki qhull tinyxml hashlibpp)
 TARGET_LINK_LIBRARIES(LibSL jpeg png 3ds zlib qhull tinyxml hashlibpp)
@@ -612,7 +612,7 @@ ENDIF(LIBSL_BUILD_GL4)
 IF (LIBSL_BUILD_GL4CORE)
 
 	ADD_LIBRARY(LibSL_gl4core STATIC ${LIBSL_GL4CORE_SOURCE} ${LIBSL_GL4CORE_HEADERS})
-	
+
 	SET_TARGET_PROPERTIES(LibSL_gl4core PROPERTIES DEBUG_POSTFIX "-d")
 	IF (LIBSL_USE_GLUX)
 	  ADD_DEFINITIONS(-DUSE_GLUX)
