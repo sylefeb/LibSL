@@ -158,7 +158,6 @@ SET(LIBSL_CORE_SOURCE
 	Geometry/Morpho.cpp
 	Geometry/PointTree.cpp
 	System/half.cpp
-	../libs/src/SQLite/sqlite3.c
 	../libs/src/rply/rply.c
 	)
 
@@ -168,6 +167,7 @@ list(APPEND LIBSL_CORE_SOURCE
     Image/ImageFormat_JPG.cpp
     Mesh/MeshFormat_3DS.cpp
     Geometry/ConvexHull.cpp
+    ../libs/src/SQLite/sqlite3.c
     )
 endif()
 
