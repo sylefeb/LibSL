@@ -130,7 +130,6 @@ SET(LIBSL_CORE_SOURCE
 	SvgHelpers/SvgHelpers.cpp
 	Math/Math.cpp
 	Mesh/Mesh.cpp
-	Mesh/MeshFormat_3DS.cpp
 	Mesh/MeshFormat_OBJ.cpp
 	Mesh/MeshFormat_wrl.cpp
 	Mesh/MeshFormat_mesh.cpp
@@ -143,7 +142,7 @@ SET(LIBSL_CORE_SOURCE
 	Mesh/VertexFormat_dynamic.cpp
 	Mesh/AnimatedMesh.cpp
 	Mesh/AnimatedMeshController.cpp
-  	Mesh/AnimatedMeshFormat_animesh.cpp
+	Mesh/AnimatedMeshFormat_animesh.cpp
 	Geometry/Intersections/Intersection_Plane_AABox.cpp
 	Geometry/Intersections/Intersection_Polygon_AABox.cpp
 	Geometry/Intersections/Intersection_Ray_Plane.cpp
@@ -156,9 +155,8 @@ SET(LIBSL_CORE_SOURCE
 #	Geometry/Voxelizer.cpp
 	Geometry/Contour.cpp
 	Geometry/Components.cpp
-	Geometry/ConvexHull.cpp
 	Geometry/Morpho.cpp
-  	Geometry/PointTree.cpp
+	Geometry/PointTree.cpp
 	System/half.cpp
 	../libs/src/SQLite/sqlite3.c
 	../libs/src/rply/rply.c
@@ -167,7 +165,10 @@ SET(LIBSL_CORE_SOURCE
 if (NOT WASI)
 list(APPEND LIBSL_CORE_SOURCE 
     Image/ImageFormat_PNG.cpp 
-    Image/ImageFormat_JPG.cpp)
+    Image/ImageFormat_JPG.cpp
+    Mesh/MeshFormat_3DS.cpp
+    Geometry/ConvexHull.cpp
+    )
 endif()
 
 
