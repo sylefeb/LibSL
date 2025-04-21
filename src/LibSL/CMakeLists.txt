@@ -166,6 +166,13 @@ SET(LIBSL_CORE_SOURCE
 	../libs/src/rply/rply.c
 	)
 
+if (NOT WASI)
+list(APPEND LIBSL_CORE_SOURCE 
+    Image/ImageFormat_PNG.cpp 
+    Image/ImageFormat_JPG.cpp)
+endif()
+
+
 CreateSourceGroups("Header files" src "${LIBSL_CORE_HEADERS}")
 CreateSourceGroups("Source files" src "${LIBSL_CORE_SOURCE}")
 
