@@ -120,8 +120,6 @@ SET(LIBSL_CORE_SOURCE
 	Memory/ArrayRemap.cpp
 	Image/tga.cpp
 	Image/Image.cpp
-	Image/ImageFormat_PNG.cpp
-	Image/ImageFormat_JPG.cpp
 	Image/ImageFormat_TGA.cpp
 	Image/ImageFormat_float.cpp
 	Image/ImageFormat_pfm.cpp
