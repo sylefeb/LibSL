@@ -53,6 +53,28 @@ OPTION(LIBSL_POWER_USER            "Power user mode (reserved, do not use)" OFF)
 
 else(EMSCRIPTEN)
 
+if(WASI)
+
+# WASI
+OPTION(LIBSL_BUILD_GL              "Build LibSL_gl" OFF)
+OPTION(LIBSL_BUILD_GL4             "Build LibSL_gl for OpenGL 4.x" OFF)
+OPTION(LIBSL_BUILD_GL4CORE         "Build LibSL_gl for OpenGL 4.x core profile" OFF)
+OPTION(LIBSL_BUILD_DX9             "Build LibSL_d3d" OFF)
+OPTION(LIBSL_BUILD_DX10            "Build LibSL_dx10" OFF)
+OPTION(LIBSL_BUILD_LINALG          "Build LibSL_linalg" ON)
+OPTION(LIBSL_BUILD_MAX_PERFORMANCE "Build LibSL for performance rather than safety" ON)
+OPTION(LIBSL_BUILD_SHARP           "Build LibSL_sharp" OFF)
+OPTION(LIBSL_BUILD_TOOLS           "Build LibSL tools" OFF)
+OPTION(LIBSL_BUILD_TUTORIALS       "Build LibSL tutorials" OFF)
+OPTION(LIBSL_MULTITHREADED_STATIC  "Build LibSL with /MT flag in Visual C++" OFF)
+OPTION(LIBSL_BUILD_GLUX            "Build gluX"   OFF)
+OPTION(LIBSL_BUILD_LIBARCHIVE      "Build libarchive"   OFF)
+OPTION(LIBSL_USE_GLUX              "Use gluX with LibSL_gl"   OFF)
+OPTION(LIBSL_USE_GLFW              "Use glfw instead of glut" OFF)
+OPTION(LIBSL_POWER_USER            "Power user mode (reserved, do not use)" OFF)
+
+else(WASI)
+
 # Generic
 if (APPLE)
 # - Apple
@@ -83,6 +105,8 @@ OPTION(LIBSL_BUILD_GLUX            "Build gluX"   ON)
 OPTION(LIBSL_BUILD_LIBARCHIVE      "Build libarchive"   OFF)
 OPTION(LIBSL_USE_GLUX              "Use gluX with LibSL_gl"   ON)
 OPTION(LIBSL_POWER_USER            "Power user mode (reserved, do not use)" OFF)
+
+endif(WASI)
 
 endif(EMSCRIPTEN)
 
