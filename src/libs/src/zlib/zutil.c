@@ -14,6 +14,8 @@
 #  include "malloc.h"
 #endif
 
+void *memalign(size_t alignment, size_t size);
+
 const char * const zng_errmsg[10] = {
     (const char *)"need dictionary",     /* Z_NEED_DICT       2  */
     (const char *)"stream end",          /* Z_STREAM_END      1  */
