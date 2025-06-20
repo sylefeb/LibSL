@@ -120,8 +120,6 @@ SET(LIBSL_CORE_SOURCE
 	Memory/ArrayRemap.cpp
 	Image/tga.cpp
 	Image/Image.cpp
-	Image/ImageFormat_PNG.cpp
-	Image/ImageFormat_JPG.cpp
 	Image/ImageFormat_TGA.cpp
 	Image/ImageFormat_float.cpp
 	Image/ImageFormat_pfm.cpp
@@ -132,7 +130,6 @@ SET(LIBSL_CORE_SOURCE
 	SvgHelpers/SvgHelpers.cpp
 	Math/Math.cpp
 	Mesh/Mesh.cpp
-	Mesh/MeshFormat_3DS.cpp
 	Mesh/MeshFormat_OBJ.cpp
 	Mesh/MeshFormat_wrl.cpp
 	Mesh/MeshFormat_mesh.cpp
@@ -145,7 +142,7 @@ SET(LIBSL_CORE_SOURCE
 	Mesh/VertexFormat_dynamic.cpp
 	Mesh/AnimatedMesh.cpp
 	Mesh/AnimatedMeshController.cpp
-  	Mesh/AnimatedMeshFormat_animesh.cpp
+	Mesh/AnimatedMeshFormat_animesh.cpp
 	Geometry/Intersections/Intersection_Plane_AABox.cpp
 	Geometry/Intersections/Intersection_Polygon_AABox.cpp
 	Geometry/Intersections/Intersection_Ray_Plane.cpp
@@ -158,13 +155,22 @@ SET(LIBSL_CORE_SOURCE
 #	Geometry/Voxelizer.cpp
 	Geometry/Contour.cpp
 	Geometry/Components.cpp
-	Geometry/ConvexHull.cpp
 	Geometry/Morpho.cpp
-  	Geometry/PointTree.cpp
+	Geometry/PointTree.cpp
 	System/half.cpp
-	../libs/src/SQLite/sqlite3.c
 	../libs/src/rply/rply.c
 	)
+
+if (NOT WASI)
+list(APPEND LIBSL_CORE_SOURCE 
+    Image/ImageFormat_PNG.cpp 
+    Image/ImageFormat_JPG.cpp
+    Mesh/MeshFormat_3DS.cpp
+    Geometry/ConvexHull.cpp
+    ../libs/src/SQLite/sqlite3.c
+    )
+endif()
+
 
 CreateSourceGroups("Header files" src "${LIBSL_CORE_HEADERS}")
 CreateSourceGroups("Source files" src "${LIBSL_CORE_SOURCE}")
@@ -449,11 +455,13 @@ ADD_DEFINITIONS("-DLIBSL_IDKFK")
 ENDIF (LIBSL_POWER_USER)
 
 IF(WIN32)
-#TARGET_LINK_LIBRARIES(LibSL jpeg png 3ds zlib loki qhull shlwapi psapi winmm tinyxml hashlibpp)
-TARGET_LINK_LIBRARIES(LibSL jpeg png 3ds zlib qhull shlwapi psapi winmm tinyxml hashlibpp)
+TARGET_LINK_LIBRARIES(LibSL jpeg png 3ds zlib qhull shlwapi psapi winmm tinyxml hashlibpp imm32)
 ELSE(WIN32)
-#TARGET_LINK_LIBRARIES(LibSL jpeg png 3ds zlib loki qhull tinyxml hashlibpp)
+IF(WASI)
+TARGET_LINK_LIBRARIES(LibSL jpeg zlib tinyxml hashlibpp)
+ELSE(WASI)
 TARGET_LINK_LIBRARIES(LibSL jpeg png 3ds zlib qhull tinyxml hashlibpp)
+ENDIF(WASI)
 ENDIF(WIN32)
 
 IF(LIBSL_USE_INSTALL_PREFIX)
@@ -612,7 +620,7 @@ ENDIF(LIBSL_BUILD_GL4)
 IF (LIBSL_BUILD_GL4CORE)
 
 	ADD_LIBRARY(LibSL_gl4core STATIC ${LIBSL_GL4CORE_SOURCE} ${LIBSL_GL4CORE_HEADERS})
-	
+
 	SET_TARGET_PROPERTIES(LibSL_gl4core PROPERTIES DEBUG_POSTFIX "-d")
 	IF (LIBSL_USE_GLUX)
 	  ADD_DEFINITIONS(-DUSE_GLUX)
