@@ -100,9 +100,9 @@ namespace LibSL {
         add(p0); add(p1); add(p2); add(p3);
       }
 
-      Polygon(const LibSL::Geometry::Plane<T_NumDim>& p, T_Type size)
+      Polygon(const LibSL::Geometry::Plane<T_NumDim,T_Type>& p, T_Type size)
       {
-        std::pair<v3f,v3f> uv = frame(p.n());
+        std::pair<T_Vertex, T_Vertex> uv = frame(p.n());
         T_Vertex p0           = T_Vertex(p.o() - uv.first * size - uv.second * size);
         T_Vertex p1           = T_Vertex(p.o() + uv.first * size - uv.second * size);
         T_Vertex p2           = T_Vertex(p.o() + uv.first * size + uv.second * size);
