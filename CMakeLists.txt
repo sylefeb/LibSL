@@ -222,6 +222,7 @@ ENDIF(NOT WIN32)
 if(EMSCRIPTEN)
 set(CMAKE_EXECUTABLE_SUFFIX ".html")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s WASM=1")
+ADD_DEFINITIONS(-DEMSCRIPTEN)
 endif(EMSCRIPTEN)
 
 ###############################################################################
