@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
 PROJECT(gl4x_tutorials)
 
 SET(LibSL_DIR $ENV{LIBSL_DIR})
@@ -6,16 +6,16 @@ FIND_PACKAGE(LibSL)
 
 INCLUDE_DIRECTORIES( ${LIBSL_INCLUDE_DIR} )
 
-ADD_EXECUTABLE(gl4x_gl_tutorial0 
-	gl4x_gl_tutorial0.cpp 
-	gl4x_gl_tutorial0.fp 
+ADD_EXECUTABLE(gl4x_gl_tutorial0
+	gl4x_gl_tutorial0.cpp
+	gl4x_gl_tutorial0.fp
 	gl4x_gl_tutorial0.vp
 	gl4x_gl_tutorial0.h)
 TARGET_LINK_LIBRARIES(gl4x_gl_tutorial0 ${LIBSL_GL4_LIBRARIES} ${LIBSL_LIBRARIES})
 
 # ADD_EXECUTABLE(gl4x_gl_tutorial1
-# 	gl4x_gl_tutorial1.cpp 
-# 	gl4x_gl_tutorial1.cs 
+# 	gl4x_gl_tutorial1.cpp
+# 	gl4x_gl_tutorial1.cs
 # 	gl4x_gl_tutorial1.h)
 # TARGET_LINK_LIBRARIES(gl4x_gl_tutorial1 ${LIBSL_GL4_LIBRARIES} ${LIBSL_LIBRARIES})
 

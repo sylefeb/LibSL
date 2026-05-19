@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
 PROJECT(AutoBindShader_tutorials)
 
 SET(LibSL_DIR $ENV{LIBSL_DIR})
@@ -6,23 +6,23 @@ FIND_PACKAGE(LibSL)
 
 INCLUDE_DIRECTORIES( ${LIBSL_INCLUDE_DIR} )
 
-ADD_EXECUTABLE(AutoBindShader_gl_tutorial0 
-	AutoBindShader_gl_tutorial0.cpp 
+ADD_EXECUTABLE(AutoBindShader_gl_tutorial0
+	AutoBindShader_gl_tutorial0.cpp
 	shader_tutorial0.fp
 	shader_tutorial0.h)
 TARGET_LINK_LIBRARIES(AutoBindShader_gl_tutorial0 ${LIBSL_GL_LIBRARIES} ${LIBSL_LIBRARIES})
 
-ADD_EXECUTABLE(AutoBindShader_gl_tutorial1_geometryshader 
-	AutoBindShader_gl_tutorial1_geometryshader.cpp 
-	shader_tutorial1.vp 
-	shader_tutorial1.gs 
-	shader_tutorial1.fp 
+ADD_EXECUTABLE(AutoBindShader_gl_tutorial1_geometryshader
+	AutoBindShader_gl_tutorial1_geometryshader.cpp
+	shader_tutorial1.vp
+	shader_tutorial1.gs
+	shader_tutorial1.fp
 	shader_tutorial1.h)
 TARGET_LINK_LIBRARIES(AutoBindShader_gl_tutorial1_geometryshader ${LIBSL_GL_LIBRARIES} ${LIBSL_LIBRARIES})
 
 ADD_EXECUTABLE(AutoBindShader_gl_tutorial2_anttweakbar
-	AutoBindShader_gl_tutorial2_anttweakbar.cpp 
-	shader_tutorial2.fp 
+	AutoBindShader_gl_tutorial2_anttweakbar.cpp
+	shader_tutorial2.fp
 	shader_tutorial2.h)
 TARGET_LINK_LIBRARIES(AutoBindShader_gl_tutorial2_anttweakbar ${LIBSL_GL_LIBRARIES} ${LIBSL_LIBRARIES})
 
@@ -39,4 +39,3 @@ SET(SHADERS
 )
 
 AUTO_BIND_SHADERS( ${SHADERS} )
-
