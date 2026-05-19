@@ -1,5 +1,5 @@
 ################################################################################
-CMake_Minimum_Required(VERSION 2.6.3)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
 ################################################################################
 
 # The method used here is a bit involved and incomplete, so feel free to improve it!
