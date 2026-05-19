@@ -70,7 +70,7 @@ Type "make install" in the build tree. Libraries are copied into LibSL/lib/*
 
 To create a new project using LibSL and for instance LibSL_gl, use the following CmakeLists.txt template:
 
-	CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
+	CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
 	PROJECT(myproject)
 
 	FIND_PACKAGE(LibSL)

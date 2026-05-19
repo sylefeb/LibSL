@@ -1,7 +1,7 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
 PROJECT(jpeg)
 
-SET(LIBJPEG_SOURCES 
+SET(LIBJPEG_SOURCES
 		jcapimin.c jcapistd.c jccoefct.c jccolor.c jcdctmgr.c jchuff.c
         jcinit.c jcmainct.c jcmarker.c jcmaster.c jcomapi.c jcparam.c
         jcphuff.c jcprepct.c jcsample.c jctrans.c jdapimin.c jdapistd.c
@@ -10,11 +10,11 @@ SET(LIBJPEG_SOURCES
         jdpostct.c jdsample.c jdtrans.c jerror.c jfdctflt.c jfdctfst.c
         jfdctint.c jidctflt.c jidctfst.c jidctint.c jidctred.c jquant1.c
         jquant2.c jutils.c jmemmgr.c jmemansi.c)
-		
-SET(LIBJPEG_HEADERS 
+
+SET(LIBJPEG_HEADERS
 		jchuff.h jdhuff.h jdct.h jerror.h jinclude.h jmemsys.h jmorecfg.h
         jpegint.h jpeglib.h jversion.h cdjpeg.h cderror.h transupp.h)
-				
+
 ADD_LIBRARY(jpeg STATIC ${LIBJPEG_SOURCES} ${LIBJPEG_HEADERS})
 
 SET_TARGET_PROPERTIES(jpeg PROPERTIES DEBUG_POSTFIX "-d")
@@ -34,4 +34,3 @@ INSTALL(TARGETS jpeg
 IF(NOT WIN32)
 INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/libjpeg.a" DESTINATION ${LIBSL_INSTALL_LIB_DIR})
 ENDIF(NOT WIN32)
-
