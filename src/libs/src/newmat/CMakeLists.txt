@@ -1,7 +1,7 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
 PROJECT(newmat)
 
-SET(NEWMAT_SOURCES 
+SET(NEWMAT_SOURCES
 bandmat.cpp
 cholesky.cpp
 evalue.cpp
@@ -28,8 +28,8 @@ sort.cpp
 submat.cpp
 svd.cpp
 )
-		
-SET(NEWMAT_HEADERS 
+
+SET(NEWMAT_HEADERS
 boolean.h
 controlw.h
 include.h
@@ -43,7 +43,7 @@ newmatrm.h
 precisio.h
 solution.h
 )
-		
+
 ADD_LIBRARY(newmat STATIC ${NEWMAT_SOURCES} ${NEWMAT_HEADERS})
 
 SET_TARGET_PROPERTIES(newmat PROPERTIES DEBUG_POSTFIX "-d")

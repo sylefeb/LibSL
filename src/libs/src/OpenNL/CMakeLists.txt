@@ -2,7 +2,7 @@
 #      CMake version checks
 ######################################
 if(COMMAND cmake_minimum_required)
-   cmake_minimum_required(VERSION 2.4)
+   CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
 endif(COMMAND cmake_minimum_required)
 
 if(COMMAND cmake_policy)
@@ -48,7 +48,7 @@ ENDIF(EXISTS ${CMAKE_SOURCE_DIR}/CMakeOptions.txt)
 
 IF(USE_CNC)
     ADD_DEFINITIONS(-DNL_USE_CNC)
-    
+
     IF(CUDA_BUILD_EMULATION)
         ADD_DEFINITIONS(-D__DEVICE_EMULATION__)
     ENDIF(CUDA_BUILD_EMULATION)
@@ -61,11 +61,11 @@ IF(USE_CNC)
     ENDIF(WIN32)
 
     INCLUDE(${CMAKE_SOURCE_DIR}/CMakeModules/FindCUDA.cmake)
-    
+
     IF (CMAKE_BUILD_TYPE MATCHES Debug)
         SET(CUDA_COMPILE_TIME_EXTRA_FLAGS -G)
     ENDIF (CMAKE_BUILD_TYPE MATCHES Debug)
-    
+
     IF(CNC_OPTIMIZE_FOR_THIS_MACHINE)
         IF(COMMAND CUDA_DISCOVER_DEVICE_FLAGS)
         ELSE(COMMAND CUDA_DISCOVER_DEVICE_FLAGS)
@@ -80,11 +80,11 @@ IF(USE_CNC)
 	        LOAD_COMMAND(CUDA_DISCOVER_DEVICE_FLAGS ${PROJECT_BINARY_DIR}/CMake ${PROJECT_BINARY_DIR}/CMake/Debug)
         ENDIF(COMMAND CUDA_DISCOVER_DEVICE_FLAGS)
         CUDA_DISCOVER_DEVICE_FLAGS()
-        
+
         SET(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS} ${CUDA_DEVICE_FLAGS} )
         ADD_DEFINITIONS(${CUDA_DEVICE_FLAGS})
     ENDIF(CNC_OPTIMIZE_FOR_THIS_MACHINE)
-    
+
 ENDIF(USE_CNC)
 
 IF (CMAKE_BUILD_TYPE MATCHES Debug)
@@ -114,7 +114,3 @@ ENDIF(BUILD_EXAMPLES)
 IF(WIN32)
   MESSAGE("Configure done. You may need to click on configure again if the OK button is disabled")
 ENDIF(WIN32)
-
-
-
-

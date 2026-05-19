@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
 PROJECT(loki)
 
 IF (NOT EMSCRIPTEN)
@@ -7,7 +7,7 @@ INCLUDE(UseCXX11_clang)
 ENDIF()
 ENDIF()
 
-SET(LOKI_SOURCES 
+SET(LOKI_SOURCES
 src/LevelMutex.cpp
 src/OrderedStatic.cpp
 src/SafeFormat.cpp
@@ -16,8 +16,8 @@ src/SmallObj.cpp
 src/SmartPtr.cpp
 src/StrongPtr.cpp
 )
-		
-SET(LOKI_HEADERS 
+
+SET(LOKI_HEADERS
 )
 
 INCLUDE_DIRECTORIES(include)

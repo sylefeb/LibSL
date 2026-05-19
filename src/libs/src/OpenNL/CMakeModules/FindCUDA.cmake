@@ -253,7 +253,7 @@
 
 # We need to have at least this version to support the VERSION_LESS argument to 'if' (2.6.2) and unset (2.6.3)
 cmake_policy(PUSH)
-cmake_minimum_required(VERSION 2.6.3)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
 cmake_policy(POP)
 
 # This macro helps us find the location of helper files we will need the full path to
