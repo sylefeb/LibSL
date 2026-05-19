@@ -220,7 +220,7 @@ void NAMESPACE::ImageFormat_PNG::save(const char *fname,const NAMESPACE::Image *
 
 //---------------------------------------------------------------------------
 
-#ifndef EMSCRIPTEN // SL 2025-04-17 hotfix as this result in Emscripten compilation error
+#ifndef __EMSCRIPTEN__ // SL 2025-04-17 hotfix as this result in Emscripten compilation error
 
 template <typename TChar>
 void write_data_stream(png_structp png_ptr, png_bytep data, png_size_t length)
