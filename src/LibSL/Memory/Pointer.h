@@ -385,7 +385,7 @@ namespace LibSL  {
 
         void erase() { if (!SafePtr::isNull()) { delete (SafePtr::raw()); (*this) = NULL; } }
 
-        operator typename Pointer::t_RawPointer() { return (SafePtr::raw()); }
+        operator typename LibSL::Memory::Pointer::Pointer<T_Type, LibSL::Memory::Pointer::CheckValid, LibSL::Memory::Pointer::TransferAddress>::t_RawPointer() { return (SafePtr::raw()); }
         operator T_Type * const ()   const { return (SafePtr::raw()); }
       };
 
