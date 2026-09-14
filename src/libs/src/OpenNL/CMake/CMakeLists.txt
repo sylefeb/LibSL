@@ -1,7 +1,7 @@
 PROJECT(CUDA_DISCOVER_DEVICE_FLAGS)
 
 if(COMMAND cmake_minimum_required)
-   cmake_minimum_required(VERSION 2.4)
+   CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
 endif(COMMAND cmake_minimum_required)
 
 INCLUDE(${CMAKE_SOURCE_DIR}/../CMakeModules/FindCUDA.cmake)
