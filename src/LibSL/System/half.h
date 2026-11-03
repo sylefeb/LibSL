@@ -401,6 +401,7 @@ inline
 half::half ()
 {
     // no initialization
+    _h = 0;
 }
 
 

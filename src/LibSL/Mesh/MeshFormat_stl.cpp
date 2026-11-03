@@ -89,11 +89,10 @@ NAMESPACE::TriangleMesh *NAMESPACE::MeshFormat_stl::loadASCII(const char *fname)
 
   BasicParser::FileStream stream(fname);
   BasicParser::Parser<BasicParser::FileStream> parser(stream);
-  const char *s = parser.readString();
-  if (strcmp(s,"solid")) {
+  const char *s = parser.readString("\n");
+  if (strncmp(s,"solid",5)) {
 	 throw Fatal("[MeshFormat_stl::loadASCII] - file '%s' is not an ascii STL",fname);
   }
-  s = parser.readString("\n");
   cerr << sprint("[stl] loading mesh '%s', file '%s'",s,fname) << endl;
   while (!parser.eof()) {
 	  if (parser.eof()) break;

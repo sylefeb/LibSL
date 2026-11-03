@@ -28,6 +28,7 @@ OPTION(LIBSL_USE_GLFW              "Use glfw" OFF)
 OPTION(LIBSL_USE_GLUT              "Use glut" ON)
 OPTION(LIBSL_BUILD_GLFW            "Build glfw from source" OFF)
 OPTION(LIBSL_POWER_USER            "Power user mode (reserved, do not use)" OFF)
+OPTION(LIBSL_BUILD_TESTS           "Build LibSL tests" ON)
 
 ADD_DEFINITIONS(-DANDROID)
 
@@ -54,6 +55,7 @@ OPTION(LIBSL_USE_GLFW              "Use glfw" OFF)
 OPTION(LIBSL_USE_GLUT              "Use glut" ON)
 OPTION(LIBSL_BUILD_GLFW            "Build glfw from source" OFF)
 OPTION(LIBSL_POWER_USER            "Power user mode (reserved, do not use)" OFF)
+OPTION(LIBSL_BUILD_TESTS           "Build LibSL tests" ON)
 
 else(EMSCRIPTEN)
 
@@ -115,6 +117,7 @@ OPTION(LIBSL_BUILD_GLUX            "Build gluX"   ON)
 OPTION(LIBSL_BUILD_LIBARCHIVE      "Build libarchive"   OFF)
 OPTION(LIBSL_USE_GLUX              "Use gluX with LibSL_gl"   ON)
 OPTION(LIBSL_POWER_USER            "Power user mode (reserved, do not use)" OFF)
+OPTION(LIBSL_BUILD_TESTS           "Build LibSL tests" ON)
 
 endif(WASI)
 
@@ -174,7 +177,7 @@ INCLUDE_DIRECTORIES(
 			${CMAKE_CURRENT_SOURCE_DIR}/src/libs/src/SQLite
 			${CMAKE_CURRENT_SOURCE_DIR}/src/libs/src/qhull/src/libqhull_r
 			${CMAKE_CURRENT_SOURCE_DIR}/src/libs/src/rply
-      ${CMAKE_CURRENT_SOURCE_DIR}/src/libs/src/glfw/include
+			${CMAKE_CURRENT_SOURCE_DIR}/src/libs/src/glfw/include
 			)
 
 if (LIBSL_ENABLE_NVIDIA_CG)

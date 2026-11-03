@@ -69,11 +69,11 @@ void ConvexHullEngine<Dim>::run(
   coordT* data = new coordT[num_points * dim];
   if (num_points != 0) {
     const double* rawPtr = &points[0][0];
-#ifdef _MSC_VER
-		std::copy(rawPtr, rawPtr + num_points * dim, stdext::checked_array_iterator<double*>(data, num_points * dim));
-#else
+//#ifdef _MSC_VER
+	//std::copy(rawPtr, rawPtr + num_points * dim, stdext::checked_array_iterator<double*>(data, num_points * dim));
+//#else
     std::copy(rawPtr, rawPtr + num_points * dim, data);
-#endif
+//#endif
   }
 
 #ifdef USE_CXX11
@@ -122,11 +122,11 @@ void ConvexHullEngine<Dim>::extractHull(
   vertexT* vertex, **vertexp;
   FORALLvertices {
       size_t i = qh_pointid(qh,vertex->point);
-#ifdef _MSC_VER
-	std::copy(vertex->point, vertex->point + dim, stdext::checked_array_iterator<pointT*>(&m_Vertices[index][0], dim));
-#else
+//#ifdef _MSC_VER
+	//std::copy(vertex->point, vertex->point + dim, stdext::checked_array_iterator<pointT*>(&m_Vertices[index][0], dim));
+//#else
       std::copy(vertex->point, vertex->point + dim, &m_Vertices[index][0]);
-#endif
+//#endif
       m_IndexMap[index] = (int)i;
       inverse_map[i] = (int)index;
       index++;
