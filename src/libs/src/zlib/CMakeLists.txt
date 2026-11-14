@@ -730,6 +730,7 @@ if(WITH_GZFILEOP)
 endif()
 
 add_library(zlib STATIC ${ZLIB_ALL_SRCS})
+target_include_directories(zlib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(ZLIB_INSTALL_LIBRARIES zlib)
 
