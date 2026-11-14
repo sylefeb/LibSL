@@ -10,6 +10,10 @@
 #ifdef WITH_GZFILEOP
 #  include "gzguts.h"
 #endif
+#ifndef UNALIGNED_OK
+/* POSIX, not declared by the headers in strict C99 mode */
+int posix_memalign(void **memptr, size_t alignment, size_t size);
+#endif
 
 const char * const zng_errmsg[10] = {
     (const char *)"need dictionary",     /* Z_NEED_DICT       2  */
